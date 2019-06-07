@@ -1,0 +1,74 @@
+.resizers{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+.resizers .resizer{
+    width: 20px;
+    height: 10px;
+    background: #545c64;
+    position: absolute;
+    /*border: 3px solid #4286f4;*/
+}
+.resizers .top {
+    color: white;
+    width: 100%;
+    height: calc(#{$footer-height} - 10px);
+    line-height: calc(#{$footer-height} - 10px);
+    text-align: center;
+    cursor: n-resize;
+}
+.resizers .resizer.left {
+    left: 0;
+    top: 0;
+    height: 100%;
+    cursor: w-resize;
+    display: table;
+    z-index: 1;
+}
+.resizers .resizer.right {
+    right: 0;
+    top: 0;
+    height: 100%;
+    cursor: w-resize;
+    display: table;
+    z-index: 1;
+}
+.resizers .resizer-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    color: white;
+}
+.resizers .resizer-inner:hover {
+    color: #03a9f4;
+}
+.resizers .resizer.top-left {
+    left: -5px;
+    top: -5px;
+    cursor: nwse-resize; /*resizer cursor*/
+}
+.resizers .resizer.top-right {
+    right: -5px;
+    top: -5px;
+    cursor: nesw-resize;
+}
+.resizers .resizer.bottom-left {
+    left: -5px;
+    bottom: -5px;
+    cursor: nesw-resize;
+}
+.resizers .resizer.bottom-right {
+    background: none;
+    right: -5px;
+    bottom: -5px;
+    cursor: nwse-resize;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 20px 20px;
+    border-color: transparent transparent #545c64 transparent;
+}
+.resizers .resizer:hover {
+    border-color: transparent transparent #03a9f4 transparent;
+}
