@@ -326,32 +326,8 @@
           });
         })
       },
-      // ----------------------------------------------------------------------------------------
-      // sm_eStatMetaCity (statType, side) {
-      //   if (statType === 'city') {
-      //     return this.$store.state.statList.eStatMetaCity3
-      //   } else {
-      //     if (side === 'leftSide') {
-      //       return this.$store.state.statList.eStatMetaCity1
-      //     } else {
-      //       return this.$store.state.statList.eStatMetaCity2
-      //     }
-      //   }
-      // },
-      // sm_eStatMetaPref (statType, side) {
-      //   if (statType === 'pref') {
-      //     return this.$store.state.statList.eStatMetaPreh3
-      //   } else {
-      //     if (side === 'leftSide') {
-      //       return this.$store.state.statList.eStatMetaPreh1
-      //     } else {
-      //       return this.$store.state.statList.eStatMetaPreh2
-      //     }
-      //   }
-      // },
       prefChange2 () {
         this.$store.commit('statList/eStatReload', {side:'left'});
-        // this.$store.commit('statList/statReload', 'right')
       },
       prefChange (prefCode) {
         const citys = Citycodes.filter(value => value.id.substr(0, 2) === prefCode.substr(0, 2));
@@ -440,7 +416,6 @@
         this.$refs.treeTimeCity.setCheckedKeys([]);
         this.$store.commit('statList/selectStatTimeCity', {statName: '', statIds: '', endStat: '', side: this.side })
       },
-
       //-----------------------------------------------------------------------------------------
       nodeClickMiyazaki (e) {
         if (!e.children) {
@@ -460,10 +435,7 @@
               units.push(keys[i].split('/')[2]);
             }
           }
-          const aaa = units.filter(function (x, i, self) {
-            return self.indexOf(x) === i;
-          });
-          if (aaa.length > 2) {
+          if (units.filter((x, i, self) => self.indexOf(x) === i).length > 2) {
             alert("単位が３つ以上あるので描画できません。選択しなおしてください。0");
             const newKeys = keys.filter(val => val !== e.statName);
             this.$refs.treeTime.setCheckedKeys(newKeys);
