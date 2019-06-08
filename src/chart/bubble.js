@@ -29,6 +29,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg  = store.state.statList.transition;
+  // const transitionFlg = false
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -36,8 +37,10 @@ export default function (val, parentDiv) {
       this.data = null;
       this.colorScale = null;
       this.fontScale = null;
+      // this.year = null;
     }
     create () {
+      // console.log('バブル')
       if (prefOrCity === 'pref') this.dataset.shift();
       const children = [];
       for (const datasetValue of this.dataset) {
@@ -89,6 +92,9 @@ export default function (val, parentDiv) {
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
+  .attr('viewBox', '0 0 '+ width + ' '  + height)
+  .attr('preserveAspectRatio', 'xMidYMid')
+  .classed("svg-content-responsive", true)
   .classed('chart-svg', true);
   // バブル作成---------------------------------------------------------------------------------
   const bubbles = svg.append('g')
@@ -110,6 +116,7 @@ export default function (val, parentDiv) {
   }
   // バブルのテキスト
   const text =bubbles.append('text')
+  // .attr('dominant-baseline', 'central')
   .text(d => {
     if(d.r !== 0) return d.data.name
   })
@@ -150,6 +157,7 @@ export default function (val, parentDiv) {
   const rangeInput = e => {
     // console.log(e)
     const value = Number(e.target.value);
+    // let dc = new DataCreate(val.statData[value].data2);
     let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     bubbles
@@ -174,6 +182,7 @@ export default function (val, parentDiv) {
       const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
       return cY > 200? 'black': 'white';
     });
+    // .exit().remove();
     const year = val.statData[value].time.substr(0,4);
     d3.select('#year-range-text-' + prefOrCity).text(year);
     dc = null
