@@ -18,48 +18,7 @@
       <resize-observer @notify="mix_detectResize" />
     </div>
     <!--メイン部。グラフ表示部分-->
-    <div id="contents">
-      <div id="left-chart-div">
-        <!--都道府県用スライダー-->
-        <div class="pref-top" v-show="s_activeIndex==='pref'">
-          <span id="year-range-text-pref"></span>
-          <div class="year-range-div">
-            <input type="range" id="year-range-pref"  v-model="s_yearRangePref" list="year-range-list"/>
-            <div id="year-range-ticks-pref"></div>
-          </div>
-        </div>
-        <!--市町村用スライダー-->
-        <div class="pref-top" v-show="s_activeIndex==='city'">
-          <span id="year-range-text-city"></span>
-          <div class="year-range-div">
-            <input type="range" id="year-range-city"  v-model="s_yearRangeCity" list="year-range-list"/>
-            <div id="year-range-ticks-city"></div>
-          </div>
-        </div>
-        <!--グラフのダイアログー-->
-        <draggable v-model="s_leftDivList" handle=".chart-div-handle">
-          <transition-group appear>
-            <div :id="'left-' + el.divId" :class="'laft-chart ' +  el.class" v-for="el in s_leftDivList" :key="el.order" v-show="el.show"
-                 v-loading="s_chartDivLoading"
-                 element-loading-background="rgba(0, 0, 0, 0)"
-            >
-              <div class='resizers'>
-                <div class='resizer bottom-right'></div>
-                <resize-observer @notify="chartDivDetectResize(el.divId)" />
-                <div class="chart-div-handle">
-                  {{ el.name}}
-                  <div style="position: absolute;top:0; right:5px;">
-                    <span class="handle-icon" @click="dialogOpen(arguments[0],el,'left')">保存</span>
-                    <!--<span class="el-icon-close handle-icon" @click="chartClose(arguments[0],el)" ></span>-->
-                  </div>
-                </div>
-                <div class="chart-contents-div">{{ el.contents}}</div>
-              </div>
-            </div>
-          </transition-group>
-        </draggable>
-      </div>
-    </div>
+    <contents/>
     <!--右サイド-->
     <div id="right-side-div" v-show="s_rightSideDivShow">
       <div class='resizers'>
@@ -92,25 +51,24 @@
   import sideTree from './components/side-tree'
   import bottom from './components/bottom'
   import dialogs from './components/dialogs'
-  import draggable from 'vuedraggable'
   import resizableDiv from './otherjs/resizablediv'
+  import contents from './components/contents'
   import mixinDetectResize from './components/mixin/detectResize'
   import mixinMetadataCreate from './components/mixin/metadata-create'
   import mixinWatch from './components/mixin/watch'
   export default {
     name: 'app',
     components: {
+      contents,
       'header-menu': header,
       sideTree,
       dialogs,
       bottom,
-      draggable
     },
     mixins: [mixinDetectResize, mixinMetadataCreate, mixinWatch],
     data() {
       return {
         timer: false,
-        chartDivLoading: false,
         timeLength: 0,
       }
     },
@@ -139,7 +97,7 @@
       dialogOpen (e,el) {
         this.$store.commit('base/dialogVisibleChange', {visible: true,target: el.divId})
       },
-      // グラフダイアログのリライズ検知-------------------------------------------------------------
+      // グラフダイアログのリサイズ検知-------------------------------------------------------------
       chartDivDetectResize () {
         const vm = this;
         if (!vm.s_menuChange) {
