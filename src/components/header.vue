@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!--ヘッダー-->
         <el-menu id="header-menu"
                  :default-active="s_activeIndex"
                  mode="horizontal"
@@ -38,13 +37,7 @@
   import mixinDetectResize from './mixin/detectResize'
   export default {
     name: 'headerMenu',
-    components: {
-    },
     mixins: [mixinDetectResize],
-    data() {
-      return {
-      }
-    },
     computed: {
       s_activeIndex: {
         get () { return this.$store.state.base.activeIndex },
@@ -65,8 +58,7 @@
       headerMenuSelect(key) {
         const vm = this;
         const divList = vm.s_leftDivList;
-        // vm.menuChange = true;// トランジションをさせない
-        vm.$store.commit('base/menuChange', true);
+        vm.$store.commit('base/menuChange', true);// トランジションをさせない
         if (key === 'home') {
           location.reload();
         } else if (key === 'miyazakiCity' || key === 'pref') {
@@ -98,15 +90,10 @@
           }
           this.mix_detectResize();
         }
-        // 「トランジションをさせる」にもどす。
         setTimeout(() => {
-          vm.$store.commit('base/menuChange', false)
+          vm.$store.commit('base/menuChange', false)// 「トランジションをさせる」にもどす。
         }, 1000);
       },
-    },
-    mounted () {
-      this.$nextTick(function () {
-      });
     }
   }
 </script>

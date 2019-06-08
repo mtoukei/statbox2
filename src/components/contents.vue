@@ -94,16 +94,5 @@
       },
     },
   }
-
-
-
-
-
-
-
-
 </script>
 
-<style scoped>
-
-</style>

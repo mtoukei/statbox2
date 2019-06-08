@@ -6,50 +6,20 @@
     <!--ヘッダー-->
     <header-menu/>
     <!--左サイド-->
-    <div id="left-side-div">
-      <div class='resizers'>
-        <div class='resizer right'>
-          <div class='resizer-inner'>
-            <i class="el-icon-arrow-right"></i>
-          </div>
-        </div>
-        <sideTree class="v-tree" side="leftSide" :statType="s_statType"/>
-      </div>
-      <resize-observer @notify="mix_detectResize" />
-    </div>
+    <sideTree  side="leftSide" :statType="s_statType"/>
     <!--メイン部。グラフ表示部分-->
     <contents/>
     <!--右サイド-->
-    <div id="right-side-div" v-show="s_rightSideDivShow">
-      <div class='resizers'>
-        <div class='resizer left'>
-          <div class='resizer-inner'>
-            <i class="el-icon-arrow-left"></i>
-          </div>
-        </div>
-        <sideTree class="v-tree" side="rightSide" :statType="s_statType"/>
-      </div>
-      <resize-observer @notify="mix_detectResize" />
-    </div>
+    <sideTree side="rightSide" :statType="s_statType" v-show="s_rightSideDivShow"/>
     <!--フッター-->
-    <div id="footer">
-      <div class='resizers'>
-        <div class='resizer top'>
-          <i class="el-icon-arrow-up"></i><span style="padding: 0 20px 0 20px">メタ情報＋テーブル</span><i class="el-icon-arrow-up"></i>
-        </div>
-        <div style="padding-top: 40px">
-          <bottom :statType="s_statType"/>
-        </div>
-      </div>
-      <resize-observer @notify="mix_detectResize" />
-    </div>
+    <footer-info :statType="s_statType"/>
   </div>
 </template>
 
 <script>
   import header from './components/header'
+  import footer from './components/footer'
   import sideTree from './components/side-tree'
-  import bottom from './components/bottom'
   import dialogs from './components/dialogs'
   import resizableDiv from './otherjs/resizablediv'
   import contents from './components/contents'
@@ -61,9 +31,9 @@
     components: {
       contents,
       'header-menu': header,
+      'footer-info': footer,
       sideTree,
       dialogs,
-      bottom,
     },
     mixins: [mixinDetectResize, mixinMetadataCreate, mixinWatch],
     data() {

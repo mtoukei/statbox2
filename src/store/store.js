@@ -273,7 +273,6 @@ const base = {
     prefCodeChange (state,payload) {
         state.prefCode = payload
     },
-
   }
 };
 const store = new Vuex.Store({
