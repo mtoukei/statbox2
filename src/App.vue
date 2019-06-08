@@ -311,7 +311,7 @@
         // 「トランジションをさせる」にもどす。
         setTimeout(() => {
           vm.menuChange = false;
-        }, 0);
+        }, 1000);
       },
     },
     // tokei2262
