@@ -34,19 +34,15 @@
         </el-menu>
     </div>
 </template>
-
 <script>
-
+  import mixinDetectResize from './mixin/detectResize'
   export default {
-    name: 'header',
+    name: 'headerMenu',
     components: {
     },
+    mixins: [mixinDetectResize],
     data() {
       return {
-        menuChange: true,
-        // activeIndex: 'miyazakiCity',
-        // statType: 'miyazakiCity',
-        rightSideDivShow: false,
       }
     },
     computed: {
@@ -58,6 +54,8 @@
         get () { return this.$store.state.base.statType },
         set (value) { this.$store.commit('base/statTypeChange', value) }
       },
+      s_rightSideDivShow () { return this.$store.state.base.rightSideDivShow },
+      s_menuChange () { return this.$store.state.base.menuChange },
       s_leftDivList () { return this.$store.state.base.leftDivList },
       s_transition () { return this.$store.state.statList.transition },
       s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
@@ -67,47 +65,42 @@
       headerMenuSelect(key) {
         const vm = this;
         const divList = vm.s_leftDivList;
-        vm.menuChange = true;// トランジションをさせない
+        // vm.menuChange = true;// トランジションをさせない
+        vm.$store.commit('base/menuChange', true);
         if (key === 'home') {
           location.reload();
         } else if (key === 'miyazakiCity' || key === 'pref') {
           vm.$store.commit('base/statTypeChange', key);
           vm.$store.commit('base/activeIndexChange', key);
-
           for (let i in divList) {
             divList[i].show = divList[i].statType === key;
           }
-
-          vm.rightSideDivShow = false;
-          this.detectResize();
+          vm.$store.commit('base/rightSideDivShowChange', false);
+          this.mix_detectResize();
         } else if (key === 'city') {
           vm.$store.commit('base/statTypeChange', key);
           vm.$store.commit('base/activeIndexChange', key);
-
           for (let i in divList) {
             divList[i].show = divList[i].statType === key;
           }
-
-          vm.rightSideDivShow = false;
-          this.detectResize();
+          vm.$store.commit('base/rightSideDivShowChange', false);
+          this.mix_detectResize();
         } else {
           vm.$store.commit('base/statTypeChange', key);
           vm.$store.commit('base/activeIndexChange', key);
-
           for (let i in divList) {
             if (divList[i].divId === key) {
               divList[i].show = true;
-              vm.rightSideDivShow = divList[i].rightSide;
+              vm.$store.commit('base/rightSideDivShowChange', divList[i].rightSide);
             } else {
               divList[i].show =false
             }
           }
-
-          this.detectResize();
+          this.mix_detectResize();
         }
         // 「トランジションをさせる」にもどす。
         setTimeout(() => {
-          vm.menuChange = false;
+          vm.$store.commit('base/menuChange', false)
         }, 1000);
       },
     },
@@ -117,7 +110,4 @@
     }
   }
 </script>
-
-<style lang="scss">
-</style>
 

@@ -39,6 +39,8 @@ const Div = [
 const base = {
   namespaced: true,
   state: {
+    rightSideDivShow: false,
+    menuChange: true,
     leftDivList: Div,
     rightDivList: Div,
     activeIndex: 'miyazakiCity',
@@ -246,6 +248,15 @@ const base = {
   getters: {
   },
   mutations: {
+    rightSideDivShowChange (state, payload) {
+      state.rightSideDivShow = payload
+    },
+    menuChange (state, payload) {
+      state.menuChange = payload
+    },
+    leftDivListChange (state, payload) {
+      state.leftDivList = payload
+    },
     activeIndexChange (state, payload) {
       state.activeIndex = payload
     },
