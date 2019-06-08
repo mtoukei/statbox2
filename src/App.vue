@@ -191,6 +191,7 @@
         timeLength: 0,
       }
     },
+
     computed: {
       s_yearRangeCity: {
         get () { return this.$store.state.statList.yearRangeCity },
