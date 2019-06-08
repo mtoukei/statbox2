@@ -1,187 +1,56 @@
 <template>
   <div id="app">
     <!--非表示のもの色々-->
-    <v-dialogs :statType="statType"></v-dialogs>
+    <dialogs :statType="s_statType"></dialogs>
     <div class="d3-tooltip"></div>
     <!--ヘッダー-->
-    <el-menu id="header-menu"
-             :default-active="activeIndex"
-             mode="horizontal"
-             @select="headerMenuSelect"
-             background-color="#545c64"
-             text-color="#fff"
-             active-text-color="#03a9f4">
-      <el-menu-item index="home">新統計BOX（試作版）</el-menu-item>
-      <el-submenu index="2">
-        <template slot="title">宮崎県市町村</template>
-        <el-menu-item index="miyazakiCity">いろんなグラフで見える化</el-menu-item>
-        <!--<el-menu-item index="double">２市町村を比較</el-menu-item>-->
-        <el-menu-item index="scatter">散布図で見える化</el-menu-item>
-      </el-submenu>
-      <el-submenu index="3">
-        <template slot="title">全国都道府県</template>
-        <el-menu-item index="pref">いろんなグラフで見える化</el-menu-item>
-        <el-menu-item index="scatterPref">散布図で見える化</el-menu-item>
-      </el-submenu>
-      <el-submenu index="4">
-        <template slot="title">全国市町村</template>
-        <el-menu-item index="city">いろんなグラフで見える化</el-menu-item>
-        <el-menu-item index="scatterCity">散布図で見える化</el-menu-item>
-      </el-submenu>
-      <el-submenu index="5">
-        <template slot="title">時系列</template>
-        <el-menu-item index="time">宮崎県を時系列で見える化</el-menu-item>
-        <el-menu-item index="timePref">全国の都道府県を時系列で見える化</el-menu-item>
-        <el-menu-item index="timeCity">全国の市町村を時系列で見える化</el-menu-item>
-      </el-submenu>
-    </el-menu>
+    <header-menu/>
     <!--左サイド-->
-    <div id="left-side-div">
-      <div class='resizers'>
-        <div class='resizer right'>
-          <div class='resizer-inner'>
-            <i class="el-icon-arrow-right"></i>
-          </div>
-        </div>
-        <v-sideTree class="v-tree" side="leftSide" :statType="statType"/>
-      </div>
-      <resize-observer @notify="detectResize" />
-    </div>
+    <sideTree  side="leftSide" :statType="s_statType"/>
     <!--メイン部。グラフ表示部分-->
-    <div id="contents">
-      <Watch></Watch>
-      <div id="left-chart-div">
-        <!--都道府県用スライダー-->
-        <div class="pref-top" v-show="activeIndex==='pref'">
-          <span id="year-range-text-pref"></span>
-          <div class="year-range-div">
-            <input type="range" id="year-range-pref"  v-model="s_yearRangePref" list="year-range-list"/>
-            <div id="year-range-ticks-pref"></div>
-          </div>
-        </div>
-        <!--市町村用スライダー-->
-        <div class="pref-top" v-show="activeIndex==='city'">
-          <span id="year-range-text-city"></span>
-          <div class="year-range-div">
-            <input type="range" id="year-range-city"  v-model="s_yearRangeCity" list="year-range-list"/>
-            <div id="year-range-ticks-city"></div>
-          </div>
-        </div>
-        <!--グラフのダイアログー-->
-        <draggable v-model="leftDivList" handle=".chart-div-handle">
-          <transition-group appear>
-            <div :id="'left-' + el.divId" :class="'laft-chart ' +  el.class" v-for="el in leftDivList" :key="el.order" v-show="el.show"
-                 v-loading="s_chartDivLoading"
-                 element-loading-background="rgba(0, 0, 0, 0)"
-            >
-              <div class='resizers'>
-                <div class='resizer bottom-right'></div>
-                <resize-observer @notify="chartDivDetectResize(el.divId)" />
-                <div class="chart-div-handle">
-                  {{ el.name}}
-                  <div style="position: absolute;top:0; right:5px;">
-                    <span class="handle-icon" @click="dialogOpen(arguments[0],el,'left')">保存</span>
-                    <!--<span class="el-icon-close handle-icon" @click="chartClose(arguments[0],el)" ></span>-->
-                  </div>
-                </div>
-                <div class="chart-contents-div">{{ el.contents}}</div>
-              </div>
-            </div>
-          </transition-group>
-        </draggable>
-      </div>
-    </div>
+    <contents/>
     <!--右サイド-->
-    <div id="right-side-div" v-show="rightSideDivShow">
-      <div class='resizers'>
-        <div class='resizer left'>
-          <div class='resizer-inner'>
-            <i class="el-icon-arrow-left"></i>
-          </div>
-        </div>
-        <v-sideTree class="v-tree" side="rightSide" :statType="statType"/>
-      </div>
-      <resize-observer @notify="detectResize" />
-    </div>
+    <sideTree side="rightSide" :statType="s_statType" v-show="s_rightSideDivShow"/>
     <!--フッター-->
-    <div id="footer">
-      <div class='resizers'>
-        <div class='resizer top'>
-          <i class="el-icon-arrow-up"></i><span style="padding: 0 20px 0 20px">メタ情報＋テーブル</span><i class="el-icon-arrow-up"></i>
-        </div>
-        <div style="padding-top: 40px">
-          <v-bottom :statType="statType"/>
-        </div>
-      </div>
-      <resize-observer @notify="detectResize" />
-    </div>
+    <footer-info :statType="s_statType"/>
   </div>
 </template>
 
 <script>
-  // グラフの種類を増やすときはここに追加する。
-  const Div = [
-    {order: 0, statType:'miyazakiCity', divId: 'bar-miyazaki-city', class: 'large1-chart-div', name: '棒グラフ', show: true, rightSide: false},
-    {order: 1 ,statType:'miyazakiCity', divId: 'rank-miyazaki-city', class: 'normal-chart-div', name: 'ランキング', show: true, rightSide: false},
-    {order: 2 ,statType:'miyazakiCity', divId: 'bubble-miyazaki-city', class: 'normal-chart-div', name: 'バブル', show: true, rightSide: false},
-    {order: 3, statType:'miyazakiCity', divId: 'map-miyazaki-city', class: 'normal-chart-div', name: '地図', show: true, rightSide: false},
-    {order: 4, statType:'miyazakiCity', divId: 'pie-miyazaki-city', class: 'normal-chart-div', name: '円グラフ', show: true, rightSide: false},
-    {order: 5, statType:'miyazakiCity', divId: 'tree-miyazaki-city', class: 'normal-chart-div', name: 'ツリーマップ', show: true, rightSide: false},
-    {order: 6 ,statType:'miyazakiCity', divId: 'histogram-miyazaki-city', class: 'normal-chart-div', name: 'ヒストグラム', show: true, rightSide: false},
-    {order: 7, divId: 'time', class: 'large2-chart-div', name: '宮崎県時系列', show: false, rightSide: false},
-    {order: 8, divId: 'timePref', class: 'large2-chart-div', name: '都道府県時系列', show: false, rightSide: false},
-    {order: 9, divId: 'timeCity', class: 'large2-chart-div', name: '市町村時系列', show: false, rightSide: false},
-    {order: 10, divId: 'scatter', class: 'large2-chart-div', name: '散布図', contents: '左右から選択してください。', show: false, rightSide: true},
-    {order: 11, divId: 'scatterPref', class: 'large3-chart-div', name: '散布図 e-Stat(社会・人口統計体系)', contents: '左右から選択してください。', show: false, rightSide: true},
-
-    {order: 12, statType:'city', divId: 'bar-city', class: 'large1-chart-div', name: '棒グラフ', show: false, rightSide: false},
-    {order: 13 ,statType:'city', divId: 'rank-city', class: 'normal-chart-div', name: 'ランキング', show: false, rightSide: false},
-    {order: 14 ,statType:'city', divId: 'bubble-city', class: 'normal-chart-div', name: 'バブル', show: false, rightSide: false},
-    {order: 15 ,statType:'city', divId: 'map-city', class: 'normal-chart-div', name: '地図', show: false, rightSide: false},
-    {order: 16, statType:'city', divId: 'pie-city', class: 'normal-chart-div', name: '円グラフ', show: false, rightSide: false},
-    {order: 17 ,statType:'city', divId: 'histogram-city', class: 'normal-chart-div', name: 'ヒストグラム', show: false, rightSide: false},
-    {order: 18, divId: 'scatterCity', class: 'large3-chart-div', name: '散布図 e-Stat(社会・人口統計体系)2', contents: '左右から選択してください。', show: false, rightSide: true},
-    {order: 19, statType:'city', divId: 'time-city', class: 'large1-chart-div', name: '時系列', show: false, rightSide: false},
-
-    {order: 20, statType:'pref', divId: 'bar-pref', class: 'large1-chart-div', name: '棒グラフ', show: false, rightSide: false},
-    {order: 21 ,statType:'pref', divId: 'rank-pref', class: 'normal-chart-div', name: 'ランキング', show: false, rightSide: false},
-    {order: 22 ,statType:'pref', divId: 'bubble-pref', class: 'normal-chart-div', name: 'バブル', show: false, rightSide: false},
-    {order: 23, statType:'pref', divId: 'map-pref', class: 'normal-chart-div', name: '地図', show: false, rightSide: false},
-    {order: 24, statType:'pref', divId: 'map77-pref', class: 'normal-chart-div', name: 'カラム地図', show: false, rightSide: false},
-    {order: 25, statType:'pref', divId: 'pie-pref', class: 'normal-chart-div', name: '円グラフ', show: false, rightSide: false},
-    {order: 26, statType:'pref', divId: 'tree-pref', class: 'normal-chart-div', name: 'ツリーマップ', show: false, rightSide: false},
-    {order: 27 ,statType:'pref', divId: 'histogram-pref', class: 'normal-chart-div', name: 'ヒストグラム', show: false, rightSide: false},
-    {order: 28, statType:'pref', divId: 'time-pref', class: 'large1-chart-div', name: '時系列', show: false, rightSide: false},
-  ];
+  import header from './components/header'
+  import footer from './components/footer'
   import sideTree from './components/side-tree'
-  import bottom from './components/bottom'
   import dialogs from './components/dialogs'
-  import draggable from 'vuedraggable'
   import resizableDiv from './otherjs/resizablediv'
-  import Watch from './components/watch'
+  import contents from './components/contents'
+  import mixinDetectResize from './components/mixin/detectResize'
+  import mixinMetadataCreate from './components/mixin/metadata-create'
+  import mixinWatch from './components/mixin/watch'
   export default {
     name: 'app',
     components: {
-      Watch,
-      'v-sideTree': sideTree,
-      'v-dialogs': dialogs,
-      'v-bottom': bottom,
-      draggable
+      contents,
+      'header-menu': header,
+      'footer-info': footer,
+      sideTree,
+      dialogs,
     },
+    mixins: [mixinDetectResize, mixinMetadataCreate, mixinWatch],
     data() {
       return {
         timer: false,
-        menuChange: true,
-        chartDivLoading: false,
-        activeIndex: 'miyazakiCity',
-        statType: 'miyazakiCity',
-        rightSideDivShow: false,
-        leftDivList: Div,
-        rightDivList: Div,
         timeLength: 0,
       }
     },
     computed: {
+      s_rightSideDivShow () { return this.$store.state.base.rightSideDivShow },
+      s_menuChange () { return this.$store.state.base.menuChange },
+      s_statType () { return this.$store.state.base.statType },
+      s_activeIndex () { return this.$store.state.base.activeIndex },
+      s_leftDivList: {
+        get () { return this.$store.state.base.leftDivList },
+        set (value) { this.$store.commit('base/leftDivListChange', value) }
+      },
       s_yearRangeCity: {
         get () { return this.$store.state.statList.yearRangeCity },
         set (value) { this.$store.commit('statList/yearRangeCityChange', value) }
@@ -198,65 +67,10 @@
       dialogOpen (e,el) {
         this.$store.commit('base/dialogVisibleChange', {visible: true,target: el.divId})
       },
-      // リサイズ検知----------------------------------------------------------------------------
-      detectResize () {
-        this.$nextTick(function () {
-          const bodyHeight = document.body.clientHeight;
-          const bodyWidth = document.body.clientWidth;
-          const headerHeight = document.querySelector('#header-menu').clientHeight;
-          const footerHeight = document.querySelector('#footer').clientHeight;
-          const resizersLeft = document.querySelector('.resizers .resizer.left');
-          const resizersRight = document.querySelector('.resizers .resizer.right');
-          const treeDivs  = document.querySelectorAll('.tree-div');
-          const leftSideDivWidth = document.querySelector('#left-side-div').clientWidth;
-          const rightSideDivWidth = document.querySelector('#right-side-div').clientWidth;
-          const vTreeLefts  = document.querySelectorAll('#left-side-div' + ' .v-tree');
-          const vTreeRights  = document.querySelectorAll('#right-side-div' + ' .v-tree');
-          const contents = document.querySelector('#contents');
-          // 高さ設定。画面ボトムのリサイズ-------------------------------------------------------
-          for (let i in treeDivs) {
-            if (treeDivs[i].style) treeDivs[i].style.height = (bodyHeight - footerHeight - 120) + 'px';
-          }
-          resizersLeft.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';
-          resizersRight.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';
-          contents.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';
-          document.querySelector('#footer-inner-left').style.height = (footerHeight - 40) + 'px';
-          // 幅設定。左右サイドのリサイズ---------------------------------------------------------
-          vTreeLefts[0].style.width = (leftSideDivWidth-30) + 'px';
-          vTreeRights[0].style.width = (rightSideDivWidth-30) + 'px';
-          contents.style.left = leftSideDivWidth + 'px';
-          if (this.rightSideDivShow) {
-            contents.style.width = (bodyWidth - leftSideDivWidth - rightSideDivWidth) + 'px';
-          } else {
-            contents.style.width = (bodyWidth - leftSideDivWidth) + 'px';
-          }
-          // グラフの幅、高さ設定-----------------------------------------------------------------
-          if (this.statType === 'time') {
-            document.querySelector('#left-time').style.width = (bodyWidth - leftSideDivWidth - 20) + 'px';
-            document.querySelector('#left-time').style.height = (bodyHeight - footerHeight - 120) + 'px';
-          }
-          if (this.statType === 'timePref') {
-            document.querySelector('#left-timePref').style.width = (bodyWidth - leftSideDivWidth - 20) + 'px';
-            document.querySelector('#left-timePref').style.height = (bodyHeight - footerHeight - 120) + 'px';
-          }
-          if (this.statType === 'timeCity') {
-            document.querySelector('#left-timeCity').style.width = (bodyWidth - leftSideDivWidth - 20) + 'px';
-            document.querySelector('#left-timeCity').style.height = (bodyHeight - footerHeight - 120) + 'px';
-          }
-          if (this.statType === 'scatterPref') {
-            document.querySelector('#left-scatterPref').style.width = (bodyWidth - leftSideDivWidth - rightSideDivWidth - 20) + 'px';
-            document.querySelector('#left-scatterPref').style.height = (bodyHeight - footerHeight - 200) + 'px';
-          }
-          if (this.statType === 'scatter') {
-            document.querySelector('#left-scatter').style.width = (bodyWidth - leftSideDivWidth - rightSideDivWidth - 20) + 'px';
-            document.querySelector('#left-scatter').style.height = (bodyHeight - footerHeight - 200) + 'px';
-          }
-        })
-      },
-      // グラフダイアログのリライズ検知-------------------------------------------------------------
+      // グラフダイアログのリサイズ検知-------------------------------------------------------------
       chartDivDetectResize () {
         const vm = this;
-        if (!vm.menuChange) {
+        if (!vm.s_menuChange) {
           // 連続でのリサイズを抑制する。
           if (vm.timer !== false) {
             clearTimeout(vm.timer);
@@ -272,130 +86,21 @@
           }, 10);
         }
       },
-      // ヘッダーメニュー--------------------------------------------------------------------------
-      headerMenuSelect(key) {
-        const vm = this;
-        const divList = vm.leftDivList;
-        vm.menuChange = true;// トランジションをさせない
-        if (key === 'home') {
-          location.reload();
-        } else if (key === 'miyazakiCity' || key === 'pref') {
-          vm.statType = key;
-          vm.activeIndex = key;
-          for (let i in divList) {
-            divList[i].show = divList[i].statType === key;
-          }
-          vm.rightSideDivShow = false;
-          this.detectResize();
-        } else if (key === 'city') {
-          vm.statType = key;
-          vm.activeIndex = key;
-          for (let i in divList) {
-            divList[i].show = divList[i].statType === key;
-          }
-          vm.rightSideDivShow = false;
-          this.detectResize();
-        } else {
-          vm.statType = key;
-          vm.activeIndex = key;
-          for (let i in divList) {
-            if (divList[i].divId === key) {
-              divList[i].show = true;
-              vm.rightSideDivShow = divList[i].rightSide;
-            } else {
-              divList[i].show =false
-            }
-          }
-          this.detectResize();
-        }
-        // 「トランジションをさせる」にもどす。
-        setTimeout(() => {
-          vm.menuChange = false;
-        }, 1000);
-      },
     },
-    // tokei2262
-    // beforeCreate () {
-    //   // const targets = [this.$store.state.statList.eStatMetaPreh, this.$store.state.statList.eStatMetaCity]
-    //   const targets = [this.$store.state.statList.eStatMetaPreh]
-    //   const vm = this;
-    //   for (let h in targets) {
-    //     const target = targets[h]
-    //     const plomises = [];
-    //     let count = 0;
-    //     for (let i in target) {
-    //       for (let j in target[i].children) {
-    //         const statId = target[i].children[j].statId;
-    //         vm.$store.commit('base/chartDivLoadingShow', true);
-    //         plomises[count] =  new Promise(function(resolve) {
-    //           axios({
-    //             method: 'get',
-    //             url: 'https://api.e-stat.go.jp/rest/2.1/app/json/getMetaInfo',
-    //             params: {
-    //               statsDataId: statId,
-    //               appId: eStatApiId
-    //             }
-    //           })
-    //           .then(response => {
-    //             const classObjs = response.data['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'];
-    //             const cat01s = classObjs.find(val => val['@id'] === 'cat01').CLASS;
-    //             resolve({statId: statId, cat01s: cat01s})
-    //           });
-    //         });
-    //         count++;
-    //       }
-    //     }
-    //     Promise.all(plomises).then(function (result) {
-    //       for (let i in result) {
-    //         const childrenArr = [];
-    //         if (result[i].cat01s.length) {
-    //           for (let j in result[i].cat01s) {
-    //             const tgt = result[i].cat01s[j];
-    //             childrenArr.push({
-    //               statId: result[i].statId + '/' + tgt['@code'] + '/' + tgt['@unit'],
-    //               label: tgt['@name'].split('_')[1],
-    //               cat01: tgt['@code'],
-    //               unit: tgt['@unit']
-    //             });
-    //           }
-    //         } else {
-    //           const tgt = result[i].cat01s;
-    //           childrenArr.push({
-    //             statId: result[i].statId + '/' + tgt['@code'] + '/' + tgt['@unit'],
-    //             label: tgt['@name'].split('_')[1],
-    //             cat01: tgt['@code'],
-    //             unit: tgt['@unit']
-    //           });
-    //         }
-    //         for (let j in target) {
-    //           target[j].children.find((value, index, array) => {
-    //             if (value.statId === result[i].statId) {
-    //               array[index].children = childrenArr
-    //             }
-    //           });
-    //         }
-    //       }
-    //       vm.$store.commit('base/chartDivLoadingShow', false);
-    //       console.log(33333)
-    //       console.log(target)
-    //       console.log(JSON.stringify(target))
-    //     })
-    //   }
-    // },
     mounted () {
       this.$nextTick(function () {
         const vm = this;
-        window.onresize = () =>  vm.detectResize();
+        window.onresize = () =>  vm.mix_detectResize();
         // divにリサイズ機能を付与---------------------------------------------------------------
         resizableDiv('#left-side-div');
         resizableDiv('#right-side-div');
         resizableDiv('#footer');
-        for (let i in this.leftDivList) {
-          const  divId = '#left-' + this.leftDivList[i].divId;
+        for (let i in this.s_leftDivList) {
+          const  divId = '#left-' + this.s_leftDivList[i].divId;
           resizableDiv(divId);
         }
         setTimeout(() => {
-          vm.menuChange = false;
+          vm.$store.commit('base/menuChange', false);
         }, 1500);
       });
     }

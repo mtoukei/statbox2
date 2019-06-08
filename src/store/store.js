@@ -3,10 +3,48 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import statList from './store-statlist'
 Vue.use(Vuex);
+const Div = [
+  {order: 0, statType:'miyazakiCity', divId: 'bar-miyazaki-city', class: 'large1-chart-div', name: '棒グラフ', show: true, rightSide: false},
+  {order: 1 ,statType:'miyazakiCity', divId: 'rank-miyazaki-city', class: 'normal-chart-div', name: 'ランキング', show: true, rightSide: false},
+  {order: 2 ,statType:'miyazakiCity', divId: 'bubble-miyazaki-city', class: 'normal-chart-div', name: 'バブル', show: true, rightSide: false},
+  {order: 3, statType:'miyazakiCity', divId: 'map-miyazaki-city', class: 'normal-chart-div', name: '地図', show: true, rightSide: false},
+  {order: 4, statType:'miyazakiCity', divId: 'pie-miyazaki-city', class: 'normal-chart-div', name: '円グラフ', show: true, rightSide: false},
+  {order: 5, statType:'miyazakiCity', divId: 'tree-miyazaki-city', class: 'normal-chart-div', name: 'ツリーマップ', show: true, rightSide: false},
+  {order: 6 ,statType:'miyazakiCity', divId: 'histogram-miyazaki-city', class: 'normal-chart-div', name: 'ヒストグラム', show: true, rightSide: false},
+  {order: 7, divId: 'time', class: 'large2-chart-div', name: '宮崎県時系列', show: false, rightSide: false},
+  {order: 8, divId: 'timePref', class: 'large2-chart-div', name: '都道府県時系列', show: false, rightSide: false},
+  {order: 9, divId: 'timeCity', class: 'large2-chart-div', name: '市町村時系列', show: false, rightSide: false},
+  {order: 10, divId: 'scatter', class: 'large2-chart-div', name: '散布図', contents: '左右から選択してください。', show: false, rightSide: true},
+  {order: 11, divId: 'scatterPref', class: 'large3-chart-div', name: '散布図 e-Stat(社会・人口統計体系)', contents: '左右から選択してください。', show: false, rightSide: true},
+
+  {order: 12, statType:'city', divId: 'bar-city', class: 'large1-chart-div', name: '棒グラフ', show: false, rightSide: false},
+  {order: 13 ,statType:'city', divId: 'rank-city', class: 'normal-chart-div', name: 'ランキング', show: false, rightSide: false},
+  {order: 14 ,statType:'city', divId: 'bubble-city', class: 'normal-chart-div', name: 'バブル', show: false, rightSide: false},
+  {order: 15 ,statType:'city', divId: 'map-city', class: 'normal-chart-div', name: '地図', show: false, rightSide: false},
+  {order: 16, statType:'city', divId: 'pie-city', class: 'normal-chart-div', name: '円グラフ', show: false, rightSide: false},
+  {order: 17 ,statType:'city', divId: 'histogram-city', class: 'normal-chart-div', name: 'ヒストグラム', show: false, rightSide: false},
+  {order: 18, divId: 'scatterCity', class: 'large3-chart-div', name: '散布図 e-Stat(社会・人口統計体系)2', contents: '左右から選択してください。', show: false, rightSide: true},
+  {order: 19, statType:'city', divId: 'time-city', class: 'large1-chart-div', name: '時系列', show: false, rightSide: false},
+
+  {order: 20, statType:'pref', divId: 'bar-pref', class: 'large1-chart-div', name: '棒グラフ', show: false, rightSide: false},
+  {order: 21 ,statType:'pref', divId: 'rank-pref', class: 'normal-chart-div', name: 'ランキング', show: false, rightSide: false},
+  {order: 22 ,statType:'pref', divId: 'bubble-pref', class: 'normal-chart-div', name: 'バブル', show: false, rightSide: false},
+  {order: 23, statType:'pref', divId: 'map-pref', class: 'normal-chart-div', name: '地図', show: false, rightSide: false},
+  {order: 24, statType:'pref', divId: 'map77-pref', class: 'normal-chart-div', name: 'カラム地図', show: false, rightSide: false},
+  {order: 25, statType:'pref', divId: 'pie-pref', class: 'normal-chart-div', name: '円グラフ', show: false, rightSide: false},
+  {order: 26, statType:'pref', divId: 'tree-pref', class: 'normal-chart-div', name: 'ツリーマップ', show: false, rightSide: false},
+  {order: 27 ,statType:'pref', divId: 'histogram-pref', class: 'normal-chart-div', name: 'ヒストグラム', show: false, rightSide: false},
+  {order: 28, statType:'pref', divId: 'time-pref', class: 'large1-chart-div', name: '時系列', show: false, rightSide: false},
+];
 const base = {
   namespaced: true,
   state: {
-    // dialogVisible: false,
+    rightSideDivShow: false,
+    menuChange: true,
+    leftDivList: Div,
+    rightDivList: Div,
+    activeIndex: 'miyazakiCity',
+    statType: 'miyazakiCity',
     dialog:{
       visible:false,
       target:''
@@ -210,11 +248,24 @@ const base = {
   getters: {
   },
   mutations: {
+    rightSideDivShowChange (state, payload) {
+      state.rightSideDivShow = payload
+    },
+    menuChange (state, payload) {
+      state.menuChange = payload
+    },
+    leftDivListChange (state, payload) {
+      state.leftDivList = payload
+    },
+    activeIndexChange (state, payload) {
+      state.activeIndex = payload
+    },
+    statTypeChange (state, payload) {
+      state.statType = payload
+    },
     dialogVisibleChange (state,payload) {
-      // state.dialogVisible = payload
       state.dialog.visible = payload.visible;
       state.dialog.target = payload.target;
-      console.log(state.dialog)
     },
     chartDivLoadingShow (state,payload) {
       state.chartDivLoading = payload
@@ -222,7 +273,6 @@ const base = {
     prefCodeChange (state,payload) {
         state.prefCode = payload
     },
-
   }
 };
 const store = new Vuex.Store({

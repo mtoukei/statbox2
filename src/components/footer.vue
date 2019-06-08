@@ -1,46 +1,58 @@
 <template>
-    <div id="footer-inner-left">
-        <!-- 市町村データ-->
-        <div v-show="statType === 'city'">
-            <el-table
-                    :data="tableDataCity"
-                    border
-                    :show-header="false"
-                    class="bottom-info-table"
-            >
-                <el-table-column width="90px" prop="tr"/>
-                <el-table-column prop="td"/>
-            </el-table>
-            <div class="bottom-table-div">
-                <vue-good-table
-                        :columns="columns"
-                        :rows="s_leftStatEstatCity"/>
+    <div id="footer">
+        <div class='resizers'>
+            <div class='resizer top'>
+                <i class="el-icon-arrow-up"></i><span style="padding: 0 20px 0 20px">メタ情報＋テーブル</span><i class="el-icon-arrow-up"></i>
+            </div>
+            <div style="padding-top: 40px">
+                <div id="footer-inner-left">
+                    <!-- 市町村データ-->
+                    <div v-show="statType === 'city'">
+                        <el-table
+                                :data="tableDataCity"
+                                border
+                                :show-header="false"
+                                class="bottom-info-table"
+                        >
+                            <el-table-column width="90px" prop="tr"/>
+                            <el-table-column prop="td"/>
+                        </el-table>
+                        <div class="bottom-table-div">
+                            <vue-good-table
+                                    :columns="columns"
+                                    :rows="s_leftStatEstatCity"/>
+                        </div>
+                    </div>
+                    <!-- 都道府県データ-->
+                    <div v-show="statType === 'pref'">
+                        <el-table
+                                :data="tableDataPref"
+                                border
+                                :show-header="false"
+                                class="bottom-info-table"
+                        >
+                            <el-table-column width="90px" prop="tr"/>
+                            <el-table-column prop="td"/>
+                        </el-table>
+                        <div class="bottom-table-div">
+                            <vue-good-table
+                                    :columns="columns"
+                                    :rows="s_leftStatEstatPref"/>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- 都道府県データ-->
-        <div v-show="statType === 'pref'">
-            <el-table
-                    :data="tableDataPref"
-                    border
-                    :show-header="false"
-                    class="bottom-info-table"
-                    >
-                <el-table-column width="90px" prop="tr"/>
-                <el-table-column prop="td"/>
-            </el-table>
-            <div class="bottom-table-div">
-                <vue-good-table
-                        :columns="columns"
-                        :rows="s_leftStatEstatPref"/>
-            </div>
-        </div>
+        <resize-observer @notify="mix_detectResize" />
     </div>
 </template>
 
 <script>
+  import mixinDetectResize from '../components/mixin/detectResize'
   export default {
     name: "bottom",
     props: ['side', 'statType'],
+    mixins: [mixinDetectResize],
     data () {
         return {
           title: '',

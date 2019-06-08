@@ -335,7 +335,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   const inputDiv = palentDiv.append('div')
   .attr('id', 'scatter-year-range-div-' + prefOrCity)
   .style('position', 'absolute')
-  .style('bottom', '5px')
+  .style('footer-info.vue', '5px')
   .style('left', '50%')
   .style('margin-left', '-150px');
   inputDiv.append('input')
@@ -356,7 +356,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     palentDiv.append('div')
     .attr('id', 'pref-select-div')
     .style('position', 'absolute')
-    .style('bottom', '10px')
+    .style('footer-info.vue', '10px')
     .style('left', () => '50%')
     .style('margin-left', '-230px')
     .append('input')
