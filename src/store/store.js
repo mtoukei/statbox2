@@ -206,27 +206,6 @@ const base = {
       label: '沖縄県',
       chihou8id: {order:40, chiku: '9syuuokinawa', stroke: 'blr'}
     }, ],
-    // chartType: 'bar',
-    // bottomFlg: false,
-    // stat:{
-    //   leftSide:'',
-    //   rightSide:''
-    // } ,
-    // statOld:{
-    //   leftSide:'',
-    //   rightSide:''
-    // } ,
-    // leftCsvDataset: null,
-    // rightCsvDataset: null,
-    // elDialogVisible: false,
-    // elDialogMsg: '',
-    // elDialogScatterVisible: false,
-    // zeroRadio:true,
-    // soukanFlg: false,
-    // soukanReFlg: true,
-    // scrollPosition: 0,
-    // soukanList: [],
-    // exceptCity:[],
   },
   getters: {
   },
