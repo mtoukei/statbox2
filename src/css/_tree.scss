@@ -1,0 +1,60 @@
+/*ツリーCSS--------------------------------------------------------------------------------*/
+.v-tree {
+  width:170px;
+  margin-left: 5px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.el-tree {
+  background: none!important;
+  color: #2c3e50!important;
+}
+.el-tree-node__label {
+  font-size: 12px!important;
+}
+.el-tree-node__content {
+  height: 20px!important;
+}
+.el-tree-node__expand-icon {
+  color: black!important;
+}
+.el-tree-node__expand-icon.is-leaf {
+  color: transparent!important;
+}
+.top-div {
+  box-sizing: border-box;
+  padding-top: 10px;
+  height: 50px;
+  font-size: 10px;
+}
+.top-div-h {
+  height: 80px;
+}
+.top-div-h2 {
+  height: 120px;
+}
+.tree-div {
+  box-sizing: border-box;
+  height: calc(100vh - #{$header-menu-height} - #{$footer-height} - 120px);
+  padding-top: 10px;
+  padding-bottom: 50px;
+  overflow: auto;
+}
+.pref-select, .city-select {
+  width:80px;
+}
+#left-side-city .pref-select, #left-side-scatter-city .pref-select {
+  width: 100px;
+}
+.side-sourse {
+  margin-top: 10px;
+  font-size: 10px;
+}
+.el-icon-caret-right + label {
+  display: none;
+}
+.is-leaf + label {
+  display: block;
+}
