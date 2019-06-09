@@ -1,3 +1,7 @@
+// ミックスイン。普段は使用しない
+// メタデータを取得するときに使う。
+// コンソールログに出力されるJSON.stringifyをコピーして
+// ○○○に貼り付ける
 export default {
   name: 'metaDataCreate',
   beforeCreate () {
