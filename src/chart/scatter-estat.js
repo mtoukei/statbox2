@@ -15,7 +15,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
   const width = palentDiv.node().getBoundingClientRect().width;
   const height = palentDiv.node().getBoundingClientRect().height
-    - d3.select('.chart-div-handle').node().getBoundingClientRect().height;
+    - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 980;
   const multi = width / defaultWidth < 1? width / defaultWidth: 1;
   const margin = { 'top': 50 * multi, 'bottom': 100 * multi, 'right': 30 * multi, 'left': 70 * multi };
@@ -61,19 +61,16 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     // ４７都道府県でループ
     for (let i in tgtLeftData) {
       if (tgtLeftData[i]['@area'] !== '00000') {
-        // console.log(tgtLeftData[i])
-        // console.log(tgtRightData[i])
-        // if (tgtRightData[i]) {
-          const leftData = Number(tgtLeftData[i]['data']);
-          const rightData = Number(tgtRightData[i]['data']);
-          const obj = {
-            time: time,
-            cityname: tgtLeftData[i]['cityname'],
-            leftData: leftData,
-            rightData: rightData
-          };
-          // バインドするデータ dataset
-          dataset.push(obj);
+        const leftData = Number(tgtLeftData[i]['data']);
+        const rightData = Number(tgtRightData[i]['data']);
+        const obj = {
+          time: time,
+          cityname: tgtLeftData[i]['cityname'],
+          leftData: leftData,
+          rightData: rightData
+        };
+        // バインドするデータ dataset
+        dataset.push(obj);
         // }
         // 相関係数計算用---------------------------------------------
         leftDataAr.push(leftData);
@@ -87,48 +84,12 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     linReg = ss.linearRegression(kaikiData);
     linRegLine = ss.linearRegressionLine(linReg);
   };
-  // const datasetCreate = i => {
-  //   const leftDataAr = [];
-  //   const rightDataAr = [];
-  //   const kaikiData = [];
-  //   dataset = [];
-  //   const time = mixDataset[i].time;
-  //   const tgtLeftData = mixDataset[i].left.data;
-  //   const tgtRightData = mixDataset[i].right.data;
-  //   // ４７都道府県でループ
-  //   for (let i in tgtLeftData) {
-  //     if (tgtLeftData[i]['@area'] !== '00000') {
-  //       const leftData = Number(tgtLeftData[i]['$']);
-  //       const rightData = Number(tgtRightData[i]['$']);
-  //       const obj = {
-  //         time: time,
-  //         cityname: tgtLeftData[i]['@area'],
-  //         leftData: leftData,
-  //         rightData: rightData
-  //       };
-  //       // バインドするデータ dataset
-  //       dataset.push(obj);
-  //       // 相関係数計算用---------------------------------------------
-  //       leftDataAr.push(leftData);
-  //       rightDataAr.push(rightData);
-  //       // 回帰直線計算用---------------------------------------------
-  //       const arr = [rightData, leftData];
-  //       kaikiData.push(arr)
-  //     }
-  //   }
-  //   soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
-  //   linReg = ss.linearRegression(kaikiData);
-  //   linRegLine = ss.linearRegressionLine(linReg);
-  // };
   datasetCreate (mixDataset.length - 1);
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
-  .attr('viewBox', '0 0 '+ width + ' '  + height)
-  .attr('preserveAspectRatio', 'xMidYMid')
-  .classed("svg-content-responsive", true)
   .classed("chart-svg", true);
   // クリップ領域-------------------------------------------------------------------------------
   svg.append('defs').append('clipPath')
@@ -337,6 +298,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .style('position', 'absolute')
   .style('footer-info.vue', '5px')
   .style('left', '50%')
+  .style('bottom', 0)
   .style('margin-left', '-150px');
   inputDiv.append('input')
   .attr('type', 'range')
@@ -358,6 +320,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     .style('position', 'absolute')
     .style('footer-info.vue', '10px')
     .style('left', () => '50%')
+    .style('bottom', '10px')
     .style('margin-left', '-230px')
     .append('input')
     .attr('type', 'text')

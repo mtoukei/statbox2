@@ -1,3 +1,4 @@
+// ミックスイン。watchが長くなるのでミックスインで外に出した。
 import Bubble from '../../chart/bubble'
 import Bar from '../../chart/bar'
 import Map from '../../chart/map'

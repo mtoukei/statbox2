@@ -35,8 +35,6 @@ export default function (div) {
       window.addEventListener('touchend', stopResize)
     });
 
-
-
     const resize = e => {
       const bodyWidth = document.body.clientWidth;
       const leftSideDivWidth = document.querySelector('#left-side-div').clientWidth;

@@ -23,7 +23,7 @@ export default function (val, palentDiv) {
   // 大元のSVG領域の大きさを設定-----------------------------------------------------------
   const width = palentDiv.node().getBoundingClientRect().width;
   const height = palentDiv.node().getBoundingClientRect().height
-    - d3.select('.chart-div-handle').node().getBoundingClientRect().height;
+    - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 1200;
   const multi = width / defaultWidth < 1? width / defaultWidth: 1;
   const margin = { 'top': 40 * multi, 'bottom': 200 * multi, 'right': 100 * multi, 'left': 100 * multi };

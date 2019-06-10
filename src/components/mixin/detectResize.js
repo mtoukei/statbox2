@@ -1,3 +1,4 @@
+// ミックスイン
 export default {
   name: 'detectResize',
   methods: {
