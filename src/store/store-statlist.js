@@ -1,6 +1,6 @@
 import store from './store'
-import  * as statData from './stat-data'
-import * as statDataTime from './stat-data-time'
+import  * as statData from './data/data-miyazaki'
+import * as statDataTime from './data/data-miyazaki-time'
 import Citycodes from './citycodes'
 import MetaPref from './meta/meta-pref'
 import MetaCity from './meta/meta-city'
