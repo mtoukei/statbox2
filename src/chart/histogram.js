@@ -39,7 +39,7 @@ export default function (val, parentDiv) {
     }
   }
   //---------------------------------------------------------------------------------------------
-  let dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   // --------------------------------------------------------------------------------------------
   const histgramCreate = dataset => {
@@ -155,8 +155,7 @@ export default function (val, parentDiv) {
   //--------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    // let dc = new DataCreate(val.statData[value].data2);
-    let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     transitionFlg = false;
     histgramCreate(dc.dataset)
@@ -165,8 +164,6 @@ export default function (val, parentDiv) {
   const type = ie? 'change': 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
   eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity), type, (() => {
-    return e => {
-      rangeInput(e)
-    }
+    return e => rangeInput(e)
   })(1), false);
 }

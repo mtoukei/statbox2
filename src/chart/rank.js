@@ -154,13 +154,11 @@ export default function (val, parentDiv) {
   .attr('transform', () => 'translate(5,' + (12 * multi + 5)  + ')')
   .attr('class' ,'no-print')
   .append('text')
-  .text(statName);
+  .text(statName + '　単位：' + unit);
   //--------------------------------------------------------------------------------------------
-  dc = null;
-  // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     rectG1
     .data(dc.dataset, d => d.citycode)
@@ -221,7 +219,6 @@ export default function (val, parentDiv) {
       const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
       return cY > 150? 'black': 'white';
     });
-    dc = null
   };
   //--------------------------------------------------------------------------------------------
   const type = ie? 'change': 'input';

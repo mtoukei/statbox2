@@ -80,7 +80,7 @@ export default function (val, parentDiv) {
     }
   }
   //--------------------------------------------------------------------------------------------
-  let dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
@@ -144,11 +144,9 @@ export default function (val, parentDiv) {
   .append('text')
   .text(statName);
   // -------------------------------------------------------------------------------------------
-  dc = null;
-  // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     bubbles
     .data(dc.data, d => d.data.citycode)
@@ -174,7 +172,6 @@ export default function (val, parentDiv) {
     });
     const year = val.statData[value].time.substr(0,4);
     d3.select('#year-range-text-' + prefOrCity).text(year);
-    dc = null
   };
   //-------------------------------------------------------------------------------------------
   d3.select('#year-range-' + prefOrCity)
