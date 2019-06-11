@@ -128,7 +128,7 @@ export default function (val, parentDiv) {
   } else {
     text.attr('opacity', 1);
   }
-  // ツールチップ-----------------------------------------------------------------------
+  // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
   bubbles
@@ -136,7 +136,7 @@ export default function (val, parentDiv) {
     return tip.show(d.data.top + '位　' + d.data.name + '<br>' + d.data.val + unit,this)
   })
   .on('mouseout', tip.hide);
-  // 表名-------------------------------------------------------------------------------------
+  // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size',  (12 * multi) + 'px')
   .attr('transform', () => 'translate(5,' + (12 * multi + 5)  + ')')
@@ -173,7 +173,7 @@ export default function (val, parentDiv) {
     const year = val.statData[value].time.substr(0,4);
     d3.select('#year-range-text-' + prefOrCity).text(year);
   };
-  //-------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------
   d3.select('#year-range-' + prefOrCity)
   .attr('max', String(val.statData.length - 1));
   const length = val.statData.length;
