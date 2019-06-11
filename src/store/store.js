@@ -245,8 +245,6 @@ const base = {
       chihou8id: {order:40, chiku: '9syuuokinawa', stroke: 'blr'}
     }, ],
   },
-  getters: {
-  },
   mutations: {
     rightSideDivShowChange (state, payload) {
       state.rightSideDivShow = payload
