@@ -2,10 +2,10 @@ import store from './store'
 import  * as statData from './stat-data'
 import * as statDataTime from './stat-data-time'
 import Citycodes from './citycodes'
-import MetaPref from './meta-pref'
-import MetaCity from './meta-city'
-import MetaMiyazaki from './meta-miyazaki'
-import MetaMiyazakiTime from './meta-miyazaki-time'
+import MetaPref from './meta/meta-pref'
+import MetaCity from './meta/meta-city'
+import MetaMiyazaki from './meta/meta-miyazaki'
+import MetaMiyazakiTime from './meta/meta-miyazaki-time'
 const metaPref = MetaPref;
 const metaCity = MetaCity;
 const metaMiyazaki = MetaMiyazaki;
