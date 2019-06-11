@@ -25,11 +25,6 @@ export default function (val, parentDiv) {
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
   const multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
-  // -------------------------------------------------------------------------------------------
-  // const target = store.state.statList.leftStatEstatPref.div;
-  // if (val.estat){
-  //   if (target !== 'all' && target !== parentDiv) return;
-  // }
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg  = store.state.statList.transition;
   // const transitionFlg = false
@@ -45,7 +40,6 @@ export default function (val, parentDiv) {
       if (prefOrCity === 'pref') this.dataset.shift();
       this.prefData = [];
       for (const value of store.state.base.prefOptions) {
-        // console.log(value)
         this.prefData.push({
           prefcode: value.value,
           prefname: value.label,
@@ -53,7 +47,6 @@ export default function (val, parentDiv) {
         })
       }
       this.prefData.sort((a, b) => {
-        // console.log(a.chihou8id.order,b.chihou8id.order)
         if (a.chihou8id.order < b.chihou8id.order) return -1;
         if (a.chihou8id.order > b.chihou8id.order) return 1;
         return 0;
@@ -281,7 +274,6 @@ export default function (val, parentDiv) {
     let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     circle
-    // .data(dc.prefData, d => d.prefcode)
     .attr('fill', d => {
       if (d.chihou8id) {
         const result = dc.dataset.find(value => Number(value.citycode) === Number(d.prefcode));
@@ -289,7 +281,6 @@ export default function (val, parentDiv) {
       }
     });
     circleText
-    // .data(dc.prefData, d => d.prefcode)
     .text(d => {
       if (d.chihou8id) {
         const result = dc.dataset.find(value => Number(value.citycode) === Number(d.prefcode));
@@ -302,8 +293,6 @@ export default function (val, parentDiv) {
   const type = ie? 'change': 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
   eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity), type, (() => {
-    return e => {
-      rangeInput(e)
-    }
+    return e => rangeInput(e)
   })(1), false);
 }

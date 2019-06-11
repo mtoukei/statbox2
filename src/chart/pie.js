@@ -116,11 +116,9 @@ export default function (val, parentDiv) {
       } else{
         rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(3,2))))
       }
-      // rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(0,2))));
     } else {
       rgb = d3.rgb(colorScale(d.index));
     }
-
     if (0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b > 200) {
       return "black";
     }else {
@@ -194,7 +192,6 @@ export default function (val, parentDiv) {
       if (angle > 0.1) return d.data.cityname
     })
     .attr('fill', function (d) {
-      // const rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(0,2))));
       let rgb;
       if (val.estat) {
         if (prefOrCity === 'pref') {

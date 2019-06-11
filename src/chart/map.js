@@ -28,15 +28,8 @@ export default function (val, parentDiv) {
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
-  // const multi2 = width / defaultWidth;
-  // -------------------------------------------------------------------------------------------
-  // const target = store.state.statList.leftStatEstatPref.div;
-  // if (val.estat){
-  //   if (target !== 'all' && target !== parentDiv) return;
-  // }
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg  = store.state.statList.transition;
-  // const transitionFlg = false
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -237,8 +230,6 @@ export default function (val, parentDiv) {
   const type = ie? 'change': 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
   eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity), type, (() => {
-    return e => {
-      rangeInput(e)
-    }
+    return e => rangeInput(e)
   })(1), false);
 }

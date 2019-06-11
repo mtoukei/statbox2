@@ -41,11 +41,10 @@ export default function (val, parentDiv) {
       if (prefOrCity === 'pref') this.dataset.shift();
       const children = [];
       for (const datasetValue of this.dataset) {
-        const val = datasetValue.data;
         const obj = {
           citycode: datasetValue.citycode,
           name: datasetValue.cityname,
-          val: val
+          val: datasetValue.data
         };
         children.push(obj)
       }
@@ -114,7 +113,7 @@ export default function (val, parentDiv) {
     if(d.r !== 0) return d.data.name
   })
   .attr('font-size', d => dc.fontScale(d.r))
-  .attr('transform', (d) => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi)  + ')')
+  .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi)  + ')')
   .attr('text-anchor', 'middle')
   .attr('fill', function (d) {
     const rgb = d3.rgb(dc.colorScale(d.r));
@@ -148,7 +147,6 @@ export default function (val, parentDiv) {
   dc = null;
   // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
-    // console.log(e)
     const value = Number(e.target.value);
     let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
@@ -203,9 +201,7 @@ export default function (val, parentDiv) {
   const type = ie? 'change': 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
   eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity), type, (() => {
-    return e => {
-      rangeInput(e)
-    }
+    return e => rangeInput(e)
   })(1), false);
 
   if (prefOrCity === 'pref') {

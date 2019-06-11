@@ -95,7 +95,6 @@ export default function (val, parentDiv) {
     fontSize = 10 * multi + 'px'
   }
   margin.left = margin.left * multi;
-
   // スケール------------------------------------------------------------------------------------
   const xScale = d3.scaleLinear()
   .domain([d3.min(timeData, d =>d.time), d3.max(timeData, d =>d.time)])
@@ -186,15 +185,11 @@ export default function (val, parentDiv) {
   });
   svg.selectAll('.time-path').style('display', 'none');
   svgRight.selectAll('.time-legend-rect').attr('fill', 'white');
-
-  // textClick(svgRight.select('#time-legend-text-45000').node())
   textClick(svgRight.select('.time-legend-text').node());
-
   function textClick (target) {
     const cityCode = d3.select(target).attr('id').split('-')[3];
     const timePaths = svg.selectAll('.time-path');
     const timePath = svg.select('.time-path-' + cityCode);
-    // const pathLength = timePath.node().getTotalLength();
     let maxData = 0;
     if (timePath.style('display') !== 'none') {
       timePath.style('display', 'none');
@@ -258,20 +253,4 @@ export default function (val, parentDiv) {
     .attr('stroke-width', '1px')
     .attr('stroke-dasharray', '2');
   }
-  //--------------------------------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
-    let dc = new DataCreate(val.statData[value].data2);
-    dc.create();
-    transitionFlg = false;
-    // histgramCreate(dc.dataset)
-  };
-  //--------------------------------------------------------------------------------------------
-  const type = ie? 'change': 'input';
-  Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
-  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity), type, (() => {
-    return e => {
-      rangeInput(e)
-    }
-  })(1), false);
 }

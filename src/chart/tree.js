@@ -28,7 +28,6 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg  = store.state.statList.transition;
-  // const transitionFlg = false
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -324,7 +323,6 @@ export default function (val, parentDiv) {
   // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    // let dc = new DataCreate(val.statData[value].data2);
     let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     treemap(dc.root);
@@ -356,8 +354,6 @@ export default function (val, parentDiv) {
   const type = ie? 'change': 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
   eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity), type, (() => {
-    return e => {
-      rangeInput(e)
-    }
+    return e => rangeInput(e)
   })(1), false);
 }

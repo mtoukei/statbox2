@@ -72,6 +72,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     linRegLine = ss.linearRegressionLine(linReg);
   };
   datasetCreate (mixDataset.length - 1);
+
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
   const svg = palentDiv.select('.resizers').append('svg')
@@ -217,7 +218,6 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .enter()
   .append('text')
   .text(d => d.cityname)
-  // .attr('id', d => 'text' + d.cityname)
   .attr('x', d => xScale(d.rightData) + 7)
   .attr('y', d => yScale(d.leftData) + 3)
   .attr('text-anchor', 'start')
