@@ -1,4 +1,4 @@
-import store from '../store/store'
+import storeBase from '../store/store-base'
 import * as ss from 'simple-statistics'
 export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   if (!leftVal.statData.length) return;
@@ -194,7 +194,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   let tgtprefCode;
   if (d3.select('#scatter-pref-input').size()) {
     const tgtPrefName = d3.select('#scatter-pref-input').property("value");
-    const prefOptions = store.state.base.prefOptions;
+    const prefOptions = storeBase.state.base.prefOptions;
     tgtprefCode = prefOptions.find(value=> value.label === tgtPrefName).value
   } else {
     tgtprefCode = '45000'

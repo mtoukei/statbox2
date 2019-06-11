@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import store from './store/store'
+import storeBase from './store/store-base'
 import App from './App.vue'
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -35,6 +35,6 @@ if (useragent.indexOf('edge') === -1 ) {
   global.edge = true
 }
 new Vue({
-  store,
+  store: storeBase,
   render: h => h(App),
 }).$mount('#app');
