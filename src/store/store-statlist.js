@@ -1,4 +1,4 @@
-import store from './store'
+import storeBase from './store-base'
 import  * as statData from './data/data-miyazaki'
 import * as statDataTime from './data/data-miyazaki-time'
 import Citycodes from './citycodes'
@@ -151,7 +151,7 @@ const statList = {
     },
     //-------------------------------------------------------------------------------------------
     selectStatEstat (state,payload) {
-      store.commit('base/chartDivLoadingShow', true);
+      storeBase.commit('base/chartDivLoadingShow', true);
       const statId = payload.statId.split('/')[0];
       const cat01 = payload.statId.split('/')[1];
       const unit = payload.statId.split('/')[2];
@@ -187,7 +187,7 @@ const statList = {
           for (const dataValue of data) {
             // if (dataValue['@area'] !== '00000') {
               if (payload.prefOrCity === 'pref') {
-                const prefs = store.state.base.prefOptions;
+                const prefs = storeBase.state.base.prefOptions;
                 const prefsResult = prefs.find(val => val.value === dataValue['@area']);
                 const prefName = prefsResult.label;
                 data2.push({
@@ -255,7 +255,7 @@ const statList = {
         stat.div = 'all';
         stat.statsDataId = statId;
         stat.cdCat01 = cat01;
-        store.commit('base/chartDivLoadingShow', false)
+        storeBase.commit('base/chartDivLoadingShow', false)
         // console.log(stat)
       });
     },

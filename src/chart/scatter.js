@@ -1,4 +1,4 @@
-import store from '../store/store'
+import storeBase from '../store/store-base'
 import * as ss from 'simple-statistics'
 export default function (leftVal, rightVal) {
   if (!leftVal.stat) return;
@@ -19,7 +19,7 @@ export default function (leftVal, rightVal) {
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
   const margin = { 'top': 30 * multi, 'bottom': 100 * multi, 'right': 30 * multi, 'left': 60 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = store.state.statList.leftStat.transition;
+  const transitionFlg = storeBase.state.statList.leftStat.transition;
   //データセット作成-----------------------------------------------------------------------------
   const dataset = [];
   const leftDataAr = [], rightDataAr = [];

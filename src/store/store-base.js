@@ -273,10 +273,10 @@ const base = {
     },
   }
 };
-const store = new Vuex.Store({
+const storeBase = new Vuex.Store({
   modules: {
     base:base,
     statList:statList
   }
 });
-export default store
+export default storeBase

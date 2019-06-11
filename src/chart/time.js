@@ -1,4 +1,4 @@
-import store from '../store/store'
+import storeBase from '../store/store-base'
 export default function (val, palentDiv) {
   const tooltip = d3.select('.d3-tooltip');
   const endStat = val.endStat;
@@ -332,7 +332,7 @@ export default function (val, palentDiv) {
     }
     //パスの長さを取得----------------------------------------------------------------------------
     const pathLength = path.node().getTotalLength();
-    const transitionFlg = store.state.statList.leftStatTime.transition;
+    const transitionFlg = storeBase.state.statList.leftStatTime.transition;
     path
     .attr('stroke-dasharray', pathLength)
     .attr('stroke-dashoffset', pathLength);

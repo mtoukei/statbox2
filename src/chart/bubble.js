@@ -1,4 +1,4 @@
-import store from '../store/store'
+import storeBase from '../store/store-base'
 import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ export default function (val, parentDiv) {
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg  = store.state.statList.transition;
+  const transitionFlg  = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -205,8 +205,8 @@ export default function (val, parentDiv) {
   })(1), false);
 
   if (prefOrCity === 'pref') {
-    store.commit('statList/yearRangePrefChange', val.statData.length - 1)
+    storeBase.commit('statList/yearRangePrefChange', val.statData.length - 1)
   } else {
-    store.commit('statList/yearRangeCityChange', val.statData.length - 1)
+    storeBase.commit('statList/yearRangeCityChange', val.statData.length - 1)
   }
 }

@@ -1,4 +1,4 @@
-import store from "../store/store";
+import storeBase from "../store/store-base";
 import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
   const margin = { 'top': 60 * multi, 'bottom': 60 * multi, 'right': 60 * multi, 'left': 20 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  let transitionFlg  = store.state.statList.transition;
+  let transitionFlg  = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
