@@ -1,7 +1,7 @@
 import storeBase from './store-base'
 import  * as statData from './data/data-miyazaki'
 import * as statDataTime from './data/data-miyazaki-time'
-import Citycodes from './citycodes'
+import Citycodes from './data/citycodes'
 import MetaPref from './meta/meta-pref'
 import MetaCity from './meta/meta-city'
 import MetaMiyazaki from './meta/meta-miyazaki'
