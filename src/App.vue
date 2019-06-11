@@ -50,8 +50,7 @@
         resizableDiv('#right-side-div');
         resizableDiv('#footer');
         for (let i in this.s_leftDivList) {
-          const  divId = '#left-' + this.s_leftDivList[i].divId;
-          resizableDiv(divId);
+          resizableDiv('#left-' + this.s_leftDivList[i].divId);
         }
         setTimeout(() => {
           vm.$store.commit('base/menuChange', false);
