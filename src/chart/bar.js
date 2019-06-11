@@ -84,7 +84,7 @@ export default function (barVal, pathVal, parentDiv) {
     }
   }
   //---------------------------------------------------------------------------------------------
-  let dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
@@ -206,10 +206,6 @@ export default function (barVal, pathVal, parentDiv) {
   .append('text')
   .text('赤線＝中央値')
   .attr('text-anchor', 'end');
-
-
-
-
   // バーの中に数値-------------------------------------------------------------------------
   // const g2 = svg.append('g')
   // .selectAll('text')
@@ -253,12 +249,10 @@ export default function (barVal, pathVal, parentDiv) {
   .append('text')
   .text('棒 = ' + statName)
   .attr('text-anchor', 'start');
-  //--------------------------------------------------------------------------------------------
-  dc = null;
   // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    let dc = new DataCreate(JSON.parse(JSON.stringify(barVal.statData[value].data2)));
+    const dc = new DataCreate(JSON.parse(JSON.stringify(barVal.statData[value].data2)));
     dc.create();
     rect
     .data(dc.dataset, d => d.citycode )

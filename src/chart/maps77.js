@@ -72,7 +72,7 @@ export default function (val, parentDiv) {
     }
   }
   //--------------------------------------------------------------------------------------------
-  let dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
@@ -267,11 +267,9 @@ export default function (val, parentDiv) {
   .append('text')
   .text('8地方区分');
   // -------------------------------------------------------------------------------------------
-  dc = null;
-  // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     circle
     .attr('fill', d => {
@@ -287,7 +285,6 @@ export default function (val, parentDiv) {
         if (result) return result.leftTop
       }
     });
-    dc = null
   };
   //--------------------------------------------------------------------------------------------
   const type = ie? 'change': 'input';

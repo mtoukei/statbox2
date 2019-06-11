@@ -72,7 +72,7 @@ export default function (val, parentDiv) {
     }
   }
   //---------------------------------------------------------------------------------------------
-  let dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   const json = GeoPref['pref' + dc.prefCode];
   // projectionを定義----------------------------------------------------------------------
@@ -197,8 +197,6 @@ export default function (val, parentDiv) {
   .attr('class' ,'no-print')
   .append('text')
   .text(statName);
-  //--------------------------------------------------------------------------------------------
-  dc = null;
   // ズーム--------------------------------------------------------------------------------------
   const zoom =
     d3.zoom()
@@ -207,7 +205,7 @@ export default function (val, parentDiv) {
   // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     p
     .attr("fill", d => {
@@ -224,7 +222,6 @@ export default function (val, parentDiv) {
     legendText
     .data(dc.legendDataSet)
     .text(d => Math.floor(d.value).toLocaleString() + ' ' + unit);
-    dc = null
   };
   //--------------------------------------------------------------------------------------------
   const type = ie? 'change': 'input';

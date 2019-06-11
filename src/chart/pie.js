@@ -47,7 +47,7 @@ export default function (val, parentDiv) {
     }
   }
   //---------------------------------------------------------------------------------------------
-  let dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   // SVG領域作成---------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
@@ -159,12 +159,10 @@ export default function (val, parentDiv) {
   .attr('class' ,'no-print')
   .append('text')
   .text(statName);
-  //--------------------------------------------------------------------------------------------
-  dc = null;
   // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     path
     .data(pie(dc.dataset, d => d.citycode))
@@ -208,7 +206,6 @@ export default function (val, parentDiv) {
         return "white";
       }
     });
-    dc = null
   };
   //--------------------------------------------------------------------------------------------
   const type = ie? 'change': 'input';
