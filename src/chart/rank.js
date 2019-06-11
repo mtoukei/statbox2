@@ -71,8 +71,6 @@ export default function (val, parentDiv) {
   const svg = containerDiv.append('svg')
   .attr('width', width - 25)
   .attr('height', dc.dataset.length * 15 * multi + 40)
-  // .attr('viewBox', '0 0 '+ width + ' '  + height)
-  // .attr('preserveAspectRatio', 'xMidYMid')
   .classed("chart-svg", true);
   //--------------------------------------------------------------------------------------------
   const g = svg.append('g')
@@ -133,10 +131,8 @@ export default function (val, parentDiv) {
   .attr('transform', (d,i) =>'translate(' + (0) + ',' + (12 * multi  + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
-  .text(d => {
-    return d.leftTop + ' ' + d.cityname
-  })
-  .attr('fill', function (d) {
+  .text(d => d.leftTop + ' ' + d.cityname)
+  .attr('fill', d => {
     const rgb = d3.rgb(dc.colorScale(d.data));
     const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
     return cY > 150? 'black': 'white';
@@ -147,7 +143,7 @@ export default function (val, parentDiv) {
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.data.toLocaleString())
-  .attr('fill', function (d) {
+  .attr('fill', d => {
     const rgb = d3.rgb(dc.colorScale(d.data));
     const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
     return cY > 150? 'black': 'white';
@@ -180,7 +176,7 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('transform', (d,i) => 'translate(' + (0) + ',' + (12 * multi  + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
-    .attr('fill', function (d) {
+    .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
       const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
       return cY > 150? 'black': 'white';
@@ -191,7 +187,7 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('transform', (d,i) => 'translate(' + (130 * multi) + ',' + (12 * multi  + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
-    .attr('fill', function (d) {
+    .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
       const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
       return cY > 150? 'black': 'white';
@@ -209,7 +205,7 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('transform', (d,i) => 'translate(' + (0) + ',' + (12 * multi  + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
-    .attr('fill', function (d) {
+    .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
       const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
       return cY > 150? 'black': 'white';
@@ -220,7 +216,7 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('transform', (d,i) => 'translate(' + (130 * multi) + ',' + (12 * multi  + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
-    .attr('fill', function (d) {
+    .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
       const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
       return cY > 150? 'black': 'white';
@@ -231,8 +227,6 @@ export default function (val, parentDiv) {
   const type = ie? 'change': 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
   eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity), type, (() => {
-    return e => {
-      rangeInput(e)
-    }
+    return e => rangeInput(e)
   })(1), false);
 }
