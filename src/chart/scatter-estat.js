@@ -22,26 +22,14 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   //データセットの元を作成-----------------------------------------------------------------------
   const mixDataset = [];
   for (let i in leftDataset) {
-    if (prefOrCity === 'pref') {
-      const leftTiime = leftDataset[i].data[0]['@time'];
-      const rightData = rightDataset.find(el => el.data[0]['@time'] === leftTiime);
-      if (rightData) {
-        mixDataset.push({
-          time: leftTiime,
-          left: leftDataset[i],
-          right: rightData
-        })
-      }
-    } else {
-      const leftTiime = leftDataset[i].data[0]['@time'];
-      const rightData = rightDataset.find(el => el.data[0]['@time'] === leftTiime);
-      if (rightData) {
-        mixDataset.push({
-          time: leftTiime,
-          left: leftDataset[i],
-          right: rightData
-        })
-      }
+    const leftTiime = leftDataset[i].data[0]['@time'];
+    const rightData = rightDataset.find(el => el.data[0]['@time'] === leftTiime);
+    if (rightData) {
+      mixDataset.push({
+        time: leftTiime,
+        left: leftDataset[i],
+        right: rightData
+      })
     }
   }
   //--------------------------------------------------------------------------------------------
@@ -60,18 +48,17 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     const tgtRightData = mixDataset[i].right.data2;
     // ４７都道府県でループ
     for (let i in tgtLeftData) {
-      if (tgtLeftData[i]['@area'] !== '00000') {
-        const leftData = Number(tgtLeftData[i]['data']);
-        const rightData = Number(tgtRightData[i]['data']);
+      if (tgtLeftData[i].citycode !== '00000') {
+        const leftData = Number(tgtLeftData[i].data);
+        const rightData = Number(tgtRightData[i].data);
         const obj = {
           time: time,
-          cityname: tgtLeftData[i]['cityname'],
+          cityname: tgtLeftData[i].cityname,
           leftData: leftData,
           rightData: rightData
         };
         // バインドするデータ dataset
         dataset.push(obj);
-        // }
         // 相関係数計算用---------------------------------------------
         leftDataAr.push(leftData);
         rightDataAr.push(rightData);
