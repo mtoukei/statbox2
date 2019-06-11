@@ -275,7 +275,7 @@
     </div>
 </template>
 <script>
-  import Citycodes from '../store/citycodes'
+  import Citycodes from '../store/data/citycodes'
   import mixinDetectResize from '../components/mixin/detectResize'
   export default {
     name: "side-tree",
