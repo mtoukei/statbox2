@@ -36,56 +36,10 @@
       dialogs,
     },
     mixins: [mixinDetectResize, mixinMetadataCreate, mixinWatch],
-    data() {
-      return {
-        timer: false,
-        timeLength: 0,
-      }
-    },
     computed: {
       s_rightSideDivShow () { return this.$store.state.base.rightSideDivShow },
-      s_menuChange () { return this.$store.state.base.menuChange },
       s_statType () { return this.$store.state.base.statType },
-      s_activeIndex () { return this.$store.state.base.activeIndex },
-      s_leftDivList: {
-        get () { return this.$store.state.base.leftDivList },
-        set (value) { this.$store.commit('base/leftDivListChange', value) }
-      },
-      s_yearRangeCity: {
-        get () { return this.$store.state.statList.yearRangeCity },
-        set (value) { this.$store.commit('statList/yearRangeCityChange', value) }
-      },
-      s_yearRangePref: {
-        get () { return this.$store.state.statList.yearRangePref },
-        set (value) { this.$store.commit('statList/yearRangePrefChange', value) }
-      },
-      s_transition () { return this.$store.state.statList.transition },
-      s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
-    },
-    methods: {
-      // ダイアログ-------------------------------------------------------------------------------
-      dialogOpen (e,el) {
-        this.$store.commit('base/dialogVisibleChange', {visible: true,target: el.divId})
-      },
-      // グラフダイアログのリサイズ検知-------------------------------------------------------------
-      chartDivDetectResize () {
-        const vm = this;
-        if (!vm.s_menuChange) {
-          // 連続でのリサイズを抑制する。
-          if (vm.timer !== false) {
-            clearTimeout(vm.timer);
-          }
-          vm.timer = setTimeout(function() {
-            vm.$store.commit('statList/transitionSet', false);
-            vm.$store.commit('statList/statReload', 'left');
-            vm.$store.commit('statList/statReload', 'right');
-            vm.$store.commit('statList/eStatReload', {side: 'left'});
-            vm.$store.commit('statList/timeReload');
-            vm.$store.commit('statList/timePrefReload');
-            vm.$store.commit('statList/timeCityReload');
-          }, 10);
-        }
-      },
+      s_leftDivList () { return this.$store.state.base.leftDivList }
     },
     mounted () {
       this.$nextTick(function () {

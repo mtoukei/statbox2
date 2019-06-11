@@ -49,6 +49,11 @@
     components: {
       draggable
     },
+    data() {
+      return {
+        timer: false,
+      }
+    },
     computed: {
       s_menuChange () { return this.$store.state.base.menuChange },
       s_statType () { return this.$store.state.base.statType },

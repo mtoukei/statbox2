@@ -13,6 +13,11 @@ import rank from '../../chart/rank'
 import Time2 from '../../chart/time2'
 export default {
   name: 'watch',
+  data() {
+    return {
+      timeLength: 0,
+    }
+  },
   computed: {
     s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
     c_centerDivStyle () { return this.centerDivStyle },
