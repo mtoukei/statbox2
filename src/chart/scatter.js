@@ -118,9 +118,9 @@ export default function (leftVal, rightVal) {
   // 0のラインx----------------------------------------------------------------------------------
   const zeroLineX =svg.append('line')
   .attr('clip-path', 'url(#scatter-clip)')
-  .attr('x1',margin.left * multi)
+  .attr('x1',margin.left)
   .attr('y1',yScale(0))
-  .attr('x2',width -margin.right * multi)
+  .attr('x2',width -margin.right)
   .attr('y2',yScale(0))
   .attr('stroke-width', '1px')
   .attr('stroke', 'black');
@@ -128,9 +128,9 @@ export default function (leftVal, rightVal) {
   const zeroLineY =svg.append('line')
   .attr('clip-path', 'url(#scatter-clip)')
   .attr('x1',xScale(0))
-  .attr('y1',margin.top * multi)
+  .attr('y1',margin.top)
   .attr('x2',xScale(0))
-  .attr('y2',height - margin.bottom * multi)
+  .attr('y2',height - margin.bottom)
   .attr('stroke-width', '1px')
   .attr('stroke', 'black');
   // 回帰直線----------------------------------------------------------------------------------
@@ -272,16 +272,16 @@ export default function (leftVal, rightVal) {
     .attr('text-anchor', 'end');
     // 0のラインx----------------------------------------------------------------------------------
     zeroLineX
-    .attr('x1',margin.left * multi)
+    .attr('x1',margin.left)
     .attr('y1',newYScale(0))
-    .attr('x2',width -margin.right * multi)
+    .attr('x2',width -margin.right)
     .attr('y2',newYScale(0));
     // 0のラインy----------------------------------------------------------------------------------
     zeroLineY
     .attr('x1',newXScale(0))
-    .attr('y1',margin.top * multi)
+    .attr('y1',margin.top)
     .attr('x2',newXScale(0))
-    .attr('y2',height - margin.bottom * multi);
+    .attr('y2',height - margin.bottom);
     // 回帰直線--------------------------------------------------------------------------------
     kaikiLine
     .attr('x1',newXScale(rightMin))
