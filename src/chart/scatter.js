@@ -18,7 +18,7 @@ export default function (leftVal, rightVal) {
   const defaultWidth = 980;
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
   const margin = { 'top': 30 * multi, 'bottom': 100 * multi, 'right': 30 * multi, 'left': 60 * multi };
-  //トランジションフラグ----------------------------------------------------------------------------
+  //トランジションフラグ---------------------------------------------------------------------------
   const transitionFlg = storeBase.state.statList.leftStat.transition;
   //データセット作成-----------------------------------------------------------------------------
   const dataset = [];
@@ -31,27 +31,27 @@ export default function (leftVal, rightVal) {
       rightData: rightDataset[i].data
     };
     dataset.push(obj);
-    // 相関係数計算用---------------------------------------------
+    // 相関係数計算用-------------------------------------------------------------------------
     leftDataAr.push(leftDataset[i].data);
     rightDataAr.push(rightDataset[i].data);
-    // 回帰直線計算用---------------------------------------------
+    // 回帰直線計算用-------------------------------------------------------------------------
     const arr = [rightDataset[i].data,leftDataset[i].data];
     kaikiData.push(arr)
   }
   const soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
-  // SVG領域作成---------------------------------------------------------------------------
+  // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('svg').remove();
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height);
-  // クリップ領域-------------------------------------------------------------------------------
+  // クリップ領域---------------------------------------------------------------------------------
   svg.append('defs').append('clipPath')
   .attr('transform', 'translate(' + (margin.left) + ',' + (margin.top) + ')')
   .attr('id', 'scatter-clip')
   .append('rect')
   .attr('width', width - margin.right - margin.left)
   .attr('height', height - margin.top - margin.bottom);
-  // 表名------------------------------------------------------------------------------------
+  // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 14 * multi + 'px')
   .attr('transform', 'translate(' + (width/2) + ',' + (14 * multi + 10 * multi) + ')')
@@ -60,7 +60,7 @@ export default function (leftVal, rightVal) {
   .text('縦=' + leftStatName + '　×　横=' + rightStatName)
   .attr('text-anchor', 'middle ')
   .attr('font-weight', 'normal');
-  // 相関係数---------------------------------------------------------------------------------
+  // 相関係数----------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(' + 10 + ',' + (12 * multi + height - 50 * multi) + ')')
@@ -68,7 +68,7 @@ export default function (leftVal, rightVal) {
   .text('相関係数 = ' + soukan)
   .attr('id', 'soukan-text')
   .attr('text-anchor', 'start');
-  // 相関係数の注釈-------------------------------------------------------------------------
+  // 相関係数の注釈---------------------------------------------------------------------------
   let str = '', fill = 'black';
   svg.append('g')
   .attr('transform', 'translate(' + (110 * multi) + ',' + (12 * multi + height - 50 * multi) + ')')
@@ -101,7 +101,7 @@ export default function (leftVal, rightVal) {
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .attr('fill', () => fill);
-  // 軸スケールの設定-------------------------------------------------------------------------
+  // 軸スケールの設定---------------------------------------------------------------------------
   const rightMax =d3.max(dataset, d => d.rightData);
   let rightMin =d3.min(dataset, d => d.rightData);
   const leftMax =d3.max(dataset, d => d.leftData);
@@ -118,7 +118,7 @@ export default function (leftVal, rightVal) {
   // .domain([leftMin, leftMax*1.1])
   .domain([0, leftMax*1.1])
   .range([height - margin.bottom, margin.top]);
-  // 回帰直線--------------------------------------------------------------------------------
+  // 回帰直線----------------------------------------------------------------------------------
   const linReg = ss.linearRegression(kaikiData);
   const linRegLine = ss.linearRegressionLine(linReg);
   const kaikiLine = svg.append('g')
@@ -143,7 +143,7 @@ export default function (leftVal, rightVal) {
     .attr('x2',xScale(rightMax))
     .attr('y2',yScale(linRegLine(rightMax)));
   }
-  // 軸の表示---------------------------------------------------------------------------------
+  // 軸の表示----------------------------------------------------------------------------------
   const axisx = d3.axisBottom(xScale)
   .ticks(20)
   .tickSize((margin.top + margin.bottom)   - height);
@@ -173,7 +173,7 @@ export default function (leftVal, rightVal) {
   .attr('stroke-opacity', '0.5px')
   .attr('shape-rendering', 'crispEdges')
   .attr('stroke-dasharray', '2');
-  // サークルの表示----------------------------------------------------------------------------
+  // サークルの表示-----------------------------------------------------------------------------
   const circle = svg.append('g')
   .attr('clip-path', 'url(#scatter-clip)')
   .selectAll('circle')
@@ -191,7 +191,7 @@ export default function (leftVal, rightVal) {
   } else {
     circle.attr('r', 6);
   }
-  // ツールチップ-----------------------------------------------------------------------
+  // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
   circle
@@ -199,7 +199,7 @@ export default function (leftVal, rightVal) {
     return tip.show(d.cityname + '<br>' + d.leftData.toLocaleString() + leftUnit + '<br>' + d.rightData.toLocaleString() + rightUnit,this)
   })
   .on('mouseout', tip.hide);
-  // テキスト表示------------------------------------------------------------------------------
+  // テキスト表示--------------------------------------------------------------------------------
   const text = svg.append('g')
   .attr('clip-path', 'url(#scatter-clip)')
   .selectAll('text')
@@ -219,14 +219,14 @@ export default function (leftVal, rightVal) {
   } else {
     text.attr('opacity', '1');
   }
-  // 縦軸単位---------------------------------------------------------------------------------
+  // 縦軸単位----------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(' + 20 * multi +',' + (12 * multi + 5 * multi) + ')')
   .append('text')
   .text('単位:' + leftUnit)
   .attr('text-anchor', 'start');
-  // 横軸単位---------------------------------------------------------------------------------
+  // 横軸単位----------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(' + (width - margin.right) + ',' + (12 * multi + height - 50 * multi) + ')')
@@ -234,15 +234,15 @@ export default function (leftVal, rightVal) {
   .text('単位:' + rightUnit)
   .attr('text-anchor', 'end')
   .attr('font-weight', 'normal');
-  // ズーム------------------------------------------------------------------------------------
+  // ズーム--------------------------------------------------------------------------------------
   const zoomed = () => {
     const newXScale = d3.event.transform.rescaleX(xScale);
     const newYScale = d3.event.transform.rescaleY(yScale);
-    // サークル---------------------------------------------------------------------------------
+    // サークル-----------------------------------------------------------------------------------
     circle
     .attr('cx', d => newXScale(d.rightData))
     .attr('cy', d => newYScale(d.leftData));
-    // テキスト---------------------------------------------------------------------------------
+    // テキスト-----------------------------------------------------------------------------------
     text
     .attr('x', d => newXScale(d.rightData) + 7)
     .attr('y', d => newYScale(d.leftData) + 3);
@@ -255,24 +255,19 @@ export default function (leftVal, rightVal) {
     .selectAll('text')
     .attr('font-size', 10 * multi + 'px')
     .attr('text-anchor', 'end');
-    // 回帰直線-------------------------------------------------------------------------------
+    // 回帰直線--------------------------------------------------------------------------------
     kaikiLine
     .attr('x1',newXScale(rightMin))
     .attr('y1',newYScale(linRegLine(rightMin)))
     .attr('x2',newXScale(rightMax))
     .attr('y2',newYScale(linRegLine(rightMax)));
-    //-----------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------
     svg.selectAll('.axis line')
     .attr('stroke', 'lightgray')
     .attr('stroke-opacity', '0.5px')
     .attr('shape-rendering', 'crispEdges')
     .attr('stroke-dasharray', '2');
   };
-  // function resetted() {
-  //   svg.transition()
-  //   .duration(750)
-  //   .call(zoom.transform, d3.zoomIdentity);
-  // }
   const zoom = d3.zoom().on('zoom', zoomed);
   svg.call(zoom);
 }
