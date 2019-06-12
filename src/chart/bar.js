@@ -290,7 +290,6 @@ export default function (barVal, pathVal, parentDiv) {
     // })
     // .attr('x', d => xScale(d.cityname) + 2)
     // .attr('y', d => yScale(d.data)- 5);
-    dc = null
   };
   //--------------------------------------------------------------------------------------------
   const type = ie? 'change': 'input';

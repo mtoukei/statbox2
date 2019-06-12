@@ -138,17 +138,36 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .attr('font-size', 12 * multi + 'px')
   .attr('fill', () => fill);
   // 軸スケールの設定-------------------------------------------------------------------------
-  const rightMax =d3.max(dataset, d => d.rightData);
-  const rightMin =d3.min(dataset, d => d.rightData);
-  const leftMax =d3.max(dataset, d => d.leftData);
-  const leftMin =d3.min(dataset, d => d.leftData);
+  const rightMax = d3.max(dataset, d => d.rightData);
+  const rightMin = d3.min(dataset, d => d.rightData);
+  const leftMax = d3.max(dataset, d => d.leftData);
+  let leftMin = d3.min(dataset, d => d.leftData);
+  if (leftMin > 0) leftMin = 0
   const xScale = d3.scaleLinear()
   .domain([0, rightMax * 1.1])
   .range([margin.left, width - margin.right]);
   const yScale = d3.scaleLinear()
-  .domain([0, leftMax*1.1])
+  .domain([leftMin*1.1, leftMax*1.1])
   .range([height - margin.bottom, margin.top]);
-  // 回帰直線--------------------------------------------------------------------------------
+  // 0のラインx----------------------------------------------------------------------------------
+  const zeroLineX =svg.append('line')
+  .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
+  .attr('x1',margin.left * multi)
+  .attr('y1',yScale(0))
+  .attr('x2',width -margin.right * multi)
+  .attr('y2',yScale(0))
+  .attr('stroke-width', '1px')
+  .attr('stroke', 'black');
+  // 0のラインy----------------------------------------------------------------------------------
+  const zeroLineY =svg.append('line')
+  .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
+  .attr('x1',xScale(0))
+  .attr('y1',margin.top * multi)
+  .attr('x2',xScale(0))
+  .attr('y2',height - margin.bottom * multi)
+  .attr('stroke-width', '1px')
+  .attr('stroke', 'black');
+  // 回帰直線----------------------------------------------------------------------------------
   const kaikiLine = svg.append('g')
   .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
   .append('line')
@@ -160,7 +179,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .attr('stroke-width', '1px')
   .attr('stroke', 'black')
   .attr('stroke-dasharray', '4,4');
-  // 軸の表示---------------------------------------------------------------------------------
+  // 軸の表示-----------------------------------------------------------------------------------
   const axisx = d3.axisBottom(xScale)
   .ticks(20)
   .tickSize((margin.top + margin.bottom)   - height);
@@ -190,7 +209,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .attr('stroke-opacity', '0.5px')
   .attr('shape-rendering', 'crispEdges')
   .attr('stroke-dasharray', '2');
-  // サークルの表示----------------------------------------------------------------------------
+  // サークルの表示-----------------------------------------------------------------------------
   let tgtprefCode;
   if (d3.select('#scatter-pref-input').size()) {
     const tgtPrefName = d3.select('#scatter-pref-input').property("value");
@@ -210,7 +229,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .attr('cy', d => yScale( d.leftData ))
   .attr('fill', d => d.cityname === tgtprefCode? 'red': 'orange')
   .attr('r', 6);
-  // テキスト表示------------------------------------------------------------------------------
+  // テキスト表示--------------------------------------------------------------------------------
   const textG = svg.append('g')
   .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
   .selectAll('text')
@@ -222,14 +241,14 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .attr('y', d => yScale(d.leftData) + 3)
   .attr('text-anchor', 'start')
   .attr('font-size', 10 * multi + 'px');
-  // 縦軸単位---------------------------------------------------------------------------------
+  // 縦軸単位----------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', () => 'translate(' + (20 * multi)  + ',' + (12 * multi +10) + ')')
   .append('text')
   .text('単位:' + leftUnit)
   .attr('text-anchor', 'start');
-  // 横軸単位---------------------------------------------------------------------------------
+  // 横軸単位----------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(' + (width - 30) + ',' + (height - 40) + ')')
@@ -269,7 +288,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     .attr('x', d => newXScale(d.rightData) + 7)
     .attr('y', d => newYScale(d.leftData) + 3);
     d3.select('#soukan-text').text('相関係数 = ' + soukan);
-    // 回帰直線-------------------------------------------------------------------------------
+    // 回帰直線--------------------------------------------------------------------------------
     const rightMin = d3.min(dataset, d => d.rightData);
     const rightMax = d3.max(dataset, d => d.rightData);
     kaikiLine
@@ -330,7 +349,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   });
   const value = d3.select('#scatter-pref-input-' + prefOrCity).property('value');
   textInput(value);
-  // ツールチップ-----------------------------------------------------------------------
+  // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
   circle
@@ -338,11 +357,11 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     return tip.show(d.cityname + '<br>' + d.leftData.toLocaleString() + leftUnit + '<br>' + d.rightData.toLocaleString() + rightUnit,this)
   })
   .on('mouseout', tip.hide);
-  // ズーム------------------------------------------------------------------------------------
+  // ズーム--------------------------------------------------------------------------------------
   const zoomed = () => {
     newXScale = d3.event.transform.rescaleX(xScale);
     newYScale = d3.event.transform.rescaleY(yScale);
-    // サークル---------------------------------------------------------------------------------
+    // サークル----------------------------------------------------------------------------------
     circle
     .attr('cx', d => newXScale(d.rightData))
     .attr('cy', d => newYScale(d.leftData));
@@ -358,7 +377,20 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     .selectAll('text')
     .attr('font-size', 10 * multi + 'px')
     .attr('text-anchor', 'end');
-    // 回帰直線-------------------------------------------------------------------------------
+    // 0のラインx--------------------------------------------------------------------------------
+    zeroLineX
+    .attr('x1',margin.left * multi)
+    .attr('y1',newYScale(0))
+    .attr('x2',width -margin.right * multi)
+    .attr('y2',newYScale(0));
+    // 0のラインy--------------------------------------------------------------------------------
+    zeroLineY
+    .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
+    .attr('x1',newXScale(0))
+    .attr('y1',margin.top * multi)
+    .attr('x2',newXScale(0))
+    .attr('y2',height - margin.bottom * multi)
+    // 回帰直線--------------------------------------------------------------------------------
     const rightMin = d3.min(dataset, d => d.rightData);
     const rightMax = d3.max(dataset, d => d.rightData);
     kaikiLine
@@ -366,7 +398,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     .attr('y1',newYScale(linRegLine(rightMin)))
     .attr('x2',newXScale(rightMax))
     .attr('y2',newYScale(linRegLine(rightMax)));
-    //-----------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------
     svg.selectAll('.axis line')
     .attr('stroke', 'lightgray')
     .attr('stroke-opacity', '0.5px')
