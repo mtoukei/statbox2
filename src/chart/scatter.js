@@ -106,18 +106,33 @@ export default function (leftVal, rightVal) {
   let rightMin =d3.min(dataset, d => d.rightData);
   const leftMax =d3.max(dataset, d => d.leftData);
   let leftMin =d3.min(dataset, d => d.leftData);
+  if (leftMin > 0) leftMin = 0;
     rightMin = rightMin * 0.9;
     leftMin = leftMin * 0.9;
   const xScale = d3.scaleLinear()
-  // .domain([rightMin*0.9, rightMax*1.1])
-  // .domain([rightMin, rightMax*1.1])
   .domain([0, rightMax*1.1])
   .range([margin.left, width - margin.right]);
   const yScale = d3.scaleLinear()
-  // .domain([leftMin*0.9, leftMax*1.1])
-  // .domain([leftMin, leftMax*1.1])
-  .domain([0, leftMax*1.1])
+  .domain([leftMin*1.1, leftMax*1.1])
   .range([height - margin.bottom, margin.top]);
+  // 0のラインx----------------------------------------------------------------------------------
+  const zeroLineX =svg.append('line')
+  .attr('clip-path', 'url(#scatter-clip)')
+  .attr('x1',margin.left * multi)
+  .attr('y1',yScale(0))
+  .attr('x2',width -margin.right * multi)
+  .attr('y2',yScale(0))
+  .attr('stroke-width', '1px')
+  .attr('stroke', 'black');
+  // 0のラインy----------------------------------------------------------------------------------
+  const zeroLineY =svg.append('line')
+  .attr('clip-path', 'url(#scatter-clip)')
+  .attr('x1',xScale(0))
+  .attr('y1',margin.top * multi)
+  .attr('x2',xScale(0))
+  .attr('y2',height - margin.bottom * multi)
+  .attr('stroke-width', '1px')
+  .attr('stroke', 'black');
   // 回帰直線----------------------------------------------------------------------------------
   const linReg = ss.linearRegression(kaikiData);
   const linRegLine = ss.linearRegressionLine(linReg);
@@ -255,6 +270,18 @@ export default function (leftVal, rightVal) {
     .selectAll('text')
     .attr('font-size', 10 * multi + 'px')
     .attr('text-anchor', 'end');
+    // 0のラインx----------------------------------------------------------------------------------
+    zeroLineX
+    .attr('x1',margin.left * multi)
+    .attr('y1',newYScale(0))
+    .attr('x2',width -margin.right * multi)
+    .attr('y2',newYScale(0));
+    // 0のラインy----------------------------------------------------------------------------------
+    zeroLineY
+    .attr('x1',newXScale(0))
+    .attr('y1',margin.top * multi)
+    .attr('x2',newXScale(0))
+    .attr('y2',height - margin.bottom * multi);
     // 回帰直線--------------------------------------------------------------------------------
     kaikiLine
     .attr('x1',newXScale(rightMin))
