@@ -142,7 +142,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   const rightMin = d3.min(dataset, d => d.rightData);
   const leftMax = d3.max(dataset, d => d.leftData);
   let leftMin = d3.min(dataset, d => d.leftData);
-  if (leftMin > 0) leftMin = 0
+  if (leftMin > 0) leftMin = 0;
   const xScale = d3.scaleLinear()
   .domain([0, rightMax * 1.1])
   .range([margin.left, width - margin.right]);
