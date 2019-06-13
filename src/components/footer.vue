@@ -134,15 +134,10 @@
     },
     methods: {
       test () {
-        console.log(this.statData);
-        console.log(this.$store.state.statList.leftStat.statData.data);
-        console.log(this.$store.state.statList.leftStatEstatPref.statData[0].data2)
       }
     },
     mounted () {
       this.$nextTick(function () {
-        console.log(this.statType)
-
       })
     }
   }

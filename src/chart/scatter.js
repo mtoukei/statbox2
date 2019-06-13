@@ -270,13 +270,13 @@ export default function (leftVal, rightVal) {
     .selectAll('text')
     .attr('font-size', 10 * multi + 'px')
     .attr('text-anchor', 'end');
-    // 0のラインx----------------------------------------------------------------------------------
+    // 0のラインx--------------------------------------------------------------------------------
     zeroLineX
     .attr('x1',margin.left)
     .attr('y1',newYScale(0))
     .attr('x2',width -margin.right)
     .attr('y2',newYScale(0));
-    // 0のラインy----------------------------------------------------------------------------------
+    // 0のラインy--------------------------------------------------------------------------------
     zeroLineY
     .attr('x1',newXScale(0))
     .attr('y1',margin.top)
