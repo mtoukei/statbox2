@@ -557,30 +557,14 @@
       },
     },
     watch: {
-      filterTextMiyazaki(val) {
-        this.$refs.treeMiyazaki.filter(val);
-      },
-      filterTextMiyazakiTime(val) {
-        this.$refs.treeTime.filter(val);
-      },
-      filterTextPref(val) {
-        this.$refs.treePref.filter(val);
-      },
-      filterTextPrefScatter(val) {
-        this.$refs.tresscatterPref.filter(val);
-      },
-      filterTextPrefTime(val) {
-        this.$refs.treeTimePref.filter(val);
-      },
-      filterTextCity(val) {
-        this.$refs.treeCity.filter(val);
-      },
-      filterTextCityScatter(val) {
-        this.$refs.tresscatterCity.filter(val);
-      },
-      filterTextCityTime(val) {
-        this.$refs.treeTimeCity.filter(val);
-      },
+      filterTextMiyazaki(val) { this.$refs.treeMiyazaki.filter(val) },
+      filterTextMiyazakiTime(val) { this.$refs.treeTime.filter(val) },
+      filterTextPref(val) { this.$refs.treePref.filter(val) },
+      filterTextPrefScatter(val) { this.$refs.tresscatterPref.filter(val) },
+      filterTextPrefTime(val) { this.$refs.treeTimePref.filter(val) },
+      filterTextCity(val) { this.$refs.treeCity.filter(val) },
+      filterTextCityScatter(val) { this.$refs.tresscatterCity.filter(val) },
+      filterTextCityTime(val) { this.$refs.treeTimeCity.filter(val) },
     },
     mounted () {
       this.$nextTick(function () {
