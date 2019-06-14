@@ -39,12 +39,9 @@ export default {
         Pie(val, '#left-pie-miyazaki-city');
         Histogram(val, '#left-histogram-miyazaki-city');
         Bar(val, this.s_rightStat, '#left-bar-miyazaki-city');
-        // // Bar(this.s_rightStat, val, 'rightSide');
         Map(val, '#left-map-miyazaki-city');
         rank(val, '#left-rank-miyazaki-city');
         Tree(val, '#left-tree-miyazaki-city');
-        // // Scatter(this.s_leftStat, this.s_rightStat);
-        // console.log("完走")
       },
       deep: true,
     },
