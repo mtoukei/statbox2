@@ -33,7 +33,7 @@
       'header-menu': header,
       'footer-info': footer,
       sideTree,
-      dialogs,
+      dialogs
     },
     mixins: [mixinDetectResize, mixinMetadataCreate, mixinWatch],
     computed: {
