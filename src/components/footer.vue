@@ -8,15 +8,15 @@
                 <div id="footer-inner-left">
                     <!-- 市町村データ-->
                     <div v-show="statType === 'city'">
-                        <el-table
-                                :data="tableDataCity"
-                                border
-                                :show-header="false"
-                                class="bottom-info-table"
-                        >
-                            <el-table-column width="90px" prop="tr"/>
-                            <el-table-column prop="td"/>
-                        </el-table>
+<!--                        <el-table-->
+<!--                                :data="tableDataCity"-->
+<!--                                border-->
+<!--                                :show-header="false"-->
+<!--                                class="bottom-info-table"-->
+<!--                        >-->
+<!--                            <el-table-column width="90px" prop="tr"/>-->
+<!--                            <el-table-column prop="td"/>-->
+<!--                        </el-table>-->
                         <div class="bottom-table-div">
                             <vue-good-table
                                     :columns="columns"
@@ -25,15 +25,14 @@
                     </div>
                     <!-- 都道府県データ-->
                     <div v-show="statType === 'pref'">
-                        <el-table
-                                :data="tableDataPref"
-                                border
-                                :show-header="false"
-                                class="bottom-info-table"
-                        >
-                            <el-table-column width="90px" prop="tr"/>
-                            <el-table-column prop="td"/>
-                        </el-table>
+                        <div class="bottom-info-div">
+                            <table class="source-table">
+                                <tr><th>データ名</th><td>{{ s_statName }}</td></tr>
+                                <tr><th>statsDataId</th><td>{{ s_statsDataId }}</td></tr>
+                                <tr><th>cdCat01</th><td>{{ s_cdCat01 }}</td></tr>
+                                <tr><th>出典</th><td  v-html="s_source"></td></tr>
+                            </table>
+                        </div>
                         <div class="bottom-table-div">
                             <vue-good-table
                                     :columns="columns"
@@ -55,10 +54,6 @@
     mixins: [mixinDetectResize],
     data () {
         return {
-          title: '',
-          statsDataId: '',
-          cdCat01: '',
-          info: 'ここに統計データのメタ情報を表示する。',
           columns: [
             {
               label: 'citycode',
@@ -73,52 +68,42 @@
               field: 'data',
               type: 'number',
             }
-          ],
-          tableDataPref: [],
-          tableDataCity: [],
+          ]
         }
     },
     computed: {
+      s_statName () { return this.$store.state.statList.leftStatEstatPref.statName },
+      s_statsDataId () { return this.$store.state.statList.leftStatEstatPref.statsDataId },
+      s_cdCat01 () { return this.$store.state.statList.leftStatEstatPref.cdCat01 },
+      s_source () { return this.$store.state.statList.leftStatEstatPref.source },
       s_leftStatEstatPref () {
         let data = [];
         const target = this.$store.state.statList.leftStatEstatPref.statData[this.$store.state.statList.yearRangePref];
-        if (target)  {
-          this.tableDataPref = [
-            {
-              tr: 'データ名',
-              td: this.$store.state.statList.leftStatEstatPref.statName
-            },
-            {
-              tr: 'statsDataId',
-              td: this.$store.state.statList.leftStatEstatPref.statsDataId
-            },
-            {
-              tr: 'cdCat01',
-              td:this.$store.state.statList.leftStatEstatPref.cdCat01
-            }
-          ];
-          data = target.data2;
-        }
+        if (target) data = target.data2;
         return  data
       },
       s_leftStatEstatCity () {
         let data = [];
         const target = this.$store.state.statList.leftStatEstatCity.statData[this.$store.state.statList.yearRangeCity];
         if (target)  {
-          this.tableDataCity = [
-            {
-              tr: 'データ名',
-              td: this.$store.state.statList.leftStatEstatCity.statName
-            },
-            {
-              tr: 'statsDataId',
-              td: this.$store.state.statList.leftStatEstatCity.statsDataId
-            },
-            {
-              tr: 'cdCat01',
-              td:this.$store.state.statList.leftStatEstatCity.cdCat01
-            }
-          ];
+          // this.tableDataCity = [
+          //   {
+          //     tr: 'データ名',
+          //     td: this.$store.state.statList.leftStatEstatCity.statName
+          //   },
+          //   {
+          //     tr: 'statsDataId',
+          //     td: this.$store.state.statList.leftStatEstatCity.statsDataId
+          //   },
+          //   {
+          //     tr: 'cdCat01',
+          //     td: this.$store.state.statList.leftStatEstatCity.cdCat01
+          //   },
+          //   {
+          //     tr: 'sourceId',
+          //     td: this.$store.state.statList.leftStatEstatPref.sourceId
+          //   }
+          // ];
           data = target.data2;
         }
         return  data
@@ -144,9 +129,6 @@
 </script>
 
 <style>
-    div {
-        box-sizing: border-box;
-    }
     #footer-inner-left {
         width: 50%;
         padding: 0 10px 10px 10px;
@@ -154,29 +136,30 @@
         text-align: left;
         font-size: 14px;
         line-height:18px;
-        /*display:table*/
     }
     .bottom-info-div {
         width:49%;
         display: inline-block;
         vertical-align: top;
-        /*border: solid 1px gray;*/
-        /*display:table-cell;*/
-    }
-    .title-div {
-        font-weight: bold;
-        margin-bottom: 10px;
     }
     .bottom-table-div {
         width:49%;
         display: inline-block;
         vertical-align: top;
         padding:0 0 0 10px;
-        /*display:table-cell;*/
     }
-    .bottom-info-table{
-        width:49%!important;
-        display: inline-block;
+    .source-table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    .source-table th {
+        font-weight: normal;
+        background: linear-gradient(#f4f5f8, #f1f3f6);
+        border: solid 1px #dcdfe6;
+    }
+    .source-table td {
+        background: white;
+        border: solid 1px #dcdfe6;
     }
     .vgt-table {
         /*width: 49%!important;*/
