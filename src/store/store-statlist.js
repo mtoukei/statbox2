@@ -7,6 +7,7 @@ import MetaCity from './meta/meta-city'
 import MetaMiyazaki from './meta/meta-miyazaki'
 import MetaMiyazakiTime from './meta/meta-miyazaki-time'
 import MetaSourcePref from './meta/meta-source-pref'
+import MetaSourceCity from './meta/meta-source-city'
 const metaPref = MetaPref;
 const metaCity = MetaCity;
 const metaMiyazaki = MetaMiyazaki;
@@ -46,11 +47,19 @@ const statList = {
     },
     leftStatEstatCity: {
       count: 0,
-      statData:[]
+      statData:[],
+      statsDataId: '',
+      cdCat01: '',
+      statName: '',
+      source: ''
     },
     rightStatEstatCity: {
       count: 0,
-      statData:[]
+      statData:[],
+      statsDataId: '',
+      cdCat01: '',
+      statName: '',
+      source: ''
     },
     leftStatTimeCity:{
       transition: true,
@@ -194,54 +203,52 @@ const statList = {
           const data =dataAr.filter(val => val['@time'] === times2Value);
           const data2 = [];
           for (const dataValue of data) {
-            // if (dataValue['@area'] !== '00000') {
-              if (payload.prefOrCity === 'pref') {
-                const prefs = storeBase.state.base.prefOptions;
-                const prefsResult = prefs.find(val => val.value === dataValue['@area']);
-                const prefName = prefsResult.label;
-                data2.push({
-                  citycode: dataValue['@area'],
-                  cityname: prefName,
-                  data: Number(dataValue['$']),
-                  time: dataValue['@time']
-                })
-              } else if (payload.prefOrCity === 'city'){
-                if (dataValue['@area'] .substr(0,2) === prefCode.substr(0,2)) {
-                  const citysResult = Citycodes.find(val => val.id === dataValue['@area']);
-                  if (citysResult) {
-                    const kuFlg = function () {
-                      if (dataValue['@area'].substr(0,2) === '13') {// 東京都の区は区ではない。
-                        return false
-                      } else if (dataValue['@area'].substr(2,2) === '13' || dataValue['@area'].substr(2,2) === '14' || dataValue['@area'].substr(2,2) === '15') {// 3桁目が1または13は政令都市
-                        if (dataValue['@area'].substr(4, 1) !== '0') {
-                          return true
-                        } else {
-                          return false
-                        }
-                      } else if (dataValue['@area'].substr(2,1) === '1') {// 3桁目が1または13は政令都市
-                        if (Number(dataValue['@area'].substr(3, 3)) > 0) {
-                            return true
-                        } else {
-                          return false
-                        }
+            if (payload.prefOrCity === 'pref') {
+              const prefs = storeBase.state.base.prefOptions;
+              const prefsResult = prefs.find(val => val.value === dataValue['@area']);
+              const prefName = prefsResult.label;
+              data2.push({
+                citycode: dataValue['@area'],
+                cityname: prefName,
+                data: Number(dataValue['$']),
+                time: dataValue['@time']
+              })
+            } else if (payload.prefOrCity === 'city'){
+              if (dataValue['@area'] .substr(0,2) === prefCode.substr(0,2)) {
+                const citysResult = Citycodes.find(val => val.id === dataValue['@area']);
+                if (citysResult) {
+                  const kuFlg = function () {
+                    if (dataValue['@area'].substr(0,2) === '13') {// 東京都の区は区ではない。
+                      return false
+                    } else if (dataValue['@area'].substr(2,2) === '13' || dataValue['@area'].substr(2,2) === '14' || dataValue['@area'].substr(2,2) === '15') {// 3桁目が1または13は政令都市
+                      if (dataValue['@area'].substr(4, 1) !== '0') {
+                        return true
                       } else {
                         return false
                       }
-                      // return dataValue['@area'].substr(2,1)
-                    }();
-                    if (!kuFlg) {
-                      const cityName = citysResult.name;
-                      data2.push({
-                        citycode: dataValue['@area'],
-                        cityname: cityName,
-                        data: Number(dataValue['$']),
-                        time: dataValue['@time']
-                      })
+                    } else if (dataValue['@area'].substr(2,1) === '1') {// 3桁目が1または13は政令都市
+                      if (Number(dataValue['@area'].substr(3, 3)) > 0) {
+                        return true
+                      } else {
+                        return false
+                      }
+                    } else {
+                      return false
                     }
+                    // return dataValue['@area'].substr(2,1)
+                  }();
+                  if (!kuFlg) {
+                    const cityName = citysResult.name;
+                    data2.push({
+                      citycode: dataValue['@area'],
+                      cityname: cityName,
+                      data: Number(dataValue['$']),
+                      time: dataValue['@time']
+                    })
                   }
                 }
               }
-            // }
+            }
           }
           dataSet.push({
             time: times2Value,
@@ -251,26 +258,28 @@ const statList = {
         }
         console.timeEnd('selectStatEstat');
         let stat;
+        let source = '';
         if (payload.prefOrCity === 'pref') {
           stat = payload.side === 'leftSide'? state.leftStatEstatPref: state.rightStatEstatPref;
+          const result = MetaSourcePref.find(val => val.sourceId === sourceId);
+          if (result) source = result.source
         } else if (payload.prefOrCity === 'city'){
           stat = payload.side === 'leftSide'? state.leftStatEstatCity: state.rightStatEstatCity;
+          const result = MetaSourceCity.find(val => val.sourceId === sourceId);
+          if (result) source = result.source
         }
-        let source = '';
-        const result = MetaSourcePref.find(val => val.sourceId === sourceId);
-        if (result) source = result.source
         stat.transition = true;
         stat.estat = true;
         stat.statName = payload.statName;
         stat.statData = dataSet;
         stat.unit = unit;
-        // stat.div = 'all';
         stat.statsDataId = statId;
         stat.cdCat01 = cat01;
         stat.sourceId = sourceId;
         stat.source = source;
+        stat.prefOrCity = payload.prefOrCity;
         storeBase.commit('base/chartDivLoadingShow', false)
-        // console.log(stat)
+        console.log(stat)
       });
     },
     //-------------------------------------------------------------------------------------------

@@ -552,7 +552,7 @@
       nodeClickEstat4 (e) {
         if (!e.children) {
           this.$store.commit('statList/transitionSet', true);
-          this.$store.commit('statList/selectStatEstat', {statId: e.statId, side: this.side, statName: e.label, unit: e.unit, prefOrCity: 'city', prefCode: this.s_prefCode })
+          this.$store.commit('statList/selectStatEstat', {statId: e.statId, side: this.side, statName: e.label, unit: e.unit, prefOrCity: 'city', prefCode: this.s_prefCode, sourceId: e.sourceId })
         }
       },
     },
