@@ -3,12 +3,13 @@
 // コンソールログに出力されるJSON.stringifyをコピーして
 // meta-pref.jsまたはmeta-city.jsに貼り付ける
 import metaSourceIDPref from '../../store/meta/meta-source-id-pref'
-// import {console} from "vuedraggable/src/util/helper";
+import metaSourceIDCity from '../../store/meta/meta-source-id-city'
 export default {
   name: 'metaDataCreate',
   beforeCreate () {
     // const targets = [this.$store.state.statList.eStatMetaPreh, this.$store.state.statList.eStatMetaCity]
-    const targets = [this.$store.state.statList.eStatMetaPreh];
+    // const targets = [this.$store.state.statList.eStatMetaPreh];
+    const targets = [this.$store.state.statList.eStatMetaCity];
     const vm = this;
     for (let h in targets) {
       const target = targets[h];
@@ -43,7 +44,8 @@ export default {
           if (result[i].cat01s.length) {
             for (let j in result[i].cat01s) {
               const tgt = result[i].cat01s[j];
-              const aaa = metaSourceIDPref.find(val => val.項目符号 === tgt['@code']);
+              // const aaa = metaSourceIDPref.find(val => val.項目符号 === tgt['@code']);
+              const aaa = metaSourceIDCity.find(val => val.項目符号 === tgt['@code']);
               if (aaa) {
                 sourceId = aaa.sourceId
               }

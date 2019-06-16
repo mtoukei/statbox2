@@ -8,15 +8,14 @@
                 <div id="footer-inner-left">
                     <!-- 市町村データ-->
                     <div v-show="statType === 'city'">
-<!--                        <el-table-->
-<!--                                :data="tableDataCity"-->
-<!--                                border-->
-<!--                                :show-header="false"-->
-<!--                                class="bottom-info-table"-->
-<!--                        >-->
-<!--                            <el-table-column width="90px" prop="tr"/>-->
-<!--                            <el-table-column prop="td"/>-->
-<!--                        </el-table>-->
+                        <div class="bottom-info-div">
+                            <table class="source-table">
+                                <tr><th>データ名</th><td>{{ s_statNameCity }}</td></tr>
+                                <tr><th>statsDataId</th><td>{{ s_statsDataIdCity }}</td></tr>
+                                <tr><th>cdCat01</th><td>{{ s_cdCat01City }}</td></tr>
+                                <tr><th>出典</th><td  v-html="s_sourceCity"></td></tr>
+                            </table>
+                        </div>
                         <div class="bottom-table-div">
                             <vue-good-table
                                     :columns="columns"
@@ -76,6 +75,12 @@
       s_statsDataId () { return this.$store.state.statList.leftStatEstatPref.statsDataId },
       s_cdCat01 () { return this.$store.state.statList.leftStatEstatPref.cdCat01 },
       s_source () { return this.$store.state.statList.leftStatEstatPref.source },
+
+      s_statNameCity () { return this.$store.state.statList.leftStatEstatCity.statName },
+      s_statsDataIdCity () { return this.$store.state.statList.leftStatEstatCity.statsDataId },
+      s_cdCat01City () { return this.$store.state.statList.leftStatEstatCity.cdCat01 },
+      s_sourceCity () { return this.$store.state.statList.leftStatEstatCity.source },
+
       s_leftStatEstatPref () {
         let data = [];
         const target = this.$store.state.statList.leftStatEstatPref.statData[this.$store.state.statList.yearRangePref];
