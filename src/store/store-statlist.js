@@ -6,6 +6,7 @@ import MetaPref from './meta/meta-pref'
 import MetaCity from './meta/meta-city'
 import MetaMiyazaki from './meta/meta-miyazaki'
 import MetaMiyazakiTime from './meta/meta-miyazaki-time'
+import MetaSourcePref from './meta/meta-source-pref'
 const metaPref = MetaPref;
 const metaCity = MetaCity;
 const metaMiyazaki = MetaMiyazaki;
@@ -29,11 +30,19 @@ const statList = {
     },
     leftStatEstatPref: {
       count: 0,
-      statData:[]
+      statData:[],
+      statsDataId: '',
+      cdCat01: '',
+      statName: '',
+      source: ''
     },
     rightStatEstatPref: {
       count: 0,
-      statData:[]
+      statData:[],
+      statsDataId: '',
+      cdCat01: '',
+      statName: '',
+      source: ''
     },
     leftStatEstatCity: {
       count: 0,
@@ -76,7 +85,6 @@ const statList = {
     metaMiyazakiTime: MetaMiyazakiTime,
     metaMiyazaki: metaMiyazaki
   },
-
   mutations: {
     //-------------------------------------------------------------------------------------------
     clearStat (state,payload) {
@@ -156,6 +164,7 @@ const statList = {
       const cat01 = payload.statId.split('/')[1];
       const unit = payload.statId.split('/')[2];
       const prefCode = payload.prefCode;
+      const sourceId = payload.sourceId;
       const limit = 100000;
       axios({
         method: 'get',
@@ -247,14 +256,19 @@ const statList = {
         } else if (payload.prefOrCity === 'city'){
           stat = payload.side === 'leftSide'? state.leftStatEstatCity: state.rightStatEstatCity;
         }
+        let source = '';
+        const result = MetaSourcePref.find(val => val.sourceId === sourceId);
+        if (result) source = result.source
         stat.transition = true;
         stat.estat = true;
         stat.statName = payload.statName;
         stat.statData = dataSet;
         stat.unit = unit;
-        stat.div = 'all';
+        // stat.div = 'all';
         stat.statsDataId = statId;
         stat.cdCat01 = cat01;
+        stat.sourceId = sourceId;
+        stat.source = source;
         storeBase.commit('base/chartDivLoadingShow', false)
         // console.log(stat)
       });

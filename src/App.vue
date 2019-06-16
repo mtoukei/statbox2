@@ -24,7 +24,7 @@
   import resizableDiv from './otherjs/resizablediv'
   import contents from './components/contents'
   import mixinDetectResize from './components/mixin/detectResize'
-  import mixinMetadataCreate from './components/mixin/metadata-create'
+  // import mixinMetadataCreate from './components/mixin/metadata-create'
   import mixinWatch from './components/mixin/watch'
   export default {
     name: 'app',
@@ -35,7 +35,8 @@
       sideTree,
       dialogs
     },
-    mixins: [mixinDetectResize, mixinMetadataCreate, mixinWatch],
+    // mixins: [mixinDetectResize, mixinMetadataCreate, mixinWatch],
+    mixins: [mixinDetectResize, mixinWatch],
     computed: {
       s_rightSideDivShow () { return this.$store.state.base.rightSideDivShow },
       s_statType () { return this.$store.state.base.statType },
