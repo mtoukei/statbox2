@@ -1,4 +1,3 @@
-import storeBase from '../store/store-base'
 import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
@@ -25,8 +24,6 @@ export default function (val, parentDiv) {
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
   const multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
-  //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor(dataset) {

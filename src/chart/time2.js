@@ -1,6 +1,4 @@
 import storeBase from "../store/store-base";
-import * as Common from './common'
-const eventkey = {};
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
   const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];

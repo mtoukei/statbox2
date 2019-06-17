@@ -119,7 +119,6 @@ const statList = {
         state.metaMiyazakiTime = aaa
       }, 0);
     },
-
     eStatMetaPrehReset (state) {
       const aaa = state.eStatMetaPreh;
       state.eStatMetaPreh = null;
@@ -167,11 +166,9 @@ const statList = {
       if (payload.side === 'left') {
         state.leftStatEstatPref.count = state.leftStatEstatPref.count + 1;
         state.leftStatEstatCity.count = state.leftStatEstatCity.count + 1;
-        // state.leftStatEstatPref.div = payload.div;
       } else {
         state.rightStatEstatPref.count = state.rightStatEstatPref.count + 1;
         state.rightStatEstatCity.count = state.rightStatEstatCity.count + 1;
-        // state.leftStatEstatPref.div = payload.div;
       }
     },
     //-------------------------------------------------------------------------------------------
@@ -191,7 +188,6 @@ const statList = {
           cntGetFlg: 'N',
           sectionHeaderFlg: '1',
           statsDataId: statId,
-          // cdArea: cityCode,
           cdCat01: cat01,
           limit: limit,
           appId: eStatApiId
@@ -285,7 +281,6 @@ const statList = {
         stat.source = source;
         stat.prefOrCity = payload.prefOrCity;
         storeBase.commit('base/chartDivLoadingShow', false)
-        console.log(stat)
       });
     },
     //-------------------------------------------------------------------------------------------
@@ -313,7 +308,6 @@ const statList = {
         unit: unit,
         data: data1
       };
-      // console.log(payload.side)
       let stat;
       if (payload.side === 'leftSide') {
         stat = state.leftStat;
@@ -324,7 +318,6 @@ const statList = {
       stat.count = stat.count + 1;
       stat.stat = payload.value;
       stat.statData = data2;
-      console.log(stat)
     },
     //-------------------------------------------------------------------------------------------
     selectStatTimeCity (state,payload) {
@@ -341,7 +334,6 @@ const statList = {
             const cat01 = statIds[i].split('/')[1];
             const unit = statIds[i].split('/')[2];
             const cityCode = payload.cityCode;
-            // console.log(statId, cat01, unit)
             const limit = 100000;
             axios({
               method: 'get',
@@ -381,7 +373,6 @@ const statList = {
                 data1.push(obj)
               }
               const data2 = {
-                // nodeId: nodeId,
                 stat: statIds[i],
                 title: title,
                 unit: unit,
@@ -397,7 +388,6 @@ const statList = {
         stat.count = stat.count + 1;
         stat.endStat = payload.endStat;
         stat.statData = result;
-        console.log(stat)
       })
     },
     //-------------------------------------------------------------------------------------------
@@ -428,7 +418,6 @@ const statList = {
               }
             })
             .then(response => {
-              // console.log(response)
               const rStatData = response.data['GET_STATS_DATA']['STATISTICAL_DATA'];
               const classObjs = rStatData['CLASS_INF']['CLASS_OBJ'];
               const title = classObjs.find(val => val['@id'] === 'cat01').CLASS['@name'].split('_')[1];
@@ -451,7 +440,6 @@ const statList = {
                 };
                 data1.push(obj)
               }
-              console.log(statIds[i]);
               const data2 = {
                 // nodeId: nodeId,
                 stat: statIds[i],
@@ -471,7 +459,6 @@ const statList = {
         stat.stat = 'estat';
         stat.endStat = payload.endStat;
         stat.statData = result;
-        console.log(stat)
       })
     },
     //-------------------------------------------------------------------------------------------
@@ -525,7 +512,6 @@ const statList = {
                 };
                 data1.push(obj)
               }
-              console.log(statIds[i]);
               const data2 = {
                 // nodeId: nodeId,
                 stat: statIds[i],
@@ -538,13 +524,11 @@ const statList = {
           })
       }
       Promise.all(plomises).then(function (result) {
-        // console.log(result)
         const stat = state.leftStatTimePref;
         stat.transition = true;
         stat.count = stat.count + 1;
         stat.endStat = payload.endStat;
         stat.statData = result;
-        console.log(stat)
       })
     },
     //-------------------------------------------------------------------------------------------
