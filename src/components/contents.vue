@@ -1,3 +1,5 @@
+id="year-range-ticks-pref"とid="year-range-ticks-city"は
+bubble.jsでtickを引いている。
 <template>
     <div id="contents">
         <div id="left-chart-div">
@@ -17,6 +19,16 @@
                     <div id="year-range-ticks-city" class="year-range-ticks"></div>
                 </div>
             </div>
+
+            <!--都道府県散布図用スライダー-->
+            <div class="pref-top" v-show="s_activeIndex==='scatterPref'">
+                <span id="year-range-text-scatter-pref"></span>
+                <div class="year-range-div">
+                    <input type="range" id="year-range-scatter-pref"  v-model="s_yearRangePref"/>
+                    <div id="year-range-ticks-scatter-pref" class="year-range-ticks"></div>
+                </div>
+            </div>
+
             <!--グラフのダイアログー-->
             <draggable v-model="s_leftDivList" handle=".chart-div-handle">
                 <transition-group appear>

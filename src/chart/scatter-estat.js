@@ -38,40 +38,98 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   let soukan;
   let linReg;
   let linRegLine;
-  const datasetCreate = i => {
-    const leftDataAr = [];
-    const rightDataAr = [];
-    const kaikiData = [];
-    dataset = [];
-    const time = mixDataset[i].time;
-    const tgtLeftData = mixDataset[i].left.data2;
-    const tgtRightData = mixDataset[i].right.data2;
-    // ４７都道府県でループ
-    for (let i in tgtLeftData) {
-      if (tgtLeftData[i].citycode !== '00000') {
-        const leftData = Number(tgtLeftData[i].data);
-        const rightData = Number(tgtRightData[i].data);
-        const obj = {
-          time: time,
-          cityname: tgtLeftData[i].cityname,
-          leftData: leftData,
-          rightData: rightData
-        };
-        // バインドするデータ dataset
-        dataset.push(obj);
-        // 相関係数計算用---------------------------------------------
-        leftDataAr.push(leftData);
-        rightDataAr.push(rightData);
-        // 回帰直線計算用---------------------------------------------
-        const arr = [rightData, leftData];
-        kaikiData.push(arr)
-      }
+
+
+  // データ等を作るクラス-------------------------------------------------------------------------
+  class DataCreate {
+    constructor (i) {
+      this.mixDataset = mixDataset[i];
+      this.dataset = [];
+      this.soukan = null;
+      this.linReg = null;
+      this.linRegLine = null;
     }
-    soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
-    linReg = ss.linearRegression(kaikiData);
-    linRegLine = ss.linearRegressionLine(linReg);
-  };
-  datasetCreate (mixDataset.length - 1);
+    create () {
+      const time = this.mixDataset.time;
+      const tgtLeftData = this.mixDataset.left.data2;
+      const tgtRightData = this.mixDataset.right.data2;
+      const leftDataAr = [];
+      const rightDataAr = [];
+      const kaikiData = [];
+      // ４７都道府県でループ
+      for (let i in tgtLeftData) {
+        if (tgtLeftData[i].citycode !== '00000') {
+          const leftData = Number(tgtLeftData[i].data);
+          const rightData = Number(tgtRightData[i].data);
+          const obj = {
+            time: time,
+            cityname: tgtLeftData[i].cityname,
+            leftData: leftData,
+            rightData: rightData
+          };
+          // バインドするデータ dataset
+          this.dataset.push(obj);
+          // 相関係数計算用---------------------------------------------
+          leftDataAr.push(leftData);
+          rightDataAr.push(rightData);
+          // 回帰直線計算用---------------------------------------------
+          const arr = [rightData, leftData];
+          kaikiData.push(arr)
+        }
+      }
+      // console.log(leftDataAr, rightDataAr)
+      this.soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
+      this.linReg = ss.linearRegression(kaikiData);
+      this.linRegLine = ss.linearRegressionLine(linReg);
+
+    }
+  }
+  const dc = new DataCreate(mixDataset.length - 1);
+  dc.create();
+
+  console.log(dc)
+
+
+
+  // const datasetCreate = i => {
+  //   const leftDataAr = [];
+  //   const rightDataAr = [];
+  //   const kaikiData = [];
+  //   dataset = [];
+  //   const time = mixDataset[i].time;
+  //   const tgtLeftData = mixDataset[i].left.data2;
+  //   const tgtRightData = mixDataset[i].right.data2;
+  //   // ４７都道府県でループ
+  //   for (let i in tgtLeftData) {
+  //     if (tgtLeftData[i].citycode !== '00000') {
+  //       const leftData = Number(tgtLeftData[i].data);
+  //       const rightData = Number(tgtRightData[i].data);
+  //       const obj = {
+  //         time: time,
+  //         cityname: tgtLeftData[i].cityname,
+  //         leftData: leftData,
+  //         rightData: rightData
+  //       };
+  //       // バインドするデータ dataset
+  //       dataset.push(obj);
+  //       // 相関係数計算用---------------------------------------------
+  //       leftDataAr.push(leftData);
+  //       rightDataAr.push(rightData);
+  //       // 回帰直線計算用---------------------------------------------
+  //       const arr = [rightData, leftData];
+  //       kaikiData.push(arr)
+  //     }
+  //   }
+  //   soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
+  //   linReg = ss.linearRegression(kaikiData);
+  //   linRegLine = ss.linearRegressionLine(linReg);
+  // };
+  // datasetCreate (mixDataset.length - 1);
+
+
+
+
+
 
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
