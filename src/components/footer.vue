@@ -87,6 +87,7 @@
 
 <script>
   import mixinDetectResize from '../components/mixin/detectResize'
+  const sourceLink = '<a href="https://www.stat.go.jp/data/ssds/2.html" target="_blank">整備している項目</a>';
   export default {
     name: "bottom",
     props: ['side', 'statType'],
@@ -114,22 +115,43 @@
       s_leftStatNamePref () { return this.$store.state.statList.leftStatEstatPref.statName },
       s_leftStatsDataIdPref () { return this.$store.state.statList.leftStatEstatPref.statsDataId },
       s_leftCdCat01Pref () { return this.$store.state.statList.leftStatEstatPref.cdCat01 },
-      s_leftSourcePref () { return this.$store.state.statList.leftStatEstatPref.source },
-
-      s_leftStatNameCity () { return this.$store.state.statList.leftStatEstatCity.statName },
-      s_leftStatsDataIdCity () { return this.$store.state.statList.leftStatEstatCity.statsDataId },
-      s_leftCdCat01City () { return this.$store.state.statList.leftStatEstatCity.cdCat01 },
-      s_leftSourceCity () { return this.$store.state.statList.leftStatEstatCity.source },
-
+      s_leftSourcePref () {
+        if (this.$store.state.statList.leftStatEstatPref.cdCat01.substr(0, 1) !== '#') {
+          return this.$store.state.statList.leftStatEstatPref.source + '<br>' + sourceLink
+        } else {
+          return  sourceLink
+        }
+      },
       s_rightStatNamePref () { return this.$store.state.statList.rightStatEstatPref.statName },
       s_rightStatsDataIdPref () { return this.$store.state.statList.rightStatEstatPref.statsDataId },
       s_rightCdCat01Pref () { return this.$store.state.statList.rightStatEstatPref.cdCat01 },
-      s_rightSourcePref () { return this.$store.state.statList.rightStatEstatPref.source },
-
+      s_rightSourcePref () {
+        if (this.$store.state.statList.rightStatEstatPref.cdCat01.substr(0, 1) !== '#') {
+          return this.$store.state.statList.rightStatEstatPref.source + '<br>' + sourceLink
+        } else {
+          return  sourceLink
+        }
+      },
+      s_leftStatNameCity () { return this.$store.state.statList.leftStatEstatCity.statName },
+      s_leftStatsDataIdCity () { return this.$store.state.statList.leftStatEstatCity.statsDataId },
+      s_leftCdCat01City () { return this.$store.state.statList.leftStatEstatCity.cdCat01 },
+      s_leftSourceCity () {
+        if (this.$store.state.statList.leftStatEstatCity.cdCat01.substr(0, 1) !== '#') {
+          return this.$store.state.statList.leftStatEstatCity.source + '<br>' + sourceLink
+        } else {
+          return  sourceLink
+        }
+      },
       s_rightStatNameCity () { return this.$store.state.statList.rightStatEstatCity.statName },
       s_rightStatsDataIdCity () { return this.$store.state.statList.rightStatEstatCity.statsDataId },
       s_rightCdCat01City () { return this.$store.state.statList.rightStatEstatCity.cdCat01 },
-      s_rightSourceCity () { return this.$store.state.statList.rightStatEstatCity.source },
+      s_rightSourceCity () {
+        if (this.$store.state.statList.rightStatEstatCity.cdCat01.substr(0, 1) !== '#') {
+          return this.$store.state.statList.rightStatEstatCity.source + '<br>' + sourceLink
+        } else {
+          return  sourceLink
+        }
+      },
     },
     methods: {
       m_leftStatEstatPref (statType) {
