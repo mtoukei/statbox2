@@ -20,19 +20,9 @@ global.axios =axios;
 global.eStatApiId = '63bd852098e1a13aeea70ed78cba31f9f3918d2f';
 const useragent = window.navigator.userAgent.toLowerCase();
 if (useragent.indexOf('msie') < 0 && useragent.indexOf('trident') < 0) {
-  global.ie =false
+  global.ie = false
 } else {
   global.ie = true
-}
-if (useragent.indexOf('firefox') === -1 ) {
-  global.fox =false
-} else {
-  global.fox = true
-}
-if (useragent.indexOf('edge') === -1 ) {
-  global.edge =false
-} else {
-  global.edge = true
 }
 new Vue({
   store: storeBase,

@@ -46,9 +46,7 @@
       "d3Tip": true,
       "axios": true,
       "eStatApiId": true,
-      "ie": true,
-      "fox": true,
-      "edge": true
+      "ie": true
     },
     "extends": [
       "plugin:vue/essential",
