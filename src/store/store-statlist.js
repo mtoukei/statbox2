@@ -16,6 +16,8 @@ const statList = {
   state: {
     yearRangeCity: 100,
     yearRangePref: 100,
+    yearRangeScatterCity: 100,
+    yearRangeScatterPref: 100,
     chartTransition:false,
     leftStat:{
       transition: true,
@@ -142,6 +144,12 @@ const statList = {
     yearRangePrefChange (state,payload) {
       state.yearRangePref = payload
     },
+    yearRangeScatterCityChange (state,payload) {
+      state.yearRangeScatterCity = payload
+    },
+    yearRangeScatterPrefChange (state,payload) {
+      state.yearRangeScatterPref = payload
+    },
     transitionSet (state,payload) {
       state.transition = payload
     },
@@ -235,7 +243,6 @@ const statList = {
                     } else {
                       return false
                     }
-                    // return dataValue['@area'].substr(2,1)
                   }();
                   if (!kuFlg) {
                     const cityName = citysResult.name;
@@ -256,7 +263,6 @@ const statList = {
             data2: data2
           })
         }
-        console.timeEnd('selectStatEstat');
         let stat;
         let source = '';
         if (payload.prefOrCity === 'pref') {

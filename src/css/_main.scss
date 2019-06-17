@@ -113,9 +113,9 @@ div {
 .handle-icon:hover {
     color: #03a9f4;
 }
-.pref-top {
-    text-align: center;
-}
+//.pref-top {
+//    text-align: center;
+//}
 
 // ツールチップ---------------------------------------------------------------------------------
    .d3-tooltip {
@@ -146,17 +146,23 @@ div {
     width: 0;
     height: 0;
 }
-#year-range-text-pref, #year-range-text-city {
+.year-range-text {
     position: absolute;
     top:10px;
     left:30px;
     font-size: 30px;
 }
+//#year-range-text-pref, #year-range-text-city {
+//    position: absolute;
+//    top:10px;
+//    left:30px;
+//    font-size: 30px;
+//}
 .year-range-div {
     margin-left: 120px;
     width: 50%;
 }
-#year-range-ticks-pref, #year-range-ticks-city {
+.year-range-ticks {
     margin-top: -25px;
     display: flex;
     justify-content: space-between;
@@ -169,7 +175,7 @@ div {
     padding-right: 8px;
     padding-left: 11px;
 }
-#year-range-ticks-pref .tick, #year-range-ticks-city .tick{
+.year-range-ticks .tick{
     position: relative;
     display: flex;
     justify-content: center;
@@ -187,7 +193,7 @@ div {
     color: #fff;
     border-radius: 2px;
     pointer-events: none;
-    z-index: 99999999;
+    z-index: 1;
 }
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {

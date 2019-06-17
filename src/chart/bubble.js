@@ -167,7 +167,7 @@ export default function (val, parentDiv) {
     .attr('text-anchor', 'middle')
     .attr('fill', function (d) {
       const rgb = d3.rgb(dc.colorScale(d.r));
-      const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
+      const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 200? 'black': 'white';
     });
     const year = val.statData[value].time.substr(0,4);
