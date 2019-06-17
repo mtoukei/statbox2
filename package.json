@@ -18,7 +18,6 @@
     "file-saver": "^2.0.1",
     "papaparse": "^4.6.3",
     "simple-statistics": "^7.0.2",
-    "splitpanes": "^1.14.2",
     "vue": "^2.6.8",
     "vue-good-table": "^2.16.4",
     "vue-resize": "^0.4.5",
