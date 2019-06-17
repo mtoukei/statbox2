@@ -55,9 +55,10 @@ export default function (barVal, pathVal, parentDiv) {
       });
       if (barVal.estat) {
         this.maxVal = 0;
-        this.minVal = 9999999999999999999;
+        this.minVal = 99999999;
         for (const value of barVal.statData) {
-          for (const value of value.data2) {
+          const data = value.data2;
+          for (const value of data) {
             if (!isNaN(value.data)) {
               if (value.citycode !== '00000') {
                 this.maxVal = this.maxVal < value.data ? value.data : this.maxVal;
@@ -92,15 +93,8 @@ export default function (barVal, pathVal, parentDiv) {
     palentDiv.select('.resizers').append('svg')
     .attr('width', width)
     .attr('height', height)
-    .attr('viewBox', '0 0 '+ width + ' '  + height)
-    .attr('preserveAspectRatio', 'xMidYMid')
-    .classed("svg-content-responsive", true)
     .classed("chart-svg", true);
-    //-------------------------------------------------------------------------------------------
-  let xScale = null;
-  let xAxis = null;
-  // 軸スケールの設定------------------------------------------------------------------------
-  // 最大値に合わせて文字サイズと左マージンを設定
+  // 最大値に合わせて文字サイズと左マージンを設定---------------------------------------------
   const len = String(Math.floor(dc.maxVal)).length;
   let fontSize = '8px';
   if (len >= 6) {
@@ -118,7 +112,7 @@ export default function (barVal, pathVal, parentDiv) {
   }
   margin.left = margin.left * multi;
   // バー横軸--------------------------------------------------------------------------------
-  xScale = d3.scaleBand()
+  const xScale = d3.scaleBand()
   .range([margin.left, width - margin.right])
   .padding(0.2)
   .domain(dc.dataset.map(d => d.cityname));
@@ -130,7 +124,7 @@ export default function (barVal, pathVal, parentDiv) {
   // x軸
   const axisx = d3.axisBottom(xScale)
   .ticks(20);
-  xAxis = svg.append('g')
+  svg.append('g')
   .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
   .call(axisx)
   .selectAll('text')
@@ -206,35 +200,6 @@ export default function (barVal, pathVal, parentDiv) {
   .append('text')
   .text('赤線＝中央値')
   .attr('text-anchor', 'end');
-  // バーの中に数値-------------------------------------------------------------------------
-  // const g2 = svg.append('g')
-  // .selectAll('text')
-  // .data(dc.dataset)
-  // .enter();
-  // const text = g2
-  // .append('text')
-  // .attr('class', 'bar-text')
-  // .text(d => {
-  //   let data = Math.floor(d.data);
-  //   if (data>=1000000) {
-  //     data = (data / 1000).toLocaleString() + '千'
-  //   } else {
-  //     data = data.toLocaleString()
-  //   }
-  //   return data
-  // })
-  // .attr('text-anchor', 'start')
-  // .attr('x', d => xScale(d.cityname) + 2)
-  // .attr('y', d => yScale(d.data)- 5)
-  // .attr('font-size', 8 * multi + 'px')
-  // .attr('fill', 'rgba(0,0,0,0)');
-  // if (transitionFlg) {
-  //   text.transition()
-  //   .duration(3000)
-  //   .attr('fill', 'black');
-  // } else {
-  //   text.attr('fill', 'black');
-  // }
   // 単位------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 10 * multi + 'px')
@@ -273,23 +238,6 @@ export default function (barVal, pathVal, parentDiv) {
     .transition()
     .duration(200)
     .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median));
-
-
-    // text
-    // .data(dc.dataset, d => d.citycode )
-    // .transition()
-    // .duration(200)
-    // .text(d => {
-    //   let data = Math.floor(d.data);
-    //   if (data>=1000000) {
-    //     data = (data / 1000).toLocaleString() + '千'
-    //   } else {
-    //     data = data.toLocaleString()
-    //   }
-    //   return data
-    // })
-    // .attr('x', d => xScale(d.cityname) + 2)
-    // .attr('y', d => yScale(d.data)- 5);
   };
   //--------------------------------------------------------------------------------------------
   const type = ie? 'change': 'input';
@@ -297,146 +245,4 @@ export default function (barVal, pathVal, parentDiv) {
   eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity), type, (() => {
     return e => rangeInput(e)
   })(1), false);
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//
-//
-//
-//   // 右データがないときは抜ける
-//   if (!pathVal.stat) return;
-//
-//   //--------------------------------------------------------------------------------------------
-//   const datasetP = JSON.parse(JSON.stringify(pathVal.statData.data));
-//   const statNameP = pathVal.statData.title;
-//   const unitP = pathVal.statData.unit;
-//   // ソートして順位をつける-------------------------------------------------------------------
-//   datasetP.sort((a,b) => {
-//     if (a.data > b.data) return -1;
-//     if (a.data < b.data) return 1;
-//     return 0;
-//   });
-//   for (let i in datasetP) {
-//     datasetP[i]['rightTop'] = Number(i) + 1
-//   }
-//   datasetP.sort((a,b) => {
-//     if(a.citycode < b.citycode) return -1;
-//     if(a.citycode > b.citycode) return 1;
-//     return 0;
-//   });
-//   // 軸スケールの設定------------------------------------------------------------------------
-//   if (!xScale) {
-//     xScale = d3.scaleBand()
-//     .rangeRound([margin.left, width - margin.right])
-//     .padding(0.1)
-//     .domain(datasetP.map(d => d.cityname));
-//   }
-//   if (!xAxis) {
-//     xAxis = svg.append('g')
-//     .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom + 0) + ')')
-//     // .attr('class', 'x_text')
-//     .call(d3.axisBottom(xScale))
-//     .selectAll('text')
-//     .attr('x', 0)
-//     .attr('y', 3)
-//     .style('text-anchor','start');
-//   }
-//   // 折れ線縦軸-----------------------------------------------------------------------------
-//   const yScale2 = d3.scaleLinear()
-//   .domain([0, d3.max(datasetP, d => d.data)])
-//   .range([height - margin.bottom, margin.top]);
-//   svg.append('g')
-//   .attr('transform', 'translate(' + (width - margin.right) + ',' + 0 + ')')
-//   .call(d3.axisRight(yScale2));
-//   //折れ線（パス）の表示-------------------------------------------------------------------
-//   const datasetPath = [];
-//   for(let i = 0; i < datasetP.length; i++){
-//     if(datasetP[i].data !== null){
-//       datasetPath.push(datasetP[i])
-//     }
-//   }
-//   const path = svg.append('path')
-//   .datum(datasetPath)
-//   .attr('fill', 'none')
-//   .attr('stroke', 'gray')
-//   .attr('stroke-width', 1)
-//   .attr('d', d3.line()
-//   .x(function (d) {
-//     return xScale(d.cityname) + xScale.bandwidth()/2;
-//   })
-//   .y(function (d) {
-//     return yScale2(d.data);
-//   }));
-//   //パスの長さを取得-------------------------------------------------------------------------
-//   const pathLength = path.node().getTotalLength();
-//   path.attr('stroke-dasharray', pathLength + ' ' + pathLength)
-//   .attr('stroke-dashoffset', pathLength);
-//   if (transitionFlg) {
-//     path.transition()
-//     .duration(1500)
-//     .ease(d3.easeLinear)
-//     .attr('stroke-dashoffset', 0);
-//   } else {
-//     path.attr('stroke-dashoffset', 0);
-//   }
-//   //サークル設置-----------------------------------------------------------------------------
-//   const g3 = svg.append('g')
-//   .selectAll('circle')
-//   .data(datasetPath)
-//   .enter();
-//   const circle = g3.append('circle')
-//   .on('mouseover', function (d)  {
-//     tooltip.style('visibility', 'visible')
-//     .html('折れ線<br>' + d.rightTop + '位　' + d.cityname + '<br>' + d.data + unitP);
-//     d3.select(this)
-//     .attr('r', 8)
-//     .attr('style', 'fill:rgb(0,0,255)');
-//   })
-//   .on('mousemove', () => {
-//     tooltip.style('top', (d3.event.pageY - 20) + 'px')
-//     .style('left', (d3.event.pageX + 10) + 'px');
-//   })
-//   .on('mouseout', function ()  {
-//     tooltip.style('visibility', 'hidden');
-//     d3.select(this)
-//     .attr('r', 4)
-//     .attr('style', 'orange');
-//   })
-//   .attr('r', 0)
-//   .attr('cx', d => xScale(d.cityname) + xScale.bandwidth()/2)
-//   .attr('cy', d => yScale2(d.data))
-//   .attr('fill', 'orange');
-//   if (transitionFlg) {
-//     circle.transition()
-//     .delay((d,i) => {
-//       return 1000 + (i * 50);
-//     })
-//     .attr('r', 4);
-//   } else {
-//     circle.attr('r', 4);
-//   }
-//   // 単位------------------------------------------------------------------------------------
-//   svg.append('g')
-//   .attr('font-size', 10 * multi + 'px')
-//   .attr('transform', 'translate(' + (width - margin.right) + ',' + 15 + ')')
-//   .append('text')
-//   .text('単位:' + unitP);
-//   // 表名------------------------------------------------------------------------------------
-//   svg.append('g')
-//   .attr('font-size', 12 * multi + 'px')
-//   .attr('transform', 'translate(' + (width - margin.right - 30) + ',' + 15 + ')')
-//   .attr('class' ,'no-print')
-//   .append('text')
-//   .text('折れ線 = ' + statNameP)
-//   .attr('text-anchor', 'end');
 }

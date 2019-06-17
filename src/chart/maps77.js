@@ -8,16 +8,13 @@ export default function (val, parentDiv) {
   if (palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
-  let unit;
   if (val.estat) {
     const target = val.statData[val.statData.length - 1];
     dataset = target.data2;
     statName = val.statName;
-    unit = target.data[0]['@unit'];
   } else {
     dataset = val.statData.data;
     statName = val.statData.title;
-    unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
   const width = palentDiv.node().getBoundingClientRect().width;
@@ -27,7 +24,6 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg  = storeBase.state.statList.transition;
-  // const transitionFlg = false
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor(dataset) {

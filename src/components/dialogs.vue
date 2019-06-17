@@ -14,7 +14,6 @@
             <!--</span>-->
         </el-dialog>
     </div>
-
 </template>
 
 <script>
@@ -93,7 +92,6 @@
           }
         };
         // ---------------------------------------------------------------------------------------
-        console.log(this.statType);
         let statData;
         const csvData = [];
         if (this.statType === 'miyazakiCity') {
@@ -131,9 +129,7 @@
           } else if (this.statType === 'timeCity') {
             statData = this.$store.state.statList.leftStatTimeCity.statData;
           }
-          console.log(statData);
           for (let i in statData) {
-            console.log(statData[i]);
             for (let j in statData[i]) {
               for (let k in statData[i][j]) {
                 if (statData[i][j][k].data) {
@@ -149,50 +145,7 @@
         } else {
           alert('未作成です。')
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // console.log(this.statType)
-        // if (this.statType === 'pref' || this.statType === 'city') {
-        //   let statData;
-        //   if (this.statType === 'pref') {
-        //     statData = this.$store.state.statList.leftStatEstatPref.statData
-        //   } else {
-        //     statData = this.$store.state.statList.leftStatEstatCity.statData
-        //   }
-        //   // console.log(statData)
-        //   const csvData = []
-        //   for (const val of statData) {
-        //     // console.log(val.data2)
-        //     for (const val of val.data2) {
-        //       // console.log(val)
-        //       csvData.push({
-        //         time: val.time.substr(0, 4),
-        //         citycode: val.citycode,
-        //         cityname: val.cityname,
-        //         data: val.data
-        //       })
-        //     }
-        //   }
-        //   aaa(csvData)
-        // } else {
-        //   alert('未作成です。')
-        // }
       },
     }
   }
 </script>
-
-<style scoped>
-
-</style>
