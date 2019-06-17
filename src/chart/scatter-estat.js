@@ -34,6 +34,9 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
       })
     }
   }
+  // --------------------------------------------------------------------------------------------
+  const year = mixDataset[mixDataset.length - 1].time.substr(0,4);
+  d3.select('#year-range-text-scatter-' + prefOrCity).text(year);
   // データ等を作るクラス-------------------------------------------------------------------------
   // 年に応じてデータセットと相関係数計算用と回帰直線計算用を作成する。
   class DataCreate {
@@ -281,6 +284,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     const value = Number(e.target.value);
     const year = mixDataset[value].time.substr(0,4);
     d3.select('#year-text-' + prefOrCity).text(year);
+    d3.select('#year-range-text-scatter-' + prefOrCity).text(year);
     const dc = new DataCreate(value);
     dc.create();
     circle
@@ -388,17 +392,17 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     .attr('text-anchor', 'end');
     // 0のラインx--------------------------------------------------------------------------------
     zeroLineX
-    .attr('x1',margin.left * multi)
-    .attr('y1',newYScale(0))
-    .attr('x2',width -margin.right * multi)
-    .attr('y2',newYScale(0));
+    .attr('x1', margin.left * multi)
+    .attr('y1', newYScale(0))
+    .attr('x2', width -margin.right * multi)
+    .attr('y2', newYScale(0));
     // 0のラインy--------------------------------------------------------------------------------
     zeroLineY
     .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
-    .attr('x1',newXScale(0))
-    .attr('y1',margin.top * multi)
-    .attr('x2',newXScale(0))
-    .attr('y2',height - margin.bottom * multi);
+    .attr('x1', newXScale(0))
+    .attr('y1', margin.top * multi)
+    .attr('x2', newXScale(0))
+    .attr('y2', height - margin.bottom * multi);
     // 回帰直線--------------------------------------------------------------------------------
     const rightMin = d3.min(dc.dataset, d => d.rightData);
     const rightMax = d3.max(dc.dataset, d => d.rightData);

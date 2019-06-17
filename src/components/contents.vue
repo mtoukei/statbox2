@@ -4,43 +4,37 @@ bubble.jsでtickを引いている。
     <div id="contents">
         <div id="left-chart-div">
             <!--都道府県用スライダー-->
-            <div class="pref-top" v-show="s_activeIndex==='pref'">
-                <span id="year-range-text-pref"></span>
+            <div v-show="s_activeIndex==='pref'">
+                <span id="year-range-text-pref" class="year-range-text"></span>
                 <div class="year-range-div">
                     <input type="range" id="year-range-pref"  v-model="s_yearRangePref"/>
                     <div id="year-range-ticks-pref" class="year-range-ticks"></div>
                 </div>
             </div>
             <!--市町村用スライダー-->
-            <div class="pref-top" v-show="s_activeIndex==='city'">
-                <span id="year-range-text-city"></span>
+            <div v-show="s_activeIndex==='city'">
+                <span id="year-range-text-city" class="year-range-text"></span>
                 <div class="year-range-div">
                     <input type="range" id="year-range-city"  v-model="s_yearRangeCity"/>
                     <div id="year-range-ticks-city" class="year-range-ticks"></div>
                 </div>
             </div>
             <!--都道府県散布図用スライダー-->
-            <div class="pref-top" v-show="s_activeIndex==='scatterPref'">
-                <span id="year-range-text-scatter-pref"></span>
+            <div v-show="s_activeIndex==='scatterPref'">
+                <span id="year-range-text-scatter-pref" class="year-range-text"></span>
                 <div class="year-range-div">
                     <input type="range" id="year-range-scatter-pref"  v-model="s_yearRangeScatterPref"/>
                     <div id="year-range-ticks-scatter-pref" class="year-range-ticks"></div>
                 </div>
             </div>
             <!--市町村散布図用スライダー-->
-            <div class="pref-top" v-show="s_activeIndex==='scatterCity'">
-                <span id="year-range-text-scatter-city"></span>
+            <div v-show="s_activeIndex==='scatterCity'">
+                <span id="year-range-text-scatter-city" class="year-range-text"></span>
                 <div class="year-range-div">
                     <input type="range" id="year-range-scatter-city"  v-model="s_yearRangeScatterCity"/>
                     <div id="year-range-ticks-scatter-city" class="year-range-ticks"></div>
                 </div>
             </div>
-
-
-
-
-
-
             <!--グラフのダイアログー-->
             <draggable v-model="s_leftDivList" handle=".chart-div-handle">
                 <transition-group appear>
