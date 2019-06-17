@@ -16,6 +16,8 @@ const statList = {
   state: {
     yearRangeCity: 100,
     yearRangePref: 100,
+    yearRangeScatterCity: 100,
+    yearRangeScatterPref: 100,
     chartTransition:false,
     leftStat:{
       transition: true,
@@ -141,6 +143,12 @@ const statList = {
     },
     yearRangePrefChange (state,payload) {
       state.yearRangePref = payload
+    },
+    yearRangeScatterCityChange (state,payload) {
+      state.yearRangeScatterCity = payload
+    },
+    yearRangeScatterPrefChange (state,payload) {
+      state.yearRangeScatterPref = payload
     },
     transitionSet (state,payload) {
       state.transition = payload

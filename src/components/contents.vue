@@ -19,15 +19,27 @@ bubble.jsでtickを引いている。
                     <div id="year-range-ticks-city" class="year-range-ticks"></div>
                 </div>
             </div>
-
             <!--都道府県散布図用スライダー-->
             <div class="pref-top" v-show="s_activeIndex==='scatterPref'">
                 <span id="year-range-text-scatter-pref"></span>
                 <div class="year-range-div">
-                    <input type="range" id="year-range-scatter-pref"  v-model="s_yearRangePref"/>
+                    <input type="range" id="year-range-scatter-pref"  v-model="s_yearRangeScatterPref"/>
                     <div id="year-range-ticks-scatter-pref" class="year-range-ticks"></div>
                 </div>
             </div>
+            <!--市町村散布図用スライダー-->
+            <div class="pref-top" v-show="s_activeIndex==='scatterCity'">
+                <span id="year-range-text-scatter-city"></span>
+                <div class="year-range-div">
+                    <input type="range" id="year-range-scatter-city"  v-model="s_yearRangeScatterCity"/>
+                    <div id="year-range-ticks-scatter-city" class="year-range-ticks"></div>
+                </div>
+            </div>
+
+
+
+
+
 
             <!--グラフのダイアログー-->
             <draggable v-model="s_leftDivList" handle=".chart-div-handle">
@@ -81,6 +93,14 @@ bubble.jsでtickを引いている。
       s_yearRangePref: {
         get () { return this.$store.state.statList.yearRangePref },
         set (value) { this.$store.commit('statList/yearRangePrefChange', value) }
+      },
+      s_yearRangeScatterCity: {
+        get () { return this.$store.state.statList.yearRangeScatterCity },
+        set (value) { this.$store.commit('statList/yearRangeScatterCityChange', value) }
+      },
+      s_yearRangeScatterPref: {
+        get () { return this.$store.state.statList.yearRangeScatterPref },
+        set (value) { this.$store.commit('statList/yearRangeScatterPrefChange', value) }
       },
       s_transition () { return this.$store.state.statList.transition },
       s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
