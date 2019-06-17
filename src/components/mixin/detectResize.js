@@ -24,6 +24,7 @@ export default {
         resizersRight.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';
         contents.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';
         document.querySelector('#footer-inner-left').style.height = (footerHeight - 40) + 'px';
+        document.querySelector('#footer-inner-right').style.height = (footerHeight - 40) + 'px';
         // 幅設定。左右サイドのリサイズ---------------------------------------------------------
         vTreeLefts[0].style.width = (leftSideDivWidth-30) + 'px';
         vTreeRights[0].style.width = (rightSideDivWidth-30) + 'px';
