@@ -5,16 +5,16 @@
             <div class="pref-top" v-show="s_activeIndex==='pref'">
                 <span id="year-range-text-pref"></span>
                 <div class="year-range-div">
-                    <input type="range" id="year-range-pref"  v-model="s_yearRangePref" list="year-range-list"/>
-                    <div id="year-range-ticks-pref"></div>
+                    <input type="range" id="year-range-pref"  v-model="s_yearRangePref"/>
+                    <div id="year-range-ticks-pref" class="year-range-ticks"></div>
                 </div>
             </div>
             <!--市町村用スライダー-->
             <div class="pref-top" v-show="s_activeIndex==='city'">
                 <span id="year-range-text-city"></span>
                 <div class="year-range-div">
-                    <input type="range" id="year-range-city"  v-model="s_yearRangeCity" list="year-range-list"/>
-                    <div id="year-range-ticks-city"></div>
+                    <input type="range" id="year-range-city"  v-model="s_yearRangeCity"/>
+                    <div id="year-range-ticks-city" class="year-range-ticks"></div>
                 </div>
             </div>
             <!--グラフのダイアログー-->
