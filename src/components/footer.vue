@@ -11,12 +11,14 @@
                     <div v-show="statType === 'pref' || statType === 'scatterPref'">
                         <div class="bottom-info-div">
                             <table class="source-table">
+                                <tr><th>種類</th><td>{{ s_leftStatPref }}</td></tr>
                                 <tr><th>データ名</th><td>{{ s_leftStatNamePref }}</td></tr>
                                 <tr><th>statsDataId</th><td>{{ s_leftStatsDataIdPref }}</td></tr>
-                                <tr><th>cdCat01</th><td>{{ s_leftCdCat01Pref }}</td></tr>
-                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/k-sugata/index.html" target="_blank">統計で見る都道府県のすがた</a></td></tr>
+                                <tr><th>※項目符号（指標コード）</th><td>{{ s_leftCdCat01Pref }}</td></tr>
+                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">都道府県・市区町村のすがた（社会・人口統計体系）</a></td></tr>
                                 <tr><th>所在源又は<br>参考資料等</th><td  v-html="s_leftSourcePref"></td></tr>
                             </table>
+                            ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
                         </div>
                         <div class="bottom-table-div">
                             <vue-good-table
@@ -28,12 +30,14 @@
                     <div v-show="statType === 'city' || statType === 'scatterCity' ">
                         <div class="bottom-info-div">
                             <table class="source-table">
+                                <tr><th>種類</th><td>{{ s_leftStatCity }}</td></tr>
                                 <tr><th>データ名</th><td>{{ s_leftStatNameCity }}</td></tr>
                                 <tr><th>statsDataId</th><td>{{ s_leftStatsDataIdCity }}</td></tr>
-                                <tr><th>cdCat01</th><td>{{ s_leftCdCat01City }}</td></tr>
-                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/s-sugata/index.html" target="_blank">統計で見る市区町村のすがた</a></td></tr>
+                                <tr><th>※項目符号（指標コード）</th><td>{{ s_leftCdCat01City }}</td></tr>
+                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">都道府県・市区町村のすがた（社会・人口統計体系）</a></td></tr>
                                 <tr><th>所在源又は<br>参考資料等</th><td  v-html="s_leftSourceCity"></td></tr>
                             </table>
+                            ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
                         </div>
                         <div class="bottom-table-div">
                             <vue-good-table
@@ -48,12 +52,14 @@
                     <div v-show="statType === 'scatterPref'">
                         <div class="bottom-info-div">
                             <table class="source-table">
+                                <tr><th>種類</th><td>{{ s_rightStatPref }}</td></tr>
                                 <tr><th>データ名</th><td>{{ s_rightStatNamePref }}</td></tr>
                                 <tr><th>statsDataId</th><td>{{ s_rightStatsDataIdPref  }}</td></tr>
-                                <tr><th>cdCat01</th><td>{{ s_rightCdCat01Pref }}</td></tr>
-                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/k-sugata/index.html" target="_blank">統計で見る都道府県のすがた</a></td></tr>
+                                <tr><th>※項目符号（指標コード）</th><td>{{ s_rightCdCat01Pref }}</td></tr>
+                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">都道府県・市区町村のすがた（社会・人口統計体系）</a></td></tr>
                                 <tr><th>所在源又は<br>参考資料等</th><td  v-html="s_rightSourcePref"></td></tr>
                             </table>
+                            ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
                         </div>
                         <div class="bottom-table-div">
                             <vue-good-table
@@ -65,12 +71,14 @@
                     <div v-show="statType === 'scatterCity'">
                         <div class="bottom-info-div">
                             <table class="source-table">
+                                <tr><th>種類</th><td>{{ s_rightStatCity }}</td></tr>
                                 <tr><th>データ名</th><td>{{ s_rightStatNameCity }}</td></tr>
                                 <tr><th>statsDataId</th><td>{{ s_rightStatsDataIdCity }}</td></tr>
-                                <tr><th>cdCat01</th><td>{{ s_rightCdCat01City }}</td></tr>
-                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/s-sugata/index.html" target="_blank">統計で見る市区町村のすがた</a></td></tr>
+                                <tr><th>※項目符号（指標コード）</th><td>{{ s_rightCdCat01City }}</td></tr>
+                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">都道府県・市区町村のすがた（社会・人口統計体系）</a></td></tr>
                                 <tr><th>所在源又は<br>参考資料等</th><td  v-html="s_rightSourceCity"></td></tr>
                             </table>
+                            ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
                         </div>
                         <div class="bottom-table-div">
                             <vue-good-table
@@ -112,6 +120,13 @@
         }
     },
     computed: {
+      s_leftStatPref () {
+        if (this.$store.state.statList.leftStatEstatPref.cdCat01.substr(0, 1) !== '#') {
+          return '基礎データ'
+        } else {
+          return '社会生活統計指標'
+        }
+      },
       s_leftStatNamePref () { return this.$store.state.statList.leftStatEstatPref.statName },
       s_leftStatsDataIdPref () { return this.$store.state.statList.leftStatEstatPref.statsDataId },
       s_leftCdCat01Pref () { return this.$store.state.statList.leftStatEstatPref.cdCat01 },
@@ -120,6 +135,13 @@
           return this.$store.state.statList.leftStatEstatPref.source + '<br>' + sourceLink
         } else {
           return  sourceLink
+        }
+      },
+      s_rightStatPref () {
+        if (this.$store.state.statList.rightStatEstatPref.cdCat01.substr(0, 1) !== '#') {
+          return '基礎データ'
+        } else {
+          return '社会生活統計指標'
         }
       },
       s_rightStatNamePref () { return this.$store.state.statList.rightStatEstatPref.statName },
@@ -132,6 +154,13 @@
           return  sourceLink
         }
       },
+      s_leftStatCity () {
+        if (this.$store.state.statList.leftStatEstatCity.cdCat01.substr(0, 1) !== '#') {
+          return '基礎データ'
+        } else {
+          return '社会生活統計指標'
+        }
+      },
       s_leftStatNameCity () { return this.$store.state.statList.leftStatEstatCity.statName },
       s_leftStatsDataIdCity () { return this.$store.state.statList.leftStatEstatCity.statsDataId },
       s_leftCdCat01City () { return this.$store.state.statList.leftStatEstatCity.cdCat01 },
@@ -140,6 +169,13 @@
           return this.$store.state.statList.leftStatEstatCity.source + '<br>' + sourceLink
         } else {
           return  sourceLink
+        }
+      },
+      s_rightStatCity () {
+        if (this.$store.state.statList.rightStatEstatCity.cdCat01.substr(0, 1) !== '#') {
+          return '基礎データ'
+        } else {
+          return '社会生活統計指標'
         }
       },
       s_rightStatNameCity () { return this.$store.state.statList.rightStatEstatCity.statName },

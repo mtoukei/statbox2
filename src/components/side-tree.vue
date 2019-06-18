@@ -51,7 +51,7 @@
                                 :indent="10">
                         </el-tree>
                         <div class="side-sourse">
-                            出典:<a href="https://www.stat.go.jp/data/k-sugata/index.html" target="_blank">統計で見る都道府県のすがた</a>
+                            出典:<a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">社会・人口統計体系</a>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                                 :indent="10">
                         </el-tree>
                         <div class="side-sourse">
-                            出典:<a href="https://www.stat.go.jp/data/k-sugata/index.html" target="_blank">統計で見る都道府県のすがた</a>
+                            出典:<a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">社会・人口統計体系</a>
                         </div>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                                 :indent="10">
                         </el-tree>
                         <div class="side-sourse">
-                            出典:<a href="https://www.stat.go.jp/data/k-sugata/index.html" target="_blank">統計で見る都道府県のすがた</a>
+                            出典:<a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">社会・人口統計体系</a>
                         </div>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
                                 :indent="10">
                         </el-tree>
                         <div class="side-sourse">
-                            出典:<a href="https://www.stat.go.jp/data/s-sugata/index.html" target="_blank">統計で見る市区町村のすがた</a>
+                            出典:<a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">社会・人口統計体系</a>
                         </div>
                     </div>
                 </div>
@@ -225,7 +225,7 @@
                                 :indent="10">
                         </el-tree>
                         <div class="side-sourse">
-                            出典:<a href="https://www.stat.go.jp/data/s-sugata/index.html" target="_blank">統計で見る市区町村のすがた</a>
+                            出典:<a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">社会・人口統計体系</a>
                         </div>
                     </div>
                 </div>
@@ -264,7 +264,7 @@
                                 :indent="10">
                         </el-tree>
                         <div class="side-sourse">
-                            出典:<a href="https://www.stat.go.jp/data/s-sugata/index.html" target="_blank">統計で見る市区町村のすがた</a>
+                            出典:<a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">社会・人口統計体系</a>
                         </div>
                     </div>
                 </div>
