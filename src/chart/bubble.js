@@ -5,6 +5,7 @@ const eventkey = {};
 export default function (val, parentDiv) {
   const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
   const palentDiv = d3.select(parentDiv);
+  const rangeDiv = d3.select('#year-range-' + prefOrCity);
   if (palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
@@ -15,7 +16,7 @@ export default function (val, parentDiv) {
     statName = val.statName;
     unit = target.data[0]['@unit'];
     const year = val.statData[val.statData.length - 1].time.substr(0, 4);
-    d3.select('#year-range-text-' + prefOrCity).text(year);
+    rangeDiv.select('.year-range-text').text(year);
   } else {
     dataset = val.statData.data;
     statName = val.statData.title;
@@ -171,15 +172,15 @@ export default function (val, parentDiv) {
       return cY > 200? 'black': 'white';
     });
     const year = val.statData[value].time.substr(0,4);
-    d3.select('#year-range-text-' + prefOrCity).text(year);
+    rangeDiv.select('.year-range-text').text(year);
   };
   //--------------------------------------------------------------------------------------------
-  d3.select('#year-range-' + prefOrCity)
+  rangeDiv.select('.year-range')
   .attr('max', String(val.statData.length - 1));
   const length = val.statData.length;
   const quarter =Math.floor((length -1) /4);
-  d3.select('#year-range-ticks-' + prefOrCity).selectAll('.tick').remove();
-  d3.select('#year-range-ticks-' + prefOrCity)
+  rangeDiv.select('.year-range-ticks').selectAll('.tick').remove();
+  rangeDiv.select('.year-range-ticks')
   .selectAll('span')
   .data(val.statData)
   .enter()
@@ -197,7 +198,7 @@ export default function (val, parentDiv) {
   //--------------------------------------------------------------------------------------------
   const type = ie? 'change': 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
-  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity), type, (() => {
+  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
     return e => rangeInput(e)
   })(1), false);
 

@@ -8,6 +8,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   const leftStatName = leftVal.statName;
   const leftUnit = leftVal.unit;
   palentDiv = d3.select(palentDiv);
+  const rangeDiv = d3.select('#year-range-scatter-' + prefOrCity);
   d3.select('#scatter-msg').remove();
   if (!rightVal.statData.length) return;
   palentDiv.select('.chart-contents-div').remove();
@@ -36,7 +37,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   }
   // --------------------------------------------------------------------------------------------
   const year = mixDataset[mixDataset.length - 1].time.substr(0,4);
-  d3.select('#year-range-text-scatter-' + prefOrCity).text(year);
+  rangeDiv.select('.year-range-text').text(year);
   // データ等を作るクラス-------------------------------------------------------------------------
   // 年に応じてデータセットと相関係数計算用と回帰直線計算用を作成する。
   class DataCreate {
@@ -284,7 +285,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     const value = Number(e.target.value);
     const year = mixDataset[value].time.substr(0,4);
     d3.select('#year-text-' + prefOrCity).text(year);
-    d3.select('#year-range-text-scatter-' + prefOrCity).text(year);
+    rangeDiv.select('.year-range-text').text(year);
     const dc = new DataCreate(value);
     dc.create();
     circle
@@ -309,12 +310,12 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     .attr('y2', newYScale(dc.linRegLine(rightMax)));
   };
   // インプットレンジ------------------------------------------------------------------------------
-  d3.select('#year-range-scatter-' + prefOrCity)
+  rangeDiv.select('.year-range')
   .attr('max', String(mixDataset.length - 1));
   const length = mixDataset.length;
   const quarter =Math.floor((length -1) / 4);
-  d3.select('#year-range-ticks-scatter-' + prefOrCity).selectAll('.tick').remove();
-  d3.select('#year-range-ticks-scatter-' + prefOrCity)
+  rangeDiv.select('.year-range-ticks').selectAll('.tick').remove();
+  rangeDiv.select('.year-range-ticks')
   .selectAll('span')
   .data(mixDataset)
   .enter()
@@ -423,7 +424,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   //--------------------------------------------------------------------------------------------
   const type = ie? 'change': 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
-  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-scatter-' + prefOrCity), type, (() => {
+  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-scatter-' + prefOrCity + ' .year-range'), type, (() => {
     return e => rangeInput(e)
   })(1), false);
   if (prefOrCity === 'pref') {
