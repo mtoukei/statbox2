@@ -27,12 +27,13 @@ div {
     color: #2c3e50;
     background-color: black;
 }
-// ヘッダー、フッター、サイド---------------------------------------------------------------------
-   #header-menu {
-       height: $header-menu-height;
-       position: fixed;
-       width: 100%;
-   }
+// ヘッダー--------------------------------------------------------------------------------------
+#header-menu {
+    height: $header-menu-height;
+    position: fixed;
+    width: 100%;
+}
+// フッター--------------------------------------------------------------------------------------
 #footer {
     width: 100%;
     height: $footer-height;
@@ -44,6 +45,61 @@ div {
     bottom: 0;
     z-index: 1;
 }
+#footer-inner-left {
+    width: 50%;
+    padding: 0 10px 10px 10px;
+    overflow: auto;
+    text-align: left;
+    font-size: 14px;
+    line-height:18px;
+    display: inline-block;
+    vertical-align: top;
+}
+#footer-inner-right {
+    width: 50%;
+    padding: 0 10px 10px 10px;
+    overflow: auto;
+    text-align: left;
+    font-size: 14px;
+    line-height:18px;
+    display: inline-block;
+    vertical-align: top;
+}
+.bottom-info-div {
+    width:49%;
+    display: inline-block;
+    vertical-align: top;
+}
+.bottom-table-div {
+    width:49%;
+    display: inline-block;
+    vertical-align: top;
+    padding:0 0 0 10px;
+}
+.source-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.source-table th {
+    font-weight: normal;
+    background: linear-gradient(#f4f5f8, #f1f3f6);
+    border: solid 1px #dcdfe6;
+}
+.source-table td {
+    background: white;
+    border: solid 1px #dcdfe6;
+}
+.vgt-table {
+    /*width: 49%!important;*/
+    font-size: 14px!important;
+}
+.vgt-table th {
+    padding: 0 20px 0 5px!important;
+}
+.vgt-table td {
+    padding: 0 5px 0 5px!important;
+}
+// サイド----------------------------------------------------------------------------------------
 #left-side-div, #right-side-div{
     position: absolute;
     top: $header-menu-height;
@@ -56,14 +112,14 @@ div {
     padding-left: 20px;
 }
 // チャート-------------------------------------------------------------------------------------
-   #contents {
-       position: absolute;
-       top: $header-menu-height;
-       left: 200px;
-       height: calc(100vh - #{$header-menu-height} - #{$footer-height});
-       background-color: whitesmoke;
-       overflow: auto;
-   }
+#contents {
+    position: absolute;
+    top: $header-menu-height;
+    left: 200px;
+    height: calc(100vh - #{$header-menu-height} - #{$footer-height});
+    background-color: whitesmoke;
+    overflow: auto;
+}
 #left-chart-div {
     background-color: whitesmoke;
     width: 100%;
@@ -113,30 +169,30 @@ div {
     color: #03a9f4;
 }
 // ツールチップ---------------------------------------------------------------------------------
-   .d3-tooltip {
-       position: absolute;
-       text-align: center;
-       width: auto;
-       height: auto;
-       padding: 5px;
-       font-size: 12px;
-       background: white;
-       border-radius: 4px;
-       -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-       -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-       box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-       visibility: hidden;
-       z-index: 1;
-   }
+.d3-tooltip {
+    position: absolute;
+    text-align: center;
+    width: auto;
+    height: auto;
+    padding: 5px;
+    font-size: 12px;
+    background: white;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    visibility: hidden;
+    z-index: 1;
+}
 // IE11対策。余計なツールチップを非表示に----------------------------------------------------
-   input[type=range]::-ms-tooltip {
-       display: none;
-   }
+input[type=range]::-ms-tooltip {
+    display: none;
+}
 // トランジション--------------------------------------------------------------------------------
-   .v-enter-active, .v-leave-active {
-       transition: all  0.5s;
-       /*transition-delay: 1s;*/
-   }
+.v-enter-active, .v-leave-active {
+    transition: all  0.5s;
+    /*transition-delay: 1s;*/
+}
 .v-enter, .v-leave-to {
     width: 0;
     height: 0;

@@ -3,36 +3,15 @@ bubble.jsでtickを引いている。
 <template>
     <div id="contents">
         <div id="left-chart-div">
-            <!--都道府県用スライダー-->
-            <div v-show="s_activeIndex==='pref'">
-                <span id="year-range-text-pref" class="year-range-text"></span>
+            <!--スライダー-->
+            <div  :id='el.id' v-for="el in rangeDiv" :key="el.id" v-show="s_activeIndex===el.statType">
+                <span class="year-range-text"></span>
                 <div class="year-range-div">
-                    <input type="range" id="year-range-pref"  v-model="s_yearRangePref"/>
-                    <div id="year-range-ticks-pref" class="year-range-ticks"></div>
-                </div>
-            </div>
-            <!--市町村用スライダー-->
-            <div v-show="s_activeIndex==='city'">
-                <span id="year-range-text-city" class="year-range-text"></span>
-                <div class="year-range-div">
-                    <input type="range" id="year-range-city"  v-model="s_yearRangeCity"/>
-                    <div id="year-range-ticks-city" class="year-range-ticks"></div>
-                </div>
-            </div>
-            <!--都道府県散布図用スライダー-->
-            <div v-show="s_activeIndex==='scatterPref'">
-                <span id="year-range-text-scatter-pref" class="year-range-text"></span>
-                <div class="year-range-div">
-                    <input type="range" id="year-range-scatter-pref"  v-model="s_yearRangeScatterPref"/>
-                    <div id="year-range-ticks-scatter-pref" class="year-range-ticks"></div>
-                </div>
-            </div>
-            <!--市町村散布図用スライダー-->
-            <div v-show="s_activeIndex==='scatterCity'">
-                <span id="year-range-text-scatter-city" class="year-range-text"></span>
-                <div class="year-range-div">
-                    <input type="range" id="year-range-scatter-city"  v-model="s_yearRangeScatterCity"/>
-                    <div id="year-range-ticks-scatter-city" class="year-range-ticks"></div>
+                    <input v-if="s_activeIndex==='pref'" type="range" class="year-range" v-model="s_yearRangePref"/>
+                    <input v-if="s_activeIndex==='city'" type="range" class="year-range" v-model="s_yearRangeCity"/>
+                    <input v-if="s_activeIndex==='scatterPref'" type="range" class="year-range" v-model="s_yearRangeScatterPref"/>
+                    <input v-if="s_activeIndex==='scatterCity'" type="range" class="year-range" v-model="s_yearRangeScatterCity"/>
+                    <div class="year-range-ticks"></div>
                 </div>
             </div>
             <!--グラフのダイアログー-->
@@ -49,7 +28,6 @@ bubble.jsでtickを引いている。
                                 {{ el.name}}
                                 <div style="position: absolute;top:0; right:5px;">
                                     <span class="handle-icon" @click="dialogOpen(arguments[0],el,'left')">保存</span>
-                                    <!--<span class="el-icon-close handle-icon" @click="chartClose(arguments[0],el)" ></span>-->
                                 </div>
                             </div>
                             <div class="chart-contents-div">{{ el.contents}}</div>
@@ -69,12 +47,17 @@ bubble.jsでtickを引いている。
     },
     data() {
       return {
+        rangeDiv: [
+          {id:'year-range-pref', statType: 'pref'},
+          {id:'year-range-city', statType: 'city'},
+          {id:'year-range-scatter-pref', statType: 'scatterPref'},
+          {id:'year-range-scatter-city', statType: 'scatterCity'}
+        ],
         timer: false,
       }
     },
     computed: {
       s_menuChange () { return this.$store.state.base.menuChange },
-      s_statType () { return this.$store.state.base.statType },
       s_activeIndex () { return this.$store.state.base.activeIndex },
       s_leftDivList: {
         get () { return this.$store.state.base.leftDivList },
@@ -96,11 +79,9 @@ bubble.jsでtickを引いている。
         get () { return this.$store.state.statList.yearRangeScatterPref },
         set (value) { this.$store.commit('statList/yearRangeScatterPrefChange', value) }
       },
-      s_transition () { return this.$store.state.statList.transition },
       s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
     },
     methods: {
-      // ダイアログ-------------------------------------------------------------------------------
       dialogOpen (e,el) {
         this.$store.commit('base/dialogVisibleChange', {visible: true,target: el.divId})
       },

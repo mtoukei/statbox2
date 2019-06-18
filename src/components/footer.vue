@@ -5,88 +5,26 @@
                 <i class="el-icon-arrow-up"></i><span style="padding: 0 20px 0 20px">メタ情報＋テーブル</span><i class="el-icon-arrow-up"></i>
             </div>
             <div style="padding-top: 40px">
-                <!--左サイド-->
-                <div id="footer-inner-left">
-                    <!-- 都道府県データ-->
-                    <div v-show="statType === 'pref' || statType === 'scatterPref'">
+                <!--メタ情報とテーブル作成-->
+                <div :id="el.id" v-for="el in footerInner" :key="el.id">
+                    <div v-show="m_divShow (statType, el.side)">
                         <div class="bottom-info-div">
                             <table class="source-table">
-                                <tr><th>種類</th><td>{{ s_leftStatPref }}</td></tr>
-                                <tr><th>データ名</th><td>{{ s_leftStatNamePref }}</td></tr>
-                                <tr><th>statsDataId</th><td>{{ s_leftStatsDataIdPref }}</td></tr>
-                                <tr><th>※項目符号（指標コード）</th><td>{{ s_leftCdCat01Pref }}</td></tr>
-                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">都道府県・市区町村のすがた（社会・人口統計体系）</a></td></tr>
-                                <tr><th>所在源又は<br>参考資料等</th><td  v-html="s_leftSourcePref"></td></tr>
+                                <tr><th>種類</th><td>{{ m_metaData (statType, el.side).syurui }}</td></tr>
+                                <tr><th>データ名</th><td>{{ m_metaData (statType, el.side).dataName }}</td></tr>
+                                <tr><th>statsDataId</th><td>{{ m_metaData (statType, el.side).statsDataId }}</td></tr>
+                                <tr><th>※項目符号（指標コード）</th><td>{{ m_metaData (statType, el.side).cdCat01 }}</td></tr>
+                                <tr><th>出典</th><td  v-html="m_metaData (statType, el.side).source1"></td></tr>
+                                <tr><th>所在源又は<br>参考資料等</th><td  v-html="m_metaData (statType, el.side).source2"></td></tr>
                             </table>
                             ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
                         </div>
                         <div class="bottom-table-div">
-                            <vue-good-table
-                                    :columns="columns"
-                                    :rows="m_leftStatEstatPref(statType)"/>
-                        </div>
-                    </div>
-                    <!-- 市町村データ-->
-                    <div v-show="statType === 'city' || statType === 'scatterCity' ">
-                        <div class="bottom-info-div">
-                            <table class="source-table">
-                                <tr><th>種類</th><td>{{ s_leftStatCity }}</td></tr>
-                                <tr><th>データ名</th><td>{{ s_leftStatNameCity }}</td></tr>
-                                <tr><th>statsDataId</th><td>{{ s_leftStatsDataIdCity }}</td></tr>
-                                <tr><th>※項目符号（指標コード）</th><td>{{ s_leftCdCat01City }}</td></tr>
-                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">都道府県・市区町村のすがた（社会・人口統計体系）</a></td></tr>
-                                <tr><th>所在源又は<br>参考資料等</th><td  v-html="s_leftSourceCity"></td></tr>
-                            </table>
-                            ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
-                        </div>
-                        <div class="bottom-table-div">
-                            <vue-good-table
-                                    :columns="columns"
-                                    :rows="m_leftStatEstatCity(statType)"/>
+                            <vue-good-table :columns="columns" :rows="m_tableData (statType, el.side) "/>
                         </div>
                     </div>
                 </div>
-                <!--右サイド-->
-                <div id="footer-inner-right" v-show="statType === 'scatterPref' || statType === 'scatterCity'">
-                    <!-- 都道府県データ-->
-                    <div v-show="statType === 'scatterPref'">
-                        <div class="bottom-info-div">
-                            <table class="source-table">
-                                <tr><th>種類</th><td>{{ s_rightStatPref }}</td></tr>
-                                <tr><th>データ名</th><td>{{ s_rightStatNamePref }}</td></tr>
-                                <tr><th>statsDataId</th><td>{{ s_rightStatsDataIdPref  }}</td></tr>
-                                <tr><th>※項目符号（指標コード）</th><td>{{ s_rightCdCat01Pref }}</td></tr>
-                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">都道府県・市区町村のすがた（社会・人口統計体系）</a></td></tr>
-                                <tr><th>所在源又は<br>参考資料等</th><td  v-html="s_rightSourcePref"></td></tr>
-                            </table>
-                            ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
-                        </div>
-                        <div class="bottom-table-div">
-                            <vue-good-table
-                                    :columns="columns"
-                                    :rows="m_rightStatEstatPref(statType)"/>
-                        </div>
-                    </div>
-                    <!-- 市町村データ-->
-                    <div v-show="statType === 'scatterCity'">
-                        <div class="bottom-info-div">
-                            <table class="source-table">
-                                <tr><th>種類</th><td>{{ s_rightStatCity }}</td></tr>
-                                <tr><th>データ名</th><td>{{ s_rightStatNameCity }}</td></tr>
-                                <tr><th>statsDataId</th><td>{{ s_rightStatsDataIdCity }}</td></tr>
-                                <tr><th>※項目符号（指標コード）</th><td>{{ s_rightCdCat01City }}</td></tr>
-                                <tr><th>出典</th><td><a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">都道府県・市区町村のすがた（社会・人口統計体系）</a></td></tr>
-                                <tr><th>所在源又は<br>参考資料等</th><td  v-html="s_rightSourceCity"></td></tr>
-                            </table>
-                            ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
-                        </div>
-                        <div class="bottom-table-div">
-                            <vue-good-table
-                                    :columns="columns"
-                                    :rows="m_rightStatEstatCity(statType)"/>
-                        </div>
-                    </div>
-                </div>
+                <!--メタ情報とテーブル作成ここまで-->
             </div>
         </div>
         <resize-observer @notify="mix_detectResize" />
@@ -95,13 +33,16 @@
 
 <script>
   import mixinDetectResize from '../components/mixin/detectResize'
-  const sourceLink = '<a href="https://www.stat.go.jp/data/ssds/2.html" target="_blank">整備している項目</a>';
   export default {
     name: "bottom",
     props: ['side', 'statType'],
     mixins: [mixinDetectResize],
     data () {
         return {
+          footerInner: [
+            {id: 'footer-inner-left', side: 'leftSide'},
+            {id: 'footer-inner-right', side: 'rightSide'}
+          ],
           columns: [
             {
               label: 'citycode',
@@ -119,117 +60,94 @@
           ]
         }
     },
-    computed: {
-      s_leftStatPref () {
-        if (this.$store.state.statList.leftStatEstatPref.cdCat01.substr(0, 1) !== '#') {
-          return '基礎データ'
-        } else {
-          return '社会生活統計指標'
-        }
-      },
-      s_leftStatNamePref () { return this.$store.state.statList.leftStatEstatPref.statName },
-      s_leftStatsDataIdPref () { return this.$store.state.statList.leftStatEstatPref.statsDataId },
-      s_leftCdCat01Pref () { return this.$store.state.statList.leftStatEstatPref.cdCat01 },
-      s_leftSourcePref () {
-        if (this.$store.state.statList.leftStatEstatPref.cdCat01.substr(0, 1) !== '#') {
-          return this.$store.state.statList.leftStatEstatPref.source + '<br>' + sourceLink
-        } else {
-          return  sourceLink
-        }
-      },
-      s_rightStatPref () {
-        if (this.$store.state.statList.rightStatEstatPref.cdCat01.substr(0, 1) !== '#') {
-          return '基礎データ'
-        } else {
-          return '社会生活統計指標'
-        }
-      },
-      s_rightStatNamePref () { return this.$store.state.statList.rightStatEstatPref.statName },
-      s_rightStatsDataIdPref () { return this.$store.state.statList.rightStatEstatPref.statsDataId },
-      s_rightCdCat01Pref () { return this.$store.state.statList.rightStatEstatPref.cdCat01 },
-      s_rightSourcePref () {
-        if (this.$store.state.statList.rightStatEstatPref.cdCat01.substr(0, 1) !== '#') {
-          return this.$store.state.statList.rightStatEstatPref.source + '<br>' + sourceLink
-        } else {
-          return  sourceLink
-        }
-      },
-      s_leftStatCity () {
-        if (this.$store.state.statList.leftStatEstatCity.cdCat01.substr(0, 1) !== '#') {
-          return '基礎データ'
-        } else {
-          return '社会生活統計指標'
-        }
-      },
-      s_leftStatNameCity () { return this.$store.state.statList.leftStatEstatCity.statName },
-      s_leftStatsDataIdCity () { return this.$store.state.statList.leftStatEstatCity.statsDataId },
-      s_leftCdCat01City () { return this.$store.state.statList.leftStatEstatCity.cdCat01 },
-      s_leftSourceCity () {
-        if (this.$store.state.statList.leftStatEstatCity.cdCat01.substr(0, 1) !== '#') {
-          return this.$store.state.statList.leftStatEstatCity.source + '<br>' + sourceLink
-        } else {
-          return  sourceLink
-        }
-      },
-      s_rightStatCity () {
-        if (this.$store.state.statList.rightStatEstatCity.cdCat01.substr(0, 1) !== '#') {
-          return '基礎データ'
-        } else {
-          return '社会生活統計指標'
-        }
-      },
-      s_rightStatNameCity () { return this.$store.state.statList.rightStatEstatCity.statName },
-      s_rightStatsDataIdCity () { return this.$store.state.statList.rightStatEstatCity.statsDataId },
-      s_rightCdCat01City () { return this.$store.state.statList.rightStatEstatCity.cdCat01 },
-      s_rightSourceCity () {
-        if (this.$store.state.statList.rightStatEstatCity.cdCat01.substr(0, 1) !== '#') {
-          return this.$store.state.statList.rightStatEstatCity.source + '<br>' + sourceLink
-        } else {
-          return  sourceLink
-        }
-      },
-    },
     methods: {
-      m_leftStatEstatPref (statType) {
-        let data = [];
-        let target;
-        if (statType === 'pref') {
-          target = this.$store.state.statList.leftStatEstatPref.statData[this.$store.state.statList.yearRangePref];
+      m_divShow (statType, side) {
+        if (side === 'leftSide') {
+          return statType === 'pref' || statType === 'scatterPref' || statType === 'city' || statType === 'scatterCity'
         } else {
-          target = this.$store.state.statList.leftStatEstatPref.statData[this.$store.state.statList.yearRangeScatterPref];
+          return statType === 'scatterPref' || statType === 'scatterCity'
         }
-        if (target) data = target.data2;
-        return  data
       },
-      m_rightStatEstatPref (statType) {
-        let data = [];
-        let target;
-        if (statType === 'pref') {
-          target = this.$store.state.statList.rightStatEstatPref.statData[this.$store.state.statList.yearRangePref];
-        } else {
-          target = this.$store.state.statList.rightStatEstatPref.statData[this.$store.state.statList.yearRangeScatterPref];
+      m_metaData (statType, side) {
+        let stat;
+        let  syurui, dataName, statsDataId, cdCat01, source1, source2;
+        const sourceLink = '<a href="https://www.stat.go.jp/data/ssds/2.html" target="_blank">整備している項目</a>';
+        switch (statType) {
+          case 'pref':
+          case 'scatterPref':
+            if (side === 'leftSide') {
+              stat = this.$store.state.statList.leftStatEstatPref
+            } else {
+              stat = this.$store.state.statList.rightStatEstatPref
+            }
+            break;
+          case 'city':
+          case 'scatterCity':
+            if (side === 'leftSide') {
+              stat = this.$store.state.statList.leftStatEstatCity
+            } else {
+              stat = this.$store.state.statList.rightStatEstatCity
+            }
+            break;
         }
-        if (target) data = target.data2;
-        return  data
-      },
-      m_leftStatEstatCity (statType) {
-        let data = [];
-        let target;
-        if (statType === 'city') {
-          target = this.$store.state.statList.leftStatEstatCity.statData[this.$store.state.statList.yearRangeCity];
-        } else {
-          target = this.$store.state.statList.leftStatEstatCity.statData[this.$store.state.statList.yearRangeScatterCity];
+        if (stat) {
+          if (stat.cdCat01.substr(0, 1) !== '#') {
+            syurui = '基礎データ'
+          } else {
+            syurui = '社会生活統計指標'
+          }
+          dataName = stat.statName;
+          statsDataId = stat.statsDataId;
+          cdCat01 = stat.cdCat01;
+          source1 = '<a href="https://www.stat.go.jp/data/ssds/index.html" target="_blank">都道府県・市区町村のすがた（社会・人口統計体系）</a>';
+          if (stat.cdCat01.substr(0, 1) !== '#') {
+            source2 = stat.source + '<br>' + sourceLink
+          } else {
+            source2 = sourceLink
+          }
         }
-        if (target) data = target.data2;
-        return  data
+        const returnObj = {
+          syurui,
+          dataName,
+          statsDataId,
+          cdCat01,
+          source1,
+          source2
+        };
+        return returnObj
       },
-      m_rightStatEstatCity (statType) {
+      m_tableData (statType, side) {
         let data = [];
         let target;
-        if (statType === 'city') {
-          target = this.$store.state.statList.rightStatEstatCity.statData[this.$store.state.statList.yearRangeCity];
-        } else {
-          target = this.$store.state.statList.rightStatEstatCity.statData[this.$store.state.statList.yearRangeScatterCity];
+        switch (statType) {
+          case 'pref':
+            if (side === 'leftSide') {
+              target = this.$store.state.statList.leftStatEstatPref.statData[this.$store.state.statList.yearRangePref]
+            } else {
+              target = this.$store.state.statList.rightStatEstatPref.statData[this.$store.state.statList.yearRangePref]
+            }
+            break;
+          case 'scatterPref':
+            if (side === 'leftSide') {
+              target = this.$store.state.statList.leftStatEstatPref.statData[this.$store.state.statList.yearRangeScatterPref]
+            } else {
+              target = this.$store.state.statList.rightStatEstatPref.statData[this.$store.state.statList.yearRangeScatterPref]
+            }
+            break;
+          case 'city':
+            if (side === 'leftSide') {
+              target = this.$store.state.statList.leftStatEstatCity.statData[this.$store.state.statList.yearRangeCity]
+            } else {
+              target = this.$store.state.statList.rightStatEstatCity.statData[this.$store.state.statList.yearRangeCity]
+            }
+            break;
+          case 'scatterCity':
+            if (side === 'leftSide') {
+              target = this.$store.state.statList.leftStatEstatCity.statData[this.$store.state.statList.yearRangeScatterCity]
+            } else {
+              target = this.$store.state.statList.rightStatEstatCity.statData[this.$store.state.statList.yearRangeScatterCity];
+            }
+            break;
         }
         if (target) data = target.data2;
         return  data
@@ -237,60 +155,3 @@
     }
   }
 </script>
-
-<style>
-    #footer-inner-left {
-        width: 50%;
-        padding: 0 10px 10px 10px;
-        overflow: auto;
-        text-align: left;
-        font-size: 14px;
-        line-height:18px;
-        display: inline-block;
-        vertical-align: top;
-    }
-    #footer-inner-right {
-        width: 50%;
-        padding: 0 10px 10px 10px;
-        overflow: auto;
-        text-align: left;
-        font-size: 14px;
-        line-height:18px;
-        display: inline-block;
-        vertical-align: top;
-    }
-    .bottom-info-div {
-        width:49%;
-        display: inline-block;
-        vertical-align: top;
-    }
-    .bottom-table-div {
-        width:49%;
-        display: inline-block;
-        vertical-align: top;
-        padding:0 0 0 10px;
-    }
-    .source-table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-    .source-table th {
-        font-weight: normal;
-        background: linear-gradient(#f4f5f8, #f1f3f6);
-        border: solid 1px #dcdfe6;
-    }
-    .source-table td {
-        background: white;
-        border: solid 1px #dcdfe6;
-    }
-    .vgt-table {
-        /*width: 49%!important;*/
-        font-size: 14px!important;
-    }
-    .vgt-table th {
-        padding: 0 20px 0 5px!important;
-    }
-    .vgt-table td {
-        padding: 0 5px 0 5px!important;
-    }
-</style>

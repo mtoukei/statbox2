@@ -242,7 +242,7 @@ export default function (barVal, pathVal, parentDiv) {
   //--------------------------------------------------------------------------------------------
   const type = ie? 'change': 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
-  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity), type, (() => {
+  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
     return e => rangeInput(e)
   })(1), false);
 }
