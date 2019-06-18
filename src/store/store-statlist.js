@@ -19,6 +19,7 @@ const statList = {
     yearRangeScatterCity: 100,
     yearRangeScatterPref: 100,
     chartTransition:false,
+    // 宮崎県市町村用-------------------------------------------------------------------------
     leftStat:{
       transition: true,
       count: 0,
@@ -31,6 +32,7 @@ const statList = {
       stat: '',
       statData: {},
     },
+    // 全国都道府県用-------------------------------------------------------------------------
     leftStatEstatPref: {
       count: 0,
       statData:[],
@@ -47,6 +49,7 @@ const statList = {
       statName: '',
       source: ''
     },
+    // 全国市町村用----------------------------------------------------------------------------
     leftStatEstatCity: {
       count: 0,
       statData:[],
@@ -63,18 +66,7 @@ const statList = {
       statName: '',
       source: ''
     },
-    leftStatTimeCity:{
-      transition: true,
-      count: 0,
-      stat: '',
-      statData: {},
-    },
-    leftStatTimePref:{
-      transition: true,
-      count: 0,
-      stat: '',
-      statData: {},
-    },
+    // 宮崎県時系列用-------------------------------------------------------------------------
     leftStatTime:{
       transition: true,
       count: 0,
@@ -87,10 +79,25 @@ const statList = {
       stat: '',
       statData: {},
     },
-    statOld:{
-      leftSide: '',
-      rightSide: ''
+    // 全国都道府県時系列用------------------------------------------------------------------
+    leftStatTimePref:{
+      transition: true,
+      count: 0,
+      stat: '',
+      statData: {},
     },
+    // 全国市町村時系列用--------------------------------------------------------------------
+    leftStatTimeCity:{
+      transition: true,
+      count: 0,
+      stat: '',
+      statData: {},
+    },
+    // statOld:{
+    //   leftSide: '',
+    //   rightSide: ''
+    // },
+    // 左右サイドメニューのメタ情報用------------------------------------------------------------
     eStatMetaCity: JSON.parse(JSON.stringify(metaCity)),
     eStatMetaPreh: JSON.parse(JSON.stringify(metaPref)),
     metaMiyazakiTime: MetaMiyazakiTime,
