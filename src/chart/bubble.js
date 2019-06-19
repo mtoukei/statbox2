@@ -6,11 +6,12 @@ export default function (val, parentDiv) {
   const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
   const palentDiv = d3.select(parentDiv);
   const rangeDiv = d3.select('#year-range-' + prefOrCity);
+  const isEStat = val.estat === true;
   if (palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
   let unit;
-  if (val.estat) {
+  if (isEStat) {
     const target = val.statData[val.statData.length - 1];
     dataset = target.data2;
     statName = val.statName;
@@ -196,15 +197,16 @@ export default function (val, parentDiv) {
     }
   });
   //--------------------------------------------------------------------------------------------
-  const type = ie? 'change': 'input';
-  Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
-  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-    return e => rangeInput(e)
-  })(1), false);
-
-  if (prefOrCity === 'pref') {
-    storeBase.commit('statList/yearRangePrefChange', val.statData.length - 1)
-  } else {
-    storeBase.commit('statList/yearRangeCityChange', val.statData.length - 1)
+  if (isEStat) {
+    const type = ie ? 'change' : 'input';
+    Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
+    eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
+      return e => rangeInput(e)
+    })(1), false);
+    if (prefOrCity === 'pref') {
+      storeBase.commit('statList/yearRangePrefChange', val.statData.length - 1)
+    } else {
+      storeBase.commit('statList/yearRangeCityChange', val.statData.length - 1)
+    }
   }
 }

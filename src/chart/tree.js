@@ -5,11 +5,12 @@ const eventkey = {};
 export default function (val, parentDiv) {
   const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
   const palentDiv = d3.select(parentDiv);
+  const isEStat = val.estat === true;
   if(palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
   let unit;
-  if (val.estat) {
+  if (isEStat) {
     const target = val.statData[val.statData.length - 1];
     const allPrefData = target.data;
     dataset = target.data2;
@@ -148,38 +149,38 @@ export default function (val, parentDiv) {
           let result, result2;
           switch(this.dataset[i].cityname) {
             case '北海道':
-              result = dataKeniki.children.find((value) => value.name === '北海道地方');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '北海道地方');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
             case '青森県':case '岩手県':case '宮城県':case '秋田県':case '山形県':case '福島県':
-              result = dataKeniki.children.find((value) => value.name === '東北地方');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '東北地方');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
             case '茨城県':case '栃木県':case '群馬県':case '埼玉県':case '千葉県':case '東京都':case '神奈川県':
-              result = dataKeniki.children.find((value) => value.name === '関東地方');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '関東地方');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
             case '新潟県':case '富山県':case '石川県':case '福井県':case '山梨県':case '長野県':case '岐阜県':case '静岡県':case '愛知県':
-              result = dataKeniki.children.find((value) => value.name === '中部地方');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '中部地方');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
             case '大阪府':case '京都府':case '兵庫県':case '奈良県':case '三重県':case '滋賀県':case '和歌山県':
-              result = dataKeniki.children.find((value) => value.name === '近畿地方');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '近畿地方');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
             case '鳥取県':case '島根県':case '岡山県':case '広島県':case '山口県':case '徳島県':case '香川県':case '愛媛県':case '高知県':
-              result = dataKeniki.children.find((value) => value.name === '中国・四国地方');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '中国・四国地方');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
             case '福岡県':case '佐賀県':case '長崎県':case '熊本県':case '大分県':case '宮崎県':case '鹿児島県':case '沖縄県':
-              result = dataKeniki.children.find((value) => value.name === '九州・沖縄地方');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '九州・沖縄地方');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
           }
@@ -190,33 +191,33 @@ export default function (val, parentDiv) {
           let result, result2;
           switch(this.dataset[i].cityname) {
             case '宮崎市':case '国富町':case '綾町':
-              result = dataKeniki.children.find((value) => value.name === '宮崎東諸県圏域');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '宮崎東諸県圏域');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
             case '日南市':case '串間市':
-              result = dataKeniki.children.find((value) => value.name === '日南・串間圏域');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '日南・串間圏域');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
             case '都城市':case '三股町':
-              result = dataKeniki.children.find((value) => value.name === '都城北諸県圏域');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '都城北諸県圏域');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
             case '小林市':case 'えびの市':case '高原町':
               result = dataKeniki.children.find((value) => value.name === '西諸県圏域');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
             case '西都市':case '高鍋町':case '新富町':case '西米良村':case '木城町':case '川南町':case '都農町':
-              result = dataKeniki.children.find((value) => value.name === '西都児湯圏域');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '西都児湯圏域');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
             case '延岡市':case '日向市':case '門川町':case '諸塚村':case '椎葉村':case '美郷町':case '高千穂町':case '日之影町':case '五ヶ瀬町':
-              result = dataKeniki.children.find((value) => value.name === '宮崎県北部圏域');
-              result2 = result.children.find((value) => value.name === this.dataset[i].cityname);
+              result = dataKeniki.children.find(value => value.name === '宮崎県北部圏域');
+              result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
           }
@@ -250,9 +251,6 @@ export default function (val, parentDiv) {
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
-  .attr('viewBox', '0 0 '+ width + ' '  + height)
-  .attr('preserveAspectRatio', 'xMidYMid')
-  .classed("svg-content-responsive", true)
   .classed("chart-svg", true);
   // ツリーマップ--------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
@@ -302,11 +300,10 @@ export default function (val, parentDiv) {
   .attr('font-size', d => dc.fontScale(d.data.value))
   .attr('class', 'node-label')
   .text(d => d.data.name)
-  // .attr('fill', 'white')
   .attr('opacity', 0);
   if (transitionFlg) {
     text.transition()
-    .delay((d,i) => i* 10)
+    .delay((d,i) => i * 10)
     .attr('opacity', 1);
   } else {
     text.attr('opacity', 1);
@@ -318,8 +315,6 @@ export default function (val, parentDiv) {
   .attr('class' ,'no-print')
   .append('text')
   .text(statName);
-  //--------------------------------------------------------------------------------------------
-  dc = null;
   // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
@@ -348,12 +343,13 @@ export default function (val, parentDiv) {
     .attr('font-size', d => dc.fontScale(d.data.value))
     .attr('class', 'node-label')
     .text(d => d.data.name);
-    dc = null
   };
-  //-------------------------------------------------------------------------------------------
-  const type = ie? 'change': 'input';
-  Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
-  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-    return e => rangeInput(e)
-  })(1), false);
+  //--------------------------------------------------------------------------------------------
+  if (isEStat) {
+    const type = ie? 'change': 'input';
+    Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
+    eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
+      return e => rangeInput(e)
+    })(1), false);
+  }
 }

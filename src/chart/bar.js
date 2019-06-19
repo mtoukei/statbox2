@@ -6,11 +6,12 @@ const eventkey = {};
 export default function (barVal, pathVal, parentDiv) {
   const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
   const palentDiv = d3.select(parentDiv);
+  const isEStat = barVal.estat === true;
   if(palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
   let unit;
-  if (barVal.estat) {
+  if (isEStat) {
     const target = barVal.statData[barVal.statData.length - 1];
     const allPrefData = target.data;
     dataset = target.data2;
@@ -240,9 +241,12 @@ export default function (barVal, pathVal, parentDiv) {
     .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median));
   };
   //--------------------------------------------------------------------------------------------
-  const type = ie? 'change': 'input';
-  Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
-  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-    return e => rangeInput(e)
-  })(1), false);
+  if (isEStat) {
+    const type = ie? 'change': 'input';
+    Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
+    eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
+      return e => rangeInput(e)
+    })(1), false);
+  }
+
 }

@@ -5,11 +5,12 @@ const eventkey = {};
 export default function (val, parentDiv) {
   const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
   const palentDiv = d3.select(parentDiv);
+  const isEStat = val.estat === true;
   if(palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
   let unit;
-  if (val.estat) {
+  if (isEStat) {
     const target = val.statData[val.statData.length - 1];
     const allPrefData = target.data;
     dataset = target.data2;
@@ -54,7 +55,6 @@ export default function (val, parentDiv) {
     .classed("chart-svg", true);
     // -------------------------------------------------------------------------------------------
     const map = dataset.map( d => d.data);
-    // console.log(map)
     // xスケール----------------------------------------------------------------------------------
     const xScale = d3.scaleLinear()
     .rangeRound([0, width - margin.left - margin.right])
@@ -161,9 +161,11 @@ export default function (val, parentDiv) {
     histgramCreate(dc.dataset)
   };
   //--------------------------------------------------------------------------------------------
-  const type = ie? 'change': 'input';
-  Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
-  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-    return e => rangeInput(e)
-  })(1), false);
+  if (isEStat) {
+    const type = ie? 'change': 'input';
+    Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
+    eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
+      return e => rangeInput(e)
+    })(1), false);
+  }
 }
