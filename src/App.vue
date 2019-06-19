@@ -35,6 +35,7 @@
       sideTree,
       dialogs
     },
+    // ミックスイン「mixinMetadataCreate」を復活させるとログにメタ情報を作る。
     // mixins: [mixinDetectResize, mixinMetadataCreate, mixinWatch],
     mixins: [mixinDetectResize, mixinWatch],
     computed: {

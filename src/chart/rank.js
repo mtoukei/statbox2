@@ -4,11 +4,12 @@ const eventkey = {};
 export default function (val, parentDiv) {
   const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
   const palentDiv = d3.select(parentDiv);
+  const isEStat = val.estat === true;
   if (palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
   let unit;
-  if (val.estat) {
+  if (isEStat) {
     const target = val.statData[val.statData.length - 1];
     dataset = target.data2;
     statName = val.statName;
@@ -91,9 +92,9 @@ export default function (val, parentDiv) {
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname )
-  .attr('fill', function (d) {
+  .attr('fill', d => {
     const rgb = d3.rgb(dc.colorScale(d.data));
-    const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
+    const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150? 'black': 'white';
   });
   const text1_2 = g.append('g')
@@ -102,9 +103,9 @@ export default function (val, parentDiv) {
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.data.toLocaleString())
-  .attr('fill', function (d) {
+  .attr('fill',  d => {
     const rgb = d3.rgb(dc.colorScale(d.data));
-    const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
+    const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150? 'black': 'white';
   });
   //--------------------------------------------------------------------------------------------
@@ -118,20 +119,20 @@ export default function (val, parentDiv) {
   .append('rect')
   .attr('width', 130 * multi)
   .attr('height', 15 * multi)
-  .attr('transform', (d,i) => 'translate(' + (0) + ',' + (15 * i * multi) + ')')
+  .attr('transform', (d,i) => 'translate(0,' + (15 * i * multi) + ')')
   .attr('fill', d => dc.colorScale(d.data))
   .attr('stroke', 'black')
   .attr('stroke-width', 0.2);
   // テキスト------------------------------------------------------------------------------------
   const text2_1 = g2.append('g')
   .append('text')
-  .attr('transform', (d,i) =>'translate(' + (0) + ',' + (12 * multi  + 15 * i * multi) + ')')
+  .attr('transform', (d,i) =>'translate(0,' + (12 * multi  + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname)
   .attr('fill', d => {
     const rgb = d3.rgb(dc.colorScale(d.data));
-    const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
+    const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150? 'black': 'white';
   });
   const text2_2 = g2.append('g')
@@ -142,7 +143,7 @@ export default function (val, parentDiv) {
   .text(d => d.data.toLocaleString())
   .attr('fill', d => {
     const rgb = d3.rgb(dc.colorScale(d.data));
-    const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
+    const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150? 'black': 'white';
   });
   // 表名-------------------------------------------------------------------------------------
@@ -163,17 +164,17 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('fill', d => dc.colorScale(d.data))
     .attr('transform', (d,i) => {
-      return 'translate(' + (0) + ',' + (12 * multi  + 15 * (i-1) * multi) + ')'
+      return 'translate(0,' + (12 * multi  + 15 * (i-1) * multi) + ')'
     });
     text1_1
     .data(dc.dataset, d => d.citycode)
     .transition()
     .duration(200)
-    .attr('transform', (d,i) => 'translate(' + (0) + ',' + (12 * multi  + 15 * i * multi) + ')')
+    .attr('transform', (d,i) => 'translate(0,' + (12 * multi  + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
     .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
-      const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
+      const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150? 'black': 'white';
     });
     text1_2
@@ -184,7 +185,7 @@ export default function (val, parentDiv) {
     .text(d => d.data.toLocaleString())
     .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
-      const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
+      const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150? 'black': 'white';
     });
     //-------------------------------------------------------------------------------------------
@@ -213,14 +214,16 @@ export default function (val, parentDiv) {
     .text(d => d.data.toLocaleString())
     .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
-      const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
+      const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150? 'black': 'white';
     });
   };
   //--------------------------------------------------------------------------------------------
-  const type = ie? 'change': 'input';
-  Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
-  eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-    return e => rangeInput(e)
-  })(1), false);
+  if (isEStat) {
+    const type = ie? 'change': 'input';
+    Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
+    eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
+      return e => rangeInput(e)
+    })(1), false);
+  }
 }

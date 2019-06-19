@@ -2,7 +2,7 @@
     <div id="footer">
         <div class='resizers'>
             <div class='resizer top'>
-                <i class="el-icon-arrow-up"></i><span style="padding: 0 20px 0 20px">メタ情報＋テーブル</span><i class="el-icon-arrow-up"></i>
+                <span style="padding: 0 20px 0 20px">出典とテーブル</span>
             </div>
             <div style="padding-top: 40px">
                 <!--メタ情報とテーブル作成-->
