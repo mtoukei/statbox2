@@ -56,15 +56,7 @@
         get () { return this.$store.state.base.activeIndex },
         set (value) { this.$store.commit('base/activeIndexChange', value) }
       },
-      s_statType: {
-        get () { return this.$store.state.base.statType },
-        set (value) { this.$store.commit('base/statTypeChange', value) }
-      },
-      s_rightSideDivShow () { return this.$store.state.base.rightSideDivShow },
-      s_menuChange () { return this.$store.state.base.menuChange },
       s_leftDivList () { return this.$store.state.base.leftDivList },
-      s_transition () { return this.$store.state.statList.transition },
-      s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
     },
     methods: {
       // ヘッダーメニュー--------------------------------------------------------------------------
