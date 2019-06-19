@@ -2,7 +2,7 @@
 // メタデータを取得するときに使う。
 // コンソールログに出力されるJSON.stringifyをコピーして
 // meta-pref.jsまたはmeta-city.jsに貼り付ける
-import metaSourceIDPref from '../../store/meta/meta-source-id-pref'
+// import metaSourceIDPref from '../../store/meta/meta-source-id-pref'
 import metaSourceIDCity from '../../store/meta/meta-source-id-city'
 export default {
   name: 'metaDataCreate',
