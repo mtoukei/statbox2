@@ -75,23 +75,11 @@ export default {
                 array[index].children = childrenArr
               }
             });
-            // console.log(target)
           }
         }
         vm.$store.commit('base/chartDivLoadingShow', false);
-        // console.log(target);
         console.log(JSON.stringify(target))
-
-        for (let obj of metaSourceIDPref) {
-          // console.log(obj)
-        }
-
       })
-    }
-  },
-  methods: {
-    mix_metaDataCreate() {
-
     }
   }
 }
