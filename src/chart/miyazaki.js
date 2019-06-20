@@ -1,4 +1,4 @@
-const miyazaki  =
+const miyazaki =
   {
     "type": "FeatureCollection",
     "name": "miyazaki",

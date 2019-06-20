@@ -29,7 +29,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
   const radius = Math.min(width, height) / 2 - 10;
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg  = storeBase.state.statList.transition;
+  const transitionFlg = storeBase.state.statList.transition;
   // const transitionFlg = false
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
@@ -152,8 +152,8 @@ export default function (val, parentDiv) {
   }
   // 表名-------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size',  (12 * multi) + 'px')
-  .attr('transform', () => 'translate(5,' + (12 * multi + 5)  + ')')
+  .attr('font-size', (12 * multi) + 'px')
+  .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
   .attr('class' ,'no-print')
   .append('text')
   .text(statName);

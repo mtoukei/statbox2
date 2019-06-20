@@ -1,45 +1,63 @@
 <template>
-    <div id="footer">
-        <div class='resizers'>
-            <div class='resizer top'>
-                <span style="padding: 0 20px 0 20px">出典とテーブル</span>
+  <div id="footer">
+    <div class="resizers">
+      <div class="resizer top">
+        <span style="padding: 0 20px 0 20px">出典とテーブル</span>
+      </div>
+      <div style="padding-top: 40px">
+        <!--メタ情報とテーブル作成-->
+        <div
+          :id="el.id"
+          v-for="el in footerInner"
+          :key="el.id"
+        >
+          <div v-show="m_divShow (statType, el.side)">
+            <div class="bottom-info-div">
+              <table class="source-table">
+                <tr><th>種類</th><td>{{ m_metaData (statType, el.side).syurui }}</td></tr>
+                <tr><th>データ名</th><td>{{ m_metaData (statType, el.side).dataName }}</td></tr>
+                <tr><th>statsDataId</th><td>{{ m_metaData (statType, el.side).statsDataId }}</td></tr>
+                <tr><th>※項目符号（指標コード）</th><td>{{ m_metaData (statType, el.side).cdCat01 }}</td></tr>
+                <tr><th>出典</th><td v-html="m_metaData (statType, el.side).source1" /></tr>
+                <tr><th>所在源又は<br>参考資料等</th><td v-html="m_metaData (statType, el.side).source2" /></tr>
+              </table>
+              ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
             </div>
-            <div style="padding-top: 40px">
-                <!--メタ情報とテーブル作成-->
-                <div :id="el.id" v-for="el in footerInner" :key="el.id">
-                    <div v-show="m_divShow (statType, el.side)">
-                        <div class="bottom-info-div">
-                            <table class="source-table">
-                                <tr><th>種類</th><td>{{ m_metaData (statType, el.side).syurui }}</td></tr>
-                                <tr><th>データ名</th><td>{{ m_metaData (statType, el.side).dataName }}</td></tr>
-                                <tr><th>statsDataId</th><td>{{ m_metaData (statType, el.side).statsDataId }}</td></tr>
-                                <tr><th>※項目符号（指標コード）</th><td>{{ m_metaData (statType, el.side).cdCat01 }}</td></tr>
-                                <tr><th>出典</th><td  v-html="m_metaData (statType, el.side).source1"></td></tr>
-                                <tr><th>所在源又は<br>参考資料等</th><td  v-html="m_metaData (statType, el.side).source2"></td></tr>
-                            </table>
-                            ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
-                        </div>
-                        <div class="bottom-table-div">
-                            <el-table :data="m_tableData (statType, el.side)">
-                                <el-table-column prop="citycode" label="citycode" sortable/>
-                                <el-table-column prop="cityname" label="cityname"/>
-                                <el-table-column prop="data" label="data" sortable/>
-                            </el-table>
-                        </div>
-                    </div>
-                </div>
-                <!--メタ情報とテーブル作成ここまで-->
+            <div class="bottom-table-div">
+              <el-table :data="m_tableData (statType, el.side)">
+                <el-table-column
+                  prop="citycode"
+                  label="citycode"
+                  sortable
+                />
+                <el-table-column
+                  prop="cityname"
+                  label="cityname"
+                />
+                <el-table-column
+                  prop="data"
+                  label="data"
+                  sortable
+                />
+              </el-table>
             </div>
+          </div>
         </div>
-        <resize-observer @notify="mix_detectResize" />
+        <!--メタ情報とテーブル作成ここまで-->
+      </div>
     </div>
+    <resize-observer @notify="mix_detectResize" />
+  </div>
 </template>
 
 <script>
   import mixinDetectResize from '../components/mixin/detectResize'
   export default {
-    name: "bottom",
-    props: ['side', 'statType'],
+    name: "Bottom",
+    props: {
+      side: {type: String, default: ''},
+      statType: {type: String, default: ''}
+    },
     mixins: [mixinDetectResize],
     data () {
         return {
@@ -59,7 +77,7 @@
       },
       m_metaData (statType, side) {
         let stat;
-        let  syurui, dataName, statsDataId, cdCat01, source1, source2;
+        let syurui, dataName, statsDataId, cdCat01, source1, source2;
         const sourceLink = '<a href="https://www.stat.go.jp/data/ssds/2.html" target="_blank">整備している項目</a>';
         switch (statType) {
           case 'pref':
@@ -132,7 +150,7 @@
             break;
         }
         if (target) data = target.data2;
-        return  data
+        return data
       }
     }
   }

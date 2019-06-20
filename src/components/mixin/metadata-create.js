@@ -19,7 +19,7 @@ export default {
         for (let j in target[i].children) {
           const statId = target[i].children[j].statId;
           vm.$store.commit('base/chartDivLoadingShow', true);
-          plomises[count] =  new Promise(function(resolve) {
+          plomises[count] = new Promise(function(resolve) {
             axios({
               method: 'get',
               url: 'https://api.e-stat.go.jp/rest/2.1/app/json/getMetaInfo',

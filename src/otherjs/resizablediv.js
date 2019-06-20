@@ -101,7 +101,7 @@ export default function (div) {
         }
       }
     };
-    const stopResize  = () => {
+    const stopResize = () => {
       window.removeEventListener('mousemove', resize)
     }
   }

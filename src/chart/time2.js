@@ -20,7 +20,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
   const margin = { 'top': 20 * multi, 'bottom': 30 * multi, 'right': 100 * multi, 'left': 60 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  let transitionFlg  = storeBase.state.statList.transition;
+  let transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -68,7 +68,7 @@ export default function (val, parentDiv) {
   .style('top', '40px')
   .style('right', 0)
   .style('width', (90 * multi) + 'px')
-  .style('height',  (height - 40 * multi) + 'px')
+  .style('height', (height - 40 * multi) + 'px')
   .style('overflow', 'auto');
   const svgRight = containerDiv.append('svg')
   .attr('width', 70 * multi)
@@ -108,7 +108,7 @@ export default function (val, parentDiv) {
   .call(
     d3.axisBottom(xScale)
     .ticks((() => {
-      return  timeData.length >10? 10: timeData.length
+      return timeData.length >10? 10: timeData.length
     })())
     .tickSize(margin.top + margin.bottom - height)
   )

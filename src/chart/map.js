@@ -30,7 +30,7 @@ export default function (val, parentDiv) {
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg  = storeBase.state.statList.transition;
+  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -193,7 +193,7 @@ export default function (val, parentDiv) {
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
-  .attr('transform', () => 'translate(5,' + (12 * multi + 5)  + ')')
+  .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
   .attr('class' ,'no-print')
   .append('text')
   .text(statName);

@@ -161,11 +161,11 @@ export default function (leftVal, rightVal) {
   // 軸の表示----------------------------------------------------------------------------------
   const axisx = d3.axisBottom(xScale)
   .ticks(20)
-  .tickSize((margin.top + margin.bottom)   - height);
+  .tickSize((margin.top + margin.bottom) - height);
   const axisy = d3.axisLeft(yScale)
   // .ticks(10)
-  .tickSize((margin.left + margin.right)  - width);
-  const gX =  svg.append('g')
+  .tickSize((margin.left + margin.right) - width);
+  const gX = svg.append('g')
   .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
   .attr('class', 'axis')
   .call(axisx);

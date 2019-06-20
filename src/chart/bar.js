@@ -30,7 +30,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
   const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 50 * multi, 'left': 50 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg  = storeBase.state.statList.transition;
+  const transitionFlg = storeBase.state.statList.transition;
   // const transitionFlg = false
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {

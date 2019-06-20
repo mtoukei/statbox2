@@ -1,18 +1,25 @@
 <template>
   <div id="app">
     <!--非表示のもの色々-->
-    <dialogs :statType="s_statType"></dialogs>
-    <div class="d3-tooltip"></div>
+    <dialogs :stat-type="s_statType" />
+    <div class="d3-tooltip" />
     <!--ヘッダー-->
-    <header-menu/>
+    <header-menu />
     <!--左サイド-->
-    <sideTree  side="leftSide" :statType="s_statType"/>
+    <sideTree
+      side="leftSide"
+      :stat-type="s_statType"
+    />
     <!--メイン部。グラフ表示部分-->
-    <contents/>
+    <contents />
     <!--右サイド-->
-    <sideTree side="rightSide" :statType="s_statType" v-show="s_rightSideDivShow"/>
+    <sideTree
+      side="rightSide"
+      :stat-type="s_statType"
+      v-show="s_rightSideDivShow"
+    />
     <!--フッター-->
-    <footer-info :statType="s_statType"/>
+    <footer-info :stat-type="s_statType" />
   </div>
 </template>
 
@@ -27,7 +34,7 @@
   // import mixinMetadataCreate from './components/mixin/metadata-create' // 後々に使うことになるので削除しない。
   import mixinWatch from './components/mixin/watch'
   export default {
-    name: 'app',
+    name: 'App',
     components: {
       contents,
       'header-menu': header,
@@ -49,7 +56,7 @@
     mounted () {
       this.$nextTick(function () {
         const vm = this;
-        window.onresize = () =>  vm.mix_detectResize();
+        window.onresize = () => vm.mix_detectResize();
         // divにリサイズ機能を付与---------------------------------------------------------------
         resizableDiv('#left-side-div');
         resizableDiv('#right-side-div');

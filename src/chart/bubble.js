@@ -30,7 +30,7 @@ export default function (val, parentDiv) {
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg  = storeBase.state.statList.transition;
+  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -66,7 +66,7 @@ export default function (val, parentDiv) {
       const bubble_data = bubble(nodes).descendants();
       // データ-----------------------------------------------------------------------------------
       // parentがないデータを返す
-      const no_root_bubble = bubble_data.filter(d => d.parent != null);
+      const no_root_bubble = bubble_data.filter(d => d.parent !== null);
       this.data = no_root_bubble;
       // 変換されたバブルデータにある半径の最大値/最小値の割り出し-----------------------------
       const maxVal = d3.max(no_root_bubble, d => d.r);
@@ -100,7 +100,7 @@ export default function (val, parentDiv) {
   .attr('class', 'bubble')
   .attr('transform', d => 'translate('+d.x+','+d.y+')');
   const circle = bubbles.append('circle')
-  .attr('fill',  d => dc.colorScale(d.r));
+  .attr('fill', d => dc.colorScale(d.r));
   if (transitionFlg) {
     circle.attr('r', 0)
     .transition()
@@ -115,7 +115,7 @@ export default function (val, parentDiv) {
     if(d.r !== 0) return d.data.name
   })
   .attr('font-size', d => dc.fontScale(d.r))
-  .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi)  + ')')
+  .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
   .attr('text-anchor', 'middle')
   .attr('fill', function (d) {
     const rgb = d3.rgb(dc.colorScale(d.r));
@@ -140,8 +140,8 @@ export default function (val, parentDiv) {
   .on('mouseout', tip.hide);
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size',  (12 * multi) + 'px')
-  .attr('transform', () => 'translate(5,' + (12 * multi + 5)  + ')')
+  .attr('font-size', (12 * multi) + 'px')
+  .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
   .attr('class' ,'no-print')
   .append('text')
   .text(statName);
@@ -165,7 +165,7 @@ export default function (val, parentDiv) {
       if(d.r !== 0) return d.data.name
     })
     .attr('font-size', d => dc.fontScale(d.r))
-    .attr('transform', (d) => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi)  + ')')
+    .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
     .attr('text-anchor', 'middle')
     .attr('fill', function (d) {
       const rgb = d3.rgb(dc.colorScale(d.r));
@@ -190,9 +190,9 @@ export default function (val, parentDiv) {
   .text((d,i) =>{
     if (length<=10) {
       return d.time.substr(0,4)
-    } else if  (i===0 || i === length -1) {
+    } else if (i===0 || i === length -1) {
       return d.time.substr(2,2)
-    } else  if (i % quarter === 0) {
+    } else if (i % quarter === 0) {
       return d.time.substr(2,2)
     }
   });

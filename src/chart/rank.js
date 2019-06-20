@@ -64,7 +64,7 @@ export default function (val, parentDiv) {
   palentDiv.style('background', '#d0d0d0');
   const containerDiv = palentDiv.select('.resizers').append('div')
   .attr('id', 'rank-container-div')
-  .style('height',  (height - 20 * multi) + 'px')
+  .style('height', (height - 20 * multi) + 'px')
   .style('overflow', 'auto');
   const svg = containerDiv.append('svg')
   .attr('width', width - 25)
@@ -88,7 +88,7 @@ export default function (val, parentDiv) {
   // テキスト------------------------------------------------------------------------------------
   const text1_1 = g.append('g')
   .append('text')
-  .attr('transform', (d,i) =>'translate(' + (0) + ',' + (12 * multi  + 15 * i * multi) + ')')
+  .attr('transform', (d,i) =>'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname )
@@ -99,18 +99,18 @@ export default function (val, parentDiv) {
   });
   const text1_2 = g.append('g')
   .append('text')
-  .attr('transform', (d,i) =>'translate(' + (130 * multi) + ',' + (12 * multi  + 15 * i * multi) + ')')
+  .attr('transform', (d,i) =>'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.data.toLocaleString())
-  .attr('fill',  d => {
+  .attr('fill', d => {
     const rgb = d3.rgb(dc.colorScale(d.data));
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150? 'black': 'white';
   });
   //--------------------------------------------------------------------------------------------
   const g2 = svg.append('g')
-  .attr('transform', 'translate(' + (10 * multi + 135 * multi)  + ',' + (10 * multi + 15) + ')')
+  .attr('transform', 'translate(' + (10 * multi + 135 * multi) + ',' + (10 * multi + 15) + ')')
   .selectAll('rect')
   .data(dc.dataset2)
   .enter();
@@ -126,7 +126,7 @@ export default function (val, parentDiv) {
   // テキスト------------------------------------------------------------------------------------
   const text2_1 = g2.append('g')
   .append('text')
-  .attr('transform', (d,i) =>'translate(0,' + (12 * multi  + 15 * i * multi) + ')')
+  .attr('transform', (d,i) =>'translate(0,' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname)
@@ -137,7 +137,7 @@ export default function (val, parentDiv) {
   });
   const text2_2 = g2.append('g')
   .append('text')
-  .attr('transform', (d,i) =>'translate(' + (130 * multi) + ',' + (12 * multi  + 15 * i * multi) + ')')
+  .attr('transform', (d,i) =>'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.data.toLocaleString())
@@ -148,8 +148,8 @@ export default function (val, parentDiv) {
   });
   // 表名-------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size',  (12 * multi) + 'px')
-  .attr('transform', () => 'translate(5,' + (12 * multi + 5)  + ')')
+  .attr('font-size', (12 * multi) + 'px')
+  .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
   .attr('class' ,'no-print')
   .append('text')
   .text(statName + '　単位：' + unit);
@@ -164,13 +164,13 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('fill', d => dc.colorScale(d.data))
     .attr('transform', (d,i) => {
-      return 'translate(0,' + (12 * multi  + 15 * (i-1) * multi) + ')'
+      return 'translate(0,' + (12 * multi + 15 * (i-1) * multi) + ')'
     });
     text1_1
     .data(dc.dataset, d => d.citycode)
     .transition()
     .duration(200)
-    .attr('transform', (d,i) => 'translate(0,' + (12 * multi  + 15 * i * multi) + ')')
+    .attr('transform', (d,i) => 'translate(0,' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
     .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
@@ -181,7 +181,7 @@ export default function (val, parentDiv) {
     .data(dc.dataset, d => d.citycode)
     .transition()
     .duration(200)
-    .attr('transform', (d,i) => 'translate(' + (130 * multi) + ',' + (12 * multi  + 15 * i * multi) + ')')
+    .attr('transform', (d,i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
     .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
@@ -194,12 +194,12 @@ export default function (val, parentDiv) {
     .transition()
     .duration(200)
     .attr('fill', d => dc.colorScale(d.data))
-    .attr('transform', (d,i) => 'translate(' + (0) + ',' + (12 * multi  + 15 * (i-1) * multi) + ')');
+    .attr('transform', (d,i) => 'translate(' + (0) + ',' + (12 * multi + 15 * (i-1) * multi) + ')');
     text2_1
     .data(dc.dataset2, d => d.citycode)
     .transition()
     .duration(200)
-    .attr('transform', (d,i) => 'translate(' + (0) + ',' + (12 * multi  + 15 * i * multi) + ')')
+    .attr('transform', (d,i) => 'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
     .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
@@ -210,7 +210,7 @@ export default function (val, parentDiv) {
     .data(dc.dataset2, d => d.citycode)
     .transition()
     .duration(200)
-    .attr('transform', (d,i) => 'translate(' + (130 * multi) + ',' + (12 * multi  + 15 * i * multi) + ')')
+    .attr('transform', (d,i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
     .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));

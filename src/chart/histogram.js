@@ -29,7 +29,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
   const margin = { 'top': 60 * multi, 'bottom': 60 * multi, 'right': 60 * multi, 'left': 20 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  let transitionFlg  = storeBase.state.statList.transition;
+  let transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -49,7 +49,7 @@ export default function (val, parentDiv) {
     const svg = palentDiv.select('.resizers').append('svg')
     .attr('width', width)
     .attr('height', height)
-    .attr('viewBox', '0 0 '+ width + ' '  + height)
+    .attr('viewBox', '0 0 '+ width + ' ' + height)
     .attr('preserveAspectRatio', 'xMidYMid')
     .classed("svg-content-responsive", true)
     .classed("chart-svg", true);
@@ -93,10 +93,10 @@ export default function (val, parentDiv) {
     if (transitionFlg) {
       rect.transition()
       .duration(1500)
-      .attr('y',  d => yScale(d.length))
+      .attr('y', d => yScale(d.length))
       .attr("height", d => height - yScale(d.length) - margin.bottom - margin.top);
     } else {
-      rect.attr('y',  d => yScale(d.length))
+      rect.attr('y', d => yScale(d.length))
       .attr("height", d => height - yScale(d.length) - margin.bottom - margin.top);
     }
     // const tip = d3Tip().attr('class', 'd3-tip').html(function(d) { return d; });
@@ -115,7 +115,7 @@ export default function (val, parentDiv) {
     .attr("text-anchor", "middle")
     .text(d => { if (d.length) return d.length + '市町村' })
     .attr("x", (xScale(histoData[0].x1) - xScale(histoData[0].x0)) / 2)
-    .attr('y',  d => yScale(d.length) - 5)
+    .attr('y', d => yScale(d.length) - 5)
     .attr('opacity', 0);
     if (transitionFlg) {
       text.transition()
@@ -138,7 +138,7 @@ export default function (val, parentDiv) {
     .attr('text-anchor', 'start');
     // 単位------------------------------------------------------------------------------------
     svg.append('g')
-    .attr('transform', 'translate(' + (width - 20) +  ',' + (height - margin.bottom + 35) + ')')
+    .attr('transform', 'translate(' + (width - 20) + ',' + (height - margin.bottom + 35) + ')')
     .append('text')
     .text('単位:' + unit)
     .attr('text-anchor', 'end')
@@ -146,7 +146,7 @@ export default function (val, parentDiv) {
     // 表名-------------------------------------------------------------------------------------
     svg.append('g')
     .attr('font-size', 12 * multi + 'px')
-    .attr('transform', () => 'translate(5,' + (12 * multi + 5)  + ')')
+    .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
     .attr('class' ,'no-print')
     .append('text')
     .text(statName);

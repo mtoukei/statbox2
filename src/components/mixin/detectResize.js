@@ -10,11 +10,11 @@ export default {
         const footerHeight = document.querySelector('#footer').clientHeight;
         const resizersLeft = document.querySelector('.resizers .resizer.left');
         const resizersRight = document.querySelector('.resizers .resizer.right');
-        const treeDivs  = document.querySelectorAll('.tree-div');
+        const treeDivs = document.querySelectorAll('.tree-div');
         const leftSideDivWidth = document.querySelector('#left-side-div').clientWidth;
         const rightSideDivWidth = document.querySelector('#right-side-div').clientWidth;
-        const vTreeLefts  = document.querySelectorAll('#left-side-div' + ' .v-tree');
-        const vTreeRights  = document.querySelectorAll('#right-side-div' + ' .v-tree');
+        const vTreeLefts = document.querySelectorAll('#left-side-div' + ' .v-tree');
+        const vTreeRights = document.querySelectorAll('#right-side-div' + ' .v-tree');
         const contents = document.querySelector('#contents');
         // 高さ設定。画面ボトムのリサイズ-------------------------------------------------------
         for (let i in treeDivs) {

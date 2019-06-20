@@ -28,7 +28,7 @@ export default function (val, parentDiv) {
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg  = storeBase.state.statList.transition;
+  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -185,7 +185,7 @@ export default function (val, parentDiv) {
               break;
           }
         }
-      }  else {
+      } else {
         dataKeniki = miyazakiKeniki;
         for (let i in this.dataset) {
           let result, result2;
@@ -206,7 +206,7 @@ export default function (val, parentDiv) {
               result2.value = this.dataset[i].data;
               break;
             case '小林市':case 'えびの市':case '高原町':
-              result = dataKeniki.children.find((value) => value.name === '西諸県圏域');
+              result = dataKeniki.children.find(value => value.name === '西諸県圏域');
               result2 = result.children.find(value => value.name === this.dataset[i].cityname);
               result2.value = this.dataset[i].data;
               break;
@@ -311,7 +311,7 @@ export default function (val, parentDiv) {
   // 表名-------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
-  .attr('transform', () => 'translate(5,' + (12 * multi + 5)  + ')')
+  .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
   .attr('class' ,'no-print')
   .append('text')
   .text(statName);

@@ -1,17 +1,40 @@
 <template>
-    <el-dialog title="保存" :visible.sync="s_dialogVisible" width="320px" center>
-        <div class="dialog-div">
-            <p>画像保存。形式を選択してください。</p>
-            <el-button class="svg-btn" type="primary" @click="saveSvg">SVG形式</el-button>
-            <el-button class="png-btn" type="primary" @click="savePng">PNG形式</el-button>
-        </div>
-        <div class="dialog-div">
-            <P>CSVをダウンロードします。</P>
-            <el-button id="csv-btn" type="primary" @click="csvDownload">ダウンロード</el-button>
-        </div>
-        <!--<span slot="footer" class="dialog-footer">-->
-        <!--</span>-->
-    </el-dialog>
+  <el-dialog
+    title="保存"
+    :visible.sync="s_dialogVisible"
+    width="320px"
+    center
+  >
+    <div class="dialog-div">
+      <p>画像保存。形式を選択してください。</p>
+      <el-button
+        class="svg-btn"
+        type="primary"
+        @click="saveSvg"
+      >
+        SVG形式
+      </el-button>
+      <el-button
+        class="png-btn"
+        type="primary"
+        @click="savePng"
+      >
+        PNG形式
+      </el-button>
+    </div>
+    <div class="dialog-div">
+      <P>CSVをダウンロードします。</P>
+      <el-button
+        id="csv-btn"
+        type="primary"
+        @click="csvDownload"
+      >
+        ダウンロード
+      </el-button>
+    </div>
+    <!--<span slot="footer" class="dialog-footer">-->
+    <!--</span>-->
+  </el-dialog>
 </template>
 
 <script>
@@ -20,8 +43,10 @@
   import Papa from 'papaparse'
   import pngSave from '../otherjs/pngsave'
   export default {
-    name: "dialogs",
-    props: ['statType'],
+    name: "Dialogs",
+    props: {
+      statType: {type: String, default: ''}
+    },
     computed: {
       s_dialogVisible: {
         get() {return this.$store.state.base.dialog.visible},
@@ -102,7 +127,7 @@
             })
           }
           csvCreate(csvData);
-        } else  if (this.statType === 'pref' || this.statType === 'city') {
+        } else if (this.statType === 'pref' || this.statType === 'city') {
           if (this.statType === 'pref') {
             statData = this.$store.state.statList.leftStatEstatPref.statData
           } else {
