@@ -1,4 +1,5 @@
 module.exports = {
+  "root": true,
   "env": {
     "browser": true,
     "es6": true,
@@ -14,6 +15,9 @@ module.exports = {
     "no-eval": "error",
     "arrow-parens": ["warn", "as-needed"],
     "no-console": "off",
+  },
+  "parserOptions": {
+    "parser": "babel-eslint"
   },
   "globals": {
     "d3": true,
