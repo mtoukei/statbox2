@@ -6,13 +6,10 @@ import 'element-ui/lib/theme-chalk/index.css'
 import * as d3 from 'd3'
 import d3Tip from "d3-tip";
 import axios from 'axios'
-import VueGoodTablePlugin from 'vue-good-table';
-import 'vue-good-table/dist/vue-good-table.css'
 import 'vue-resize/dist/vue-resize.css'
 import VueResize from 'vue-resize'
 Vue.use(Element, { size: 'small', zIndex: 3000 });
 Vue.config.productionTip = false;
-Vue.use(VueGoodTablePlugin);
 Vue.use(VueResize);
 global.d3 = d3;
 global.d3Tip = d3Tip;
