@@ -23,7 +23,7 @@ export default function (val, parentDiv) {
   const defaultWidth = 300;
   const multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg  = storeBase.state.statList.transition;
+  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor(dataset) {
@@ -75,7 +75,7 @@ export default function (val, parentDiv) {
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
-  .attr('viewBox', '0 0 '+ width + ' '  + height)
+  .attr('viewBox', '0 0 '+ width + ' ' + height)
   .attr('preserveAspectRatio', 'xMidYMid')
   .classed("svg-content-responsive", true)
   .classed("chart-svg", true);
@@ -124,7 +124,7 @@ export default function (val, parentDiv) {
         case 'lr':
           return 0 + ',' + rectSize * multi + ',' + 0;
         default:
-          return  '0,rectSize * 3'
+          return '0,rectSize * 3'
       }
     }
   };
@@ -132,9 +132,9 @@ export default function (val, parentDiv) {
     if (d.chihou8id) {
       switch (d.chihou8id.stroke) {
         case 'tl':case 'l':
-          return  - rectSize * 3 * multi;
+          return - rectSize * 3 * multi;
         case 'r':
-          return  - rectSize * multi;
+          return - rectSize * multi;
         default:
       }
     }
@@ -152,7 +152,7 @@ export default function (val, parentDiv) {
           return '#6c8df2';
         case 'kinki':
           return '#99ffff';
-        case  'cyuubu':
+        case 'cyuubu':
           return '#71ff94';
         case 'touhoku':
           return '#c0c0c0';
@@ -167,13 +167,13 @@ export default function (val, parentDiv) {
     rect.transition()
     .delay((d, i) => i * 20)
     .attr('fill', d => rectColor(d))
-    .attr('stroke-dasharray',  d => dash(d))
+    .attr('stroke-dasharray', d => dash(d))
     .attr('stroke-dashoffset', d => dashOffset(d))
     .attr('stroke', 'black')
     .attr('stroke-width', 0.5)
   } else {
     rect.attr('fill', d => rectColor(d))
-    .attr('stroke-dasharray',  d => dash(d))
+    .attr('stroke-dasharray', d => dash(d))
     .attr('stroke-dashoffset', d => dashOffset(d))
     .attr('stroke', 'black')
     .attr('stroke-width', 0.5)
@@ -199,11 +199,11 @@ export default function (val, parentDiv) {
   .attr('transform',(d,i) => {
     const y = rectSize * Math.floor(i / 7);
     const x = rectSize * (i % 7);
-    return  'translate(' + (x * multi) + ',' + (y * multi) + ')';
+    return 'translate(' + (x * multi) + ',' + (y * multi) + ')';
   });
   const circle =circleG.append('circle')
-  .attr('cx',  rectSize / 2 * multi)
-  .attr('cy',  rectSize / 2 * multi + 5 * multi)
+  .attr('cx', rectSize / 2 * multi)
+  .attr('cy', rectSize / 2 * multi + 5 * multi)
   .attr('fill', d => {
     if (d.chihou8id) {
       const result = dc.dataset.find(value => Number(value.citycode) === Number(d.prefcode));
@@ -250,15 +250,15 @@ export default function (val, parentDiv) {
   }
   // 表名-------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size',  (12 * multi) + 'px')
-  .attr('transform', () => 'translate(5,' + (12 * multi + 5)  + ')')
+  .attr('font-size', (12 * multi) + 'px')
+  .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
   .attr('class' ,'no-print')
   .append('text')
   .text(statName);
   //--------------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
-  .attr('transform', () => 'translate(20,' + (12 * multi + 35)  + ')')
+  .attr('transform', () => 'translate(20,' + (12 * multi + 35) + ')')
   .attr('class' ,'no-print')
   .append('text')
   .text('8地方区分');

@@ -35,7 +35,7 @@ function getSVGString( svgNode ) {
           selectorTextArr.push( '.'+classes[c] );
     }
     // Extract CSS Rules
-    const extractedCSSText = "";
+    let extractedCSSText = "";
     for (let i = 0; i < document.styleSheets.length; i++) {
       const s = document.styleSheets[i];
       try {

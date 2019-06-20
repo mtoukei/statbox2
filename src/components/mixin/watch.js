@@ -77,7 +77,7 @@ export default {
     s_leftStatEstatCity: {
       handler: function (val) {
         Bubble(val, '#left-bubble-city');
-        Bar(val,  '#left-bar-city');
+        Bar(val, '#left-bar-city');
         Rank(val, '#left-rank-city');
         Map(val, '#left-map-city');
         Pie(val, '#left-pie-city');

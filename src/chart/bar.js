@@ -30,7 +30,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
   const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 50 * multi, 'left': 50 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg  = storeBase.state.statList.transition;
+  const transitionFlg = storeBase.state.statList.transition;
   // const transitionFlg = false
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
@@ -158,7 +158,7 @@ export default function (val, parentDiv) {
   if (transitionFlg) {
     rect.transition()
     .duration(1000)
-    .attr('y', function (d){
+    .attr('y', function (d) {
       if (d.data>=0) {
         d3.select(this).attr('fill', 'slategray');
         return yScale(d.data)
@@ -169,7 +169,7 @@ export default function (val, parentDiv) {
     })
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
   } else {
-    rect.attr('y', function (d){
+    rect.attr('y', function (d) {
       if (d.data>=0) {
         d3.select(this).attr('fill', 'slategray');
         return yScale(d.data)
@@ -225,7 +225,7 @@ export default function (val, parentDiv) {
     .transition()
     .duration(200)
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
-    .attr('y', function (d){
+    .attr('y', function (d) {
       if (d.data>=0) {
         d3.select(this).attr('fill', 'slategray');
         return yScale(d.data)

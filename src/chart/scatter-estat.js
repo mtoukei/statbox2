@@ -191,11 +191,11 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   // 軸の表示-----------------------------------------------------------------------------------
   const axisx = d3.axisBottom(xScale)
   .ticks(20)
-  .tickSize((margin.top + margin.bottom)   - height);
+  .tickSize((margin.top + margin.bottom) - height);
   const axisy = d3.axisLeft(yScale)
   // .ticks(10)
-  .tickSize((margin.left + margin.right)  - width);
-  const gX =  svg.append('g')
+  .tickSize((margin.left + margin.right) - width);
+  const gX = svg.append('g')
   .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
   .attr('class', 'axis')
   .call(axisx);
@@ -253,7 +253,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   // 縦軸単位----------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
-  .attr('transform', () => 'translate(' + (20 * multi)  + ',' + (12 * multi +10) + ')')
+  .attr('transform', () => 'translate(' + (20 * multi) + ',' + (12 * multi +10) + ')')
   .append('text')
   .text('単位:' + leftUnit)
   .attr('text-anchor', 'start');
@@ -324,14 +324,14 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .text((d,i) =>{
     if (length<=10) {
       return d.time.substr(0,4)
-    } else if  (i===0 || i === length -1) {
+    } else if (i===0 || i === length -1) {
       return d.time.substr(2,2)
-    } else  if (i % quarter === 0) {
+    } else if (i % quarter === 0) {
       return d.time.substr(2,2)
     }
   });
   // インプットテキスト----------------------------------------------------------------------------
-  const textInput  =  cityName => {
+  const textInput = cityName => {
     circle.attr('fill', d => d.cityname === cityName? 'red': 'orange')
   };
   if (!d3.select('#scatter-pref-input-' + prefOrCity).size()) {

@@ -192,7 +192,7 @@ export default function (val, palentDiv) {
     .transition()
     .attr('r', 2);
     })
-  .on("mousemove", function(){
+  .on("mousemove", function() {
       let yearMIn = 9999;
       let dYearMIn;
       let offset = 0;

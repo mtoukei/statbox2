@@ -197,4 +197,4 @@ const metaPref =
 //   }
 // ];
 
-export default  metaPref
+export default metaPref
