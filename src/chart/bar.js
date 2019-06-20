@@ -3,24 +3,24 @@ import * as ss from 'simple-statistics'
 import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
-export default function (barVal, pathVal, parentDiv) {
+export default function (val, parentDiv) {
   const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
   const palentDiv = d3.select(parentDiv);
-  const isEStat = barVal.estat === true;
+  const isEStat = val.estat === true;
   if(palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
   let unit;
   if (isEStat) {
-    const target = barVal.statData[barVal.statData.length - 1];
+    const target = val.statData[val.statData.length - 1];
     const allPrefData = target.data;
     dataset = target.data2;
-    statName = barVal.statName;
+    statName = val.statName;
     unit = allPrefData[0]['@unit'];
   } else {
-    dataset = barVal.statData.data;
-    statName = barVal.statData.title;
-    unit = barVal.statData.unit;
+    dataset = val.statData.data;
+    statName = val.statData.title;
+    unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
   const width = palentDiv.node().getBoundingClientRect().width;
@@ -54,10 +54,10 @@ export default function (barVal, pathVal, parentDiv) {
         if (a.citycode > b.citycode) return 1;
         return 0;
       });
-      if (barVal.estat) {
+      if (val.estat) {
         this.maxVal = 0;
         this.minVal = 99999999;
-        for (const value of barVal.statData) {
+        for (const value of val.statData) {
           const data = value.data2;
           for (const value of data) {
             if (!isNaN(value.data)) {
@@ -218,7 +218,7 @@ export default function (barVal, pathVal, parentDiv) {
   // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    const dc = new DataCreate(JSON.parse(JSON.stringify(barVal.statData[value].data2)));
+    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     rect
     .data(dc.dataset, d => d.citycode )

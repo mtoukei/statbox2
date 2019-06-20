@@ -13,11 +13,6 @@ import Rank from '../../chart/rank'
 import Time2 from '../../chart/time2'
 export default {
   name: 'watch',
-  data() {
-    return {
-      timeLength: 0,
-    }
-  },
   computed: {
     s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
     c_centerDivStyle () { return this.centerDivStyle },
@@ -39,7 +34,7 @@ export default {
         // bubble.jsだけにスライダーの詳細を設定するコードが書かれている。
         // 並びはなんでもいい。
         Bubble(val, '#left-bubble-miyazaki-city');
-        Bar(val, this.s_rightStat, '#left-bar-miyazaki-city');
+        Bar(val, '#left-bar-miyazaki-city');
         Rank(val, '#left-rank-miyazaki-city');
         Map(val, '#left-map-miyazaki-city');
         Pie(val, '#left-pie-miyazaki-city');
@@ -59,7 +54,7 @@ export default {
     s_leftStatEstatPref: {
       handler: function (val) {
         Bubble(val, '#left-bubble-pref');
-        Bar(val, this.s_rightStat, '#left-bar-pref');
+        Bar(val, '#left-bar-pref');
         Rank(val, '#left-rank-pref');
         Map(val, '#left-map-pref');
         Maps77(val, '#left-map77-pref');
@@ -82,7 +77,7 @@ export default {
     s_leftStatEstatCity: {
       handler: function (val) {
         Bubble(val, '#left-bubble-city');
-        Bar(val, this.s_rightStat, '#left-bar-city');
+        Bar(val,  '#left-bar-city');
         Rank(val, '#left-rank-city');
         Map(val, '#left-map-city');
         Pie(val, '#left-pie-city');
@@ -103,7 +98,6 @@ export default {
     s_leftStatTime: {
       handler: function(val) {
         Time(val, '#left-time');
-        this.timeLength = val.statData.length;
       },
       deep: true,
     },
