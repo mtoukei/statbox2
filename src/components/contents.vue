@@ -1,5 +1,6 @@
 <template>
     <div id="contents">
+        <!--最初期時はright-chart-divも存在していた。いずれ復活するかもしれないので名前はこのままに。-->
         <div id="left-chart-div">
             <!--スライダー。細かな設定はbubble.jsでデータを読み込んだときにしている。-->
             <div  :id='el.id' v-for="el in rangeDiv" :key="el.id" v-show="s_activeIndex===el.statType">
@@ -91,7 +92,7 @@
           if (vm.timer !== false) {
             clearTimeout(vm.timer);
           }
-          vm.timer = setTimeout(function() {
+          vm.timer = setTimeout(() => {
             vm.$store.commit('statList/transitionSet', false);
             vm.$store.commit('statList/statReload', 'left');
             vm.$store.commit('statList/statReload', 'right');
@@ -105,4 +106,3 @@
     },
   }
 </script>
-
