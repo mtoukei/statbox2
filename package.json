@@ -39,13 +39,6 @@
     "env": {
       "node": true
     },
-    "globals": {
-      "d3": true,
-      "d3Tip": true,
-      "axios": true,
-      "eStatApiId": true,
-      "ie": true
-    },
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended"
