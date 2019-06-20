@@ -334,4 +334,5 @@ const ssdse =
     {
       "code": "J2506"
     }
-  ]
+  ];
+export default ssdse
