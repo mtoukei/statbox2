@@ -20,7 +20,11 @@
                             ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
                         </div>
                         <div class="bottom-table-div">
-                            <vue-good-table :columns="columns" :rows="m_tableData (statType, el.side) "/>
+                            <el-table :data="m_tableData (statType, el.side)">
+                                <el-table-column prop="citycode" label="citycode" sortable/>
+                                <el-table-column prop="cityname" label="cityname"/>
+                                <el-table-column prop="data" label="data" sortable/>
+                            </el-table>
                         </div>
                     </div>
                 </div>
@@ -42,21 +46,6 @@
           footerInner: [
             {id: 'footer-inner-left', side: 'leftSide'},
             {id: 'footer-inner-right', side: 'rightSide'}
-          ],
-          columns: [
-            {
-              label: 'citycode',
-              field: 'citycode',
-            },
-            {
-              label: 'cityname',
-              field: 'cityname',
-            },
-            {
-              label: 'data',
-              field: 'data',
-              type: 'number',
-            }
           ]
         }
     },
@@ -106,14 +95,7 @@
             source2 = sourceLink
           }
         }
-        const returnObj = {
-          syurui,
-          dataName,
-          statsDataId,
-          cdCat01,
-          source1,
-          source2
-        };
+        const returnObj = {syurui, dataName, statsDataId, cdCat01, source1, source2};
         return returnObj
       },
       m_tableData (statType, side) {

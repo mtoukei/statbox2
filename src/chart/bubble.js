@@ -69,7 +69,7 @@ export default function (val, parentDiv) {
       const no_root_bubble = bubble_data.filter(d => d.parent != null);
       this.data = no_root_bubble;
       // 変換されたバブルデータにある半径の最大値/最小値の割り出し-----------------------------
-      const maxVal= d3.max(no_root_bubble, d => d.r);
+      const maxVal = d3.max(no_root_bubble, d => d.r);
       const minVal = d3.min(no_root_bubble, d => d.r);
       // 色のスケール作成------------------------------------------------------------------------
       this.colorScale = d3.scaleLinear()
@@ -119,7 +119,7 @@ export default function (val, parentDiv) {
   .attr('text-anchor', 'middle')
   .attr('fill', function (d) {
     const rgb = d3.rgb(dc.colorScale(d.r));
-    const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
+    const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 200? 'black': 'white';
   })
   .attr('opacity', 0);

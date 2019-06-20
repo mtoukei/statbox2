@@ -82,22 +82,22 @@ div {
 }
 .source-table th {
     font-weight: normal;
-    background: linear-gradient(#f4f5f8, #f1f3f6);
+    background: #f4f5f8;
     border: solid 1px #dcdfe6;
 }
 .source-table td {
     background: white;
     border: solid 1px #dcdfe6;
 }
-.vgt-table {
-    /*width: 49%!important;*/
-    font-size: 14px!important;
+.el-table {
+    color: black!important;
 }
-.vgt-table th {
-    padding: 0 20px 0 5px!important;
+.el-table td, .el-table th {
+    padding: 0 0!important;
 }
-.vgt-table td {
-    padding: 0 5px 0 5px!important;
+.el-table th {
+    color: black!important;
+    background: #f4f5f8!important;
 }
 // サイド----------------------------------------------------------------------------------------
 #left-side-div, #right-side-div{

@@ -97,7 +97,6 @@ export default function (val, parentDiv) {
   // SVG領域作成---------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
   palentDiv.style('background', '#d0d0d0');
-  // palentDiv.style('background', 'lightsteelblue');
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)

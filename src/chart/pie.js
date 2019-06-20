@@ -55,9 +55,6 @@ export default function (val, parentDiv) {
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
-  .attr('viewBox', '0 0 '+ width + ' '  + height)
-  .attr('preserveAspectRatio', 'xMidYMid')
-  .classed("svg-content-responsive", true)
   .classed("chart-svg", true);
   const colorScale = d3.scaleOrdinal(d3.schemeSet1);
   //--------------------------------------------------------------------------------------------
@@ -120,7 +117,7 @@ export default function (val, parentDiv) {
     } else {
       rgb = d3.rgb(colorScale(d.index));
     }
-    if (0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b > 200) {
+    if (0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b > 200) {
       return "black";
     }else {
       return "white";
@@ -190,9 +187,9 @@ export default function (val, parentDiv) {
       const angle = d.endAngle - d.startAngle;
       if (angle > 0.1) return d.data.cityname
     })
-    .attr('fill', function (d) {
+    .attr('fill', d => {
       let rgb;
-      if (val.estat) {
+      if (isEStat) {
         if (prefOrCity === 'pref') {
           rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(0,2))))
         } else{
@@ -201,7 +198,7 @@ export default function (val, parentDiv) {
       } else {
         rgb = d3.rgb(colorScale(d.index));
       }
-      if (0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b > 200) {
+      if (0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b > 200) {
         return "black";
       }else {
         return "white";

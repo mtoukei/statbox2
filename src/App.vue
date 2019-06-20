@@ -24,7 +24,7 @@
   import resizableDiv from './otherjs/resizablediv'
   import contents from './components/contents'
   import mixinDetectResize from './components/mixin/detectResize'
-  // import mixinMetadataCreate from './components/mixin/metadata-create'
+  // import mixinMetadataCreate from './components/mixin/metadata-create' // 後々に使うことになるので削除しない。
   import mixinWatch from './components/mixin/watch'
   export default {
     name: 'app',
@@ -35,10 +35,13 @@
       sideTree,
       dialogs
     },
-    // ミックスイン「mixinMetadataCreate」を復活させるとログにメタ情報を作る。
-    // mixins: [mixinDetectResize, mixinMetadataCreate, mixinWatch],
-    mixins: [mixinDetectResize, mixinWatch],
+    mixins: [
+      // mixinMetadataCreate, // 復活させるとログにメタ情報を作る。
+      mixinDetectResize, // divをリサイズする。
+      mixinWatch // ウオッチを集中させている。
+    ],
     computed: {
+      // storeを見ている算出プロパティには頭にs_をつけている。
       s_rightSideDivShow () { return this.$store.state.base.rightSideDivShow },
       s_statType () { return this.$store.state.base.statType },
       s_leftDivList () { return this.$store.state.base.leftDivList }
@@ -54,9 +57,6 @@
         for (let i in this.s_leftDivList) {
           resizableDiv('#left-' + this.s_leftDivList[i].divId);
         }
-        setTimeout(() => {
-          vm.$store.commit('base/menuChange', false);
-        }, 1500);
       });
     }
   }

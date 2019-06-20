@@ -1,9 +1,8 @@
-id="year-range-ticks-pref"とid="year-range-ticks-city"は
-bubble.jsでtickを引いている。
 <template>
     <div id="contents">
+        <!--最初期時はright-chart-divも存在していた。いずれ復活するかもしれないので名前はこのままに。-->
         <div id="left-chart-div">
-            <!--スライダー-->
+            <!--スライダー。細かな設定はbubble.jsでデータを読み込んだときにしている。-->
             <div  :id='el.id' v-for="el in rangeDiv" :key="el.id" v-show="s_activeIndex===el.statType">
                 <span class="year-range-text"></span>
                 <div class="year-range-div">
@@ -16,7 +15,7 @@ bubble.jsでtickを引いている。
             </div>
             <!--グラフのダイアログー-->
             <draggable v-model="s_leftDivList" handle=".chart-div-handle">
-                <transition-group appear>
+                <transition-group>
                     <div :id="'left-' + el.divId" :class="'laft-chart ' +  el.class" v-for="el in s_leftDivList" :key="el.order" v-show="el.show"
                          v-loading="s_chartDivLoading"
                          element-loading-background="rgba(0, 0, 0, 0)"
@@ -93,7 +92,7 @@ bubble.jsでtickを引いている。
           if (vm.timer !== false) {
             clearTimeout(vm.timer);
           }
-          vm.timer = setTimeout(function() {
+          vm.timer = setTimeout(() => {
             vm.$store.commit('statList/transitionSet', false);
             vm.$store.commit('statList/statReload', 'left');
             vm.$store.commit('statList/statReload', 'right');
@@ -107,4 +106,3 @@ bubble.jsでtickを引いている。
     },
   }
 </script>
-
