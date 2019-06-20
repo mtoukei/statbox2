@@ -182,10 +182,10 @@ export default function (val, palentDiv) {
   .attr('pointer-events', 'all')
   .attr("width", width - margin.left -margin.right)
   .attr("height", height - margin.bottom - margin.top)
-  .on("mouseover", function() {
+  .on("mouseover", () => {
     tooltip.style("visibility", "visible");
     focus.style("visibility", "visible"); })
-  .on("mouseout", function() {
+  .on("mouseout", () => {
     tooltip.style("visibility", "hidden");
     focus.style("visibility", "hidden");
     palentDiv.selectAll('circle')
@@ -238,7 +238,6 @@ export default function (val, palentDiv) {
               yearMIn = d.year;
               dYearMIn = d
             }
-            // console.trace()
             palentDiv.selectAll('circle')
             .transition()
             .attr('r', 2);
@@ -397,9 +396,9 @@ export default function (val, palentDiv) {
   .on('click', (d,i) => lineHide(i));
   //---------------------------------------------------------------------------------------------
   const lineHide = i => {
-    const line = d3.select('#line-graph-' + i);
-    const rect = d3.select('#rect-' + i);
-    const circles = d3.selectAll('.circle' + i);
+    const line = svg.select('#line-graph-' + i);
+    const rect = svg.select('#rect-' + i);
+    const circles = svg.selectAll('.circle' + i);
     const pathLength = line.node().getTotalLength();
     line
     .attr('stroke-dasharray', pathLength)
