@@ -1,10 +1,10 @@
-import * as GeoPref from './geo-pref'
 import storeBase from "../store/store-base";
+import * as GeoPref from './geo-pref'
 import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
+  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1];
   const palentDiv = d3.select(parentDiv);
   const isEStat = val.estat === true;
   if(palentDiv.style('display') === 'none') return;
@@ -151,9 +151,9 @@ export default function (val, parentDiv) {
       if (d.properties.citycode) {
         const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
         return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
-      } 
+      }
         return 'rgba(0,0,0,0)'
-      
+
     });
   } else {
     p
@@ -161,9 +161,9 @@ export default function (val, parentDiv) {
       if (d.properties.citycode) {
         const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
         return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
-      } 
+      }
         return 'rgba(0,0,0,0)'
-      
+
     });
   }
   // 凡例---------------------------------------------------------------------------------------
@@ -212,9 +212,9 @@ export default function (val, parentDiv) {
       if (d.properties.citycode) {
         const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
         return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
-      } 
+      }
         return 'rgba(0,0,0,0)'
-      
+
     });
     rect
     .data(dc.legendDataSet)
