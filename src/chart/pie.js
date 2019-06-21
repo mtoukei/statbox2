@@ -39,12 +39,12 @@ export default function (val, parentDiv) {
     create () {
       if (prefOrCity === 'pref') this.dataset.shift();
       // ソートして順位をつける-------------------------------------------------------------------
-      this.dataset.sort((a,b) => {
+      this.dataset.sort((a, b) => {
         if (a.data > b.data) return -1;
         if (a.data < b.data) return 1;
         return 0;
       });
-      this.dataset.forEach((v,i) => v['leftTop'] = i + 1);
+      this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
     }
   }
   //---------------------------------------------------------------------------------------------
@@ -78,9 +78,9 @@ export default function (val, parentDiv) {
   .attr('fill', d => {
     if (val.estat) {
       if (prefOrCity === 'pref') {
-        return colorScale(Number(d.data.citycode.substr(0,2)))
+        return colorScale(Number(d.data.citycode.substr(0, 2)))
       } else{
-        return colorScale(Number(d.data.citycode.substr(3,2)))
+        return colorScale(Number(d.data.citycode.substr(3, 2)))
       }
     } else {
       return colorScale(d.index)
@@ -91,7 +91,7 @@ export default function (val, parentDiv) {
     path.transition()
     .duration(70)
     .delay((d, i) => 60 * i)
-    .attrTween('d',d => {
+    .attrTween('d', d => {
       const interpolate = d3.interpolate(
         {startAngle: d.startAngle, endAngle: d.startAngle},
         {startAngle: d.startAngle, endAngle: d.endAngle}
@@ -110,9 +110,9 @@ export default function (val, parentDiv) {
     let rgb;
     if (val.estat) {
       if (prefOrCity === 'pref') {
-        rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(0,2))))
+        rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(0, 2))))
       } else{
-        rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(3,2))))
+        rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(3, 2))))
       }
     } else {
       rgb = d3.rgb(colorScale(d.index));
@@ -154,7 +154,7 @@ export default function (val, parentDiv) {
   svg.append('g')
   .attr('font-size', (12 * multi) + 'px')
   .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text(statName);
   // -------------------------------------------------------------------------------------------
@@ -170,9 +170,9 @@ export default function (val, parentDiv) {
     .attr('fill', d => {
       if (val.estat) {
         if (prefOrCity === 'pref') {
-          return colorScale(Number(d.data.citycode.substr(0,2)))
+          return colorScale(Number(d.data.citycode.substr(0, 2)))
         } else {
-          return colorScale(Number(d.data.citycode.substr(3,2)))
+          return colorScale(Number(d.data.citycode.substr(3, 2)))
         }
       } else {
         return colorScale(d.index)
@@ -191,9 +191,9 @@ export default function (val, parentDiv) {
       let rgb;
       if (isEStat) {
         if (prefOrCity === 'pref') {
-          rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(0,2))))
+          rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(0, 2))))
         } else{
-          rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(3,2))))
+          rgb = d3.rgb(colorScale(Number(d.data.citycode.substr(3, 2))))
         }
       } else {
         rgb = d3.rgb(colorScale(d.index));

@@ -58,7 +58,7 @@ export default function (val, parentDiv) {
     // xスケール----------------------------------------------------------------------------------
     const xScale = d3.scaleLinear()
     .rangeRound([0, width - margin.left - margin.right])
-    .domain([0,d3.max(map)]);
+    .domain([0, d3.max(map)]);
     // ヒストグラムデータ---------------------------------------------------------------------------
     const histoData = d3.histogram()
     .domain(xScale.domain())
@@ -126,7 +126,7 @@ export default function (val, parentDiv) {
     }
     // x軸描画---------------------------------------------------------------------------------
     const kankaku = histoData[0].x1 - histoData[0].x0;
-    const tick = histoData.map((d,i) => kankaku * (i + 1) - kankaku / 2);
+    const tick = histoData.map((d, i) => kankaku * (i + 1) - kankaku / 2);
     const xAxis = d3.axisBottom(xScale)
     .tickValues(tick);
     svg.append("g")
@@ -147,7 +147,7 @@ export default function (val, parentDiv) {
     svg.append('g')
     .attr('font-size', 12 * multi + 'px')
     .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
-    .attr('class' ,'no-print')
+    .attr('class', 'no-print')
     .append('text')
     .text(statName);
   };

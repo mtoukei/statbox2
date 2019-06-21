@@ -1703,7 +1703,7 @@ export const setai = {
   kakuwariai: {
     column: "column06",
     statName: '核家族世帯割合（対一般世帯）',
-    unit: '%' ,
+    unit: '%',
   },
   kakuhuuhu: {
     column: "column07",

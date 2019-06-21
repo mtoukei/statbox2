@@ -49,13 +49,13 @@ export default function (val, parentDiv) {
       });
       this.prefData.unshift({prefcode: '99999', prefname: 'dummy'});
       // ソートして順位をつける-------------------------------------------------------------------
-      this.dataset.sort((a,b) => {
+      this.dataset.sort((a, b) => {
         if (a.data > b.data) return -1;
         if (a.data < b.data) return 1;
         return 0;
       });
-      this.dataset.forEach((v,i) => v['leftTop'] = i + 1);
-      this.dataset.sort((a,b) => {
+      this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
+      this.dataset.sort((a, b) => {
         if (a.citycode < b.citycode) return -1;
         if (a.citycode > b.citycode) return 1;
         return 0;
@@ -88,7 +88,7 @@ export default function (val, parentDiv) {
   //--------------------------------------------------------------------------------------------
   const rectSize = 38;
   const rectG = g.append('g')
-  .attr('transform',(d,i) => {
+  .attr('transform', (d, i) => {
     const y = rectSize * Math.floor(i / 7);
     const x = rectSize * (i % 7);
     return 'translate(' + (x * multi) + ',' + (y * multi) + ')';
@@ -196,7 +196,7 @@ export default function (val, parentDiv) {
   // サークル------------------------------------------------------------------------------------
   const circleG = g.append('g')
   .attr('display', (d, i) => i <= 1? 'none': 'block')
-  .attr('transform',(d,i) => {
+  .attr('transform', (d, i) => {
     const y = rectSize * Math.floor(i / 7);
     const x = rectSize * (i % 7);
     return 'translate(' + (x * multi) + ',' + (y * multi) + ')';
@@ -252,14 +252,14 @@ export default function (val, parentDiv) {
   svg.append('g')
   .attr('font-size', (12 * multi) + 'px')
   .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text(statName);
   //--------------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', () => 'translate(20,' + (12 * multi + 35) + ')')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text('8地方区分');
   // -------------------------------------------------------------------------------------------

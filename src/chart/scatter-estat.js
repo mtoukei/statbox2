@@ -36,7 +36,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     }
   }
   // --------------------------------------------------------------------------------------------
-  const year = mixDataset[mixDataset.length - 1].time.substr(0,4);
+  const year = mixDataset[mixDataset.length - 1].time.substr(0, 4);
   rangeDiv.select('.year-range-text').text(year);
   // データ等を作るクラス-------------------------------------------------------------------------
   // 年に応じてデータセットと相関係数計算用と回帰直線計算用を作成する。
@@ -99,7 +99,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   svg.append('g')
   .attr('font-size', 14 * multi + 'px')
   .attr('transform', 'translate(' + (width/2) + ',' + (14 * multi + 20 * multi) + ')')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text('縦=' + leftStatName + '　×　横=' + rightStatName)
   .attr('text-anchor', 'middle ')
@@ -270,7 +270,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .attr('font-size', 50 * multi + 'px')
   .attr('transform', () => 'translate(' + (margin.left + 10) + ',' + (50 * multi + margin.top + 10) + ')')
   .append('text')
-  .text(mixDataset[mixDataset.length - 1].time.substr(0,4))
+  .text(mixDataset[mixDataset.length - 1].time.substr(0, 4))
   .attr('id', 'year-text-' + prefOrCity)
   .attr('text-anchor', 'start')
   .attr('font-weight', 'normal')
@@ -283,7 +283,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   // インプットレンジの関数-----------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    const year = mixDataset[value].time.substr(0,4);
+    const year = mixDataset[value].time.substr(0, 4);
     d3.select('#year-text-' + prefOrCity).text(year);
     rangeDiv.select('.year-range-text').text(year);
     const dc = new DataCreate(value);
@@ -321,13 +321,13 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .enter()
   .append('span')
   .attr('class', 'tick')
-  .text((d,i) =>{
+  .text((d, i) =>{
     if (length<=10) {
-      return d.time.substr(0,4)
+      return d.time.substr(0, 4)
     } else if (i===0 || i === length -1) {
-      return d.time.substr(2,2)
+      return d.time.substr(2, 2)
     } else if (i % quarter === 0) {
-      return d.time.substr(2,2)
+      return d.time.substr(2, 2)
     }
   });
   // インプットテキスト----------------------------------------------------------------------------
@@ -368,7 +368,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   svg.call(tip);
   circle
   .on('mouseover', function (d) {
-    return tip.show(d.cityname + '<br>' + d.leftData.toLocaleString() + leftUnit + '<br>' + d.rightData.toLocaleString() + rightUnit,this)
+    return tip.show(d.cityname + '<br>' + d.leftData.toLocaleString() + leftUnit + '<br>' + d.rightData.toLocaleString() + rightUnit, this)
   })
   .on('mouseout', tip.hide);
   // ズーム--------------------------------------------------------------------------------------

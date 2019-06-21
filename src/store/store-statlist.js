@@ -102,7 +102,7 @@ const statList = {
   mutations: {
     //-------------------------------------------------------------------------------------------
     // サイドメニューをクリアする
-    clearStat (state,payload) {
+    clearStat (state, payload) {
       const taihi = state.metaMiyazaki;
       state.metaMiyazaki = null;
       setTimeout(() => {
@@ -141,19 +141,19 @@ const statList = {
       state.leftStatEstatCity.statData = [];
       state.rightStatEstatCity.statData = [];
     },
-    yearRangeCityChange (state,payload) {
+    yearRangeCityChange (state, payload) {
       state.yearRangeCity = payload
     },
-    yearRangePrefChange (state,payload) {
+    yearRangePrefChange (state, payload) {
       state.yearRangePref = payload
     },
-    yearRangeScatterCityChange (state,payload) {
+    yearRangeScatterCityChange (state, payload) {
       state.yearRangeScatterCity = payload
     },
-    yearRangeScatterPrefChange (state,payload) {
+    yearRangeScatterPrefChange (state, payload) {
       state.yearRangeScatterPref = payload
     },
-    transitionSet (state,payload) {
+    transitionSet (state, payload) {
       state.transition = payload
     },
     timeCityReload (state) {
@@ -166,7 +166,7 @@ const statList = {
       state.leftStatTime.count = state.leftStatTime.count + 1;
       state.leftStatTime.transition = false;
     },
-    eStatReload (state,payload) {
+    eStatReload (state, payload) {
       if (payload.side === 'left') {
         state.leftStatEstatPref.count = state.leftStatEstatPref.count + 1;
         state.leftStatEstatCity.count = state.leftStatEstatCity.count + 1;
@@ -177,7 +177,7 @@ const statList = {
     },
     // サイドのツリーをクリックしたとき---------------------------------------------------------------
     // 宮崎県用
-    selectStat (state,payload) {
+    selectStat (state, payload) {
       const data = statData;//別ファイルから
       const statName = payload.value.split('/')[0];
       const target = payload.value.split('/')[1];
@@ -213,7 +213,7 @@ const statList = {
     },
     // ------------------------------------------------------------------------------------------
     // いろんなグラフで見える化。都道府県と市区町村共用
-    selectStatEstat (state,payload) {
+    selectStatEstat (state, payload) {
       storeBase.commit('base/chartDivLoadingShow', true);
       const statId = payload.statId.split('/')[0];
       const cat01 = payload.statId.split('/')[1];
@@ -259,19 +259,19 @@ const statList = {
                 time: dataValue['@time']
               })
             } else if (payload.prefOrCity === 'city'){
-              if (dataValue['@area'] .substr(0,2) === prefCode.substr(0,2)) {
+              if (dataValue['@area'] .substr(0, 2) === prefCode.substr(0, 2)) {
                 const citysResult = Citycodes.find(val => val.id === dataValue['@area']);
                 if (citysResult) {
                   const kuFlg = function () {
-                    if (dataValue['@area'].substr(0,2) === '13') {// 東京都の区は区ではない。
+                    if (dataValue['@area'].substr(0, 2) === '13') {// 東京都の区は区ではない。
                       return false
-                    } else if (dataValue['@area'].substr(2,2) === '13' || dataValue['@area'].substr(2,2) === '14' || dataValue['@area'].substr(2,2) === '15') {// 3桁目が1または13は政令都市
+                    } else if (dataValue['@area'].substr(2, 2) === '13' || dataValue['@area'].substr(2, 2) === '14' || dataValue['@area'].substr(2, 2) === '15') {// 3桁目が1または13は政令都市
                       if (dataValue['@area'].substr(4, 1) !== '0') {
                         return true
                       } else {
                         return false
                       }
-                    } else if (dataValue['@area'].substr(2,1) === '1') {// 3桁目が1または13は政令都市
+                    } else if (dataValue['@area'].substr(2, 1) === '1') {// 3桁目が1または13は政令都市
                       if (Number(dataValue['@area'].substr(3, 3)) > 0) {
                         return true
                       } else {
@@ -398,7 +398,7 @@ const statList = {
     // },
     // ------------------------------------------------------------------------------------------
     // 時系列。宮崎県
-    selectStatTime (state,payload) {
+    selectStatTime (state, payload) {
       const data = statDataTime;
       const statNames = payload.statNames;
       const statData = [];
@@ -447,7 +447,7 @@ const statList = {
     },
     // ------------------------------------------------------------------------------------------
     // 時系列。全国都道府県用
-    selectStatTimePref (state,payload) {
+    selectStatTimePref (state, payload) {
       const statIds = payload.statIds;
       const plomises = [];
       for (let i in statIds) {
@@ -516,7 +516,7 @@ const statList = {
     },
     // ------------------------------------------------------------------------------------------
     // 時系列。全国市町村用
-    selectStatTimeCity (state,payload) {
+    selectStatTimeCity (state, payload) {
       if(!payload.cityCode) {
         // alert('市町村を選択してください。')
         // return;
@@ -587,7 +587,7 @@ const statList = {
       })
     },
     //-------------------------------------------------------------------------------------------
-    statReload (state,payload) {
+    statReload (state, payload) {
       if (payload === 'left') {
         state.leftStat.transition = false;
         state.leftStat.count = state.leftStat.count + 1;

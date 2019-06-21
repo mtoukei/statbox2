@@ -43,13 +43,13 @@ export default function (val, parentDiv) {
     create () {
       if (prefOrCity === 'pref') this.dataset.shift();
       // ソートして順位をつける-------------------------------------------------------------------
-      this.dataset.sort((a,b) => {
+      this.dataset.sort((a, b) => {
         if (a.data > b.data) return -1;
         if (a.data < b.data) return 1;
         return 0;
       });
-      this.dataset.forEach((v,i) => v['leftTop'] = i + 1);
-      this.dataset.sort((a,b) => {
+      this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
+      this.dataset.sort((a, b) => {
         if (a.citycode < b.citycode) return -1;
         if (a.citycode > b.citycode) return 1;
         return 0;
@@ -137,8 +137,8 @@ export default function (val, parentDiv) {
     if (!ie) return '-0.3em'
   })
   .attr('font-size', 10 * multi + 'px')
-  .attr('fill','black')
-  .attr('text-anchor','start');
+  .attr('fill', 'black')
+  .attr('text-anchor', 'start');
   // y軸バー-------------------------------------------------------------------------------
   svg.append('g')
   .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
@@ -197,7 +197,7 @@ export default function (val, parentDiv) {
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',15)')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text('赤線＝中央値')
   .attr('text-anchor', 'end');
@@ -211,7 +211,7 @@ export default function (val, parentDiv) {
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(' + 60 * multi + ',15)')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text('棒 = ' + statName)
   .attr('text-anchor', 'start');

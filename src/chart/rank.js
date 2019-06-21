@@ -36,14 +36,14 @@ export default function (val, parentDiv) {
     create() {
       // ソートして順位をつける-------------------------------------------------------------------
       if (prefOrCity === 'pref') this.dataset.shift();
-      this.dataset.sort((a,b) => {
+      this.dataset.sort((a, b) => {
         if (a.data > b.data) return -1;
         if (a.data < b.data) return 1;
         return 0;
       });
-      this.dataset.forEach((v,i) => v['leftTop'] = i + 1);
+      this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
       this.dataset2 = JSON.parse(JSON.stringify(this.dataset));
-      this.dataset2.sort((a,b) => {
+      this.dataset2.sort((a, b) => {
         if (a.data < b.data) return -1;
         if (a.data > b.data) return 1;
         return 0;
@@ -81,14 +81,14 @@ export default function (val, parentDiv) {
   .append('rect')
   .attr('width', 130 * multi)
   .attr('height', 15 * multi)
-  .attr('transform', (d,i) => 'translate(' + (0) + ',' + (15 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(' + (0) + ',' + (15 * i * multi) + ')')
   .attr('fill', d => dc.colorScale(d.data))
   .attr('stroke', 'black')
   .attr('stroke-width', 0.2);
   // テキスト------------------------------------------------------------------------------------
   const text1_1 = g.append('g')
   .append('text')
-  .attr('transform', (d,i) =>'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
+  .attr('transform', (d, i) =>'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname )
@@ -99,7 +99,7 @@ export default function (val, parentDiv) {
   });
   const text1_2 = g.append('g')
   .append('text')
-  .attr('transform', (d,i) =>'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
+  .attr('transform', (d, i) =>'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.data.toLocaleString())
@@ -119,14 +119,14 @@ export default function (val, parentDiv) {
   .append('rect')
   .attr('width', 130 * multi)
   .attr('height', 15 * multi)
-  .attr('transform', (d,i) => 'translate(0,' + (15 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(0,' + (15 * i * multi) + ')')
   .attr('fill', d => dc.colorScale(d.data))
   .attr('stroke', 'black')
   .attr('stroke-width', 0.2);
   // テキスト------------------------------------------------------------------------------------
   const text2_1 = g2.append('g')
   .append('text')
-  .attr('transform', (d,i) =>'translate(0,' + (12 * multi + 15 * i * multi) + ')')
+  .attr('transform', (d, i) =>'translate(0,' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname)
@@ -137,7 +137,7 @@ export default function (val, parentDiv) {
   });
   const text2_2 = g2.append('g')
   .append('text')
-  .attr('transform', (d,i) =>'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
+  .attr('transform', (d, i) =>'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.data.toLocaleString())
@@ -150,7 +150,7 @@ export default function (val, parentDiv) {
   svg.append('g')
   .attr('font-size', (12 * multi) + 'px')
   .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text(statName + '　単位：' + unit);
   //--------------------------------------------------------------------------------------------
@@ -163,14 +163,14 @@ export default function (val, parentDiv) {
     .transition()
     .duration(200)
     .attr('fill', d => dc.colorScale(d.data))
-    .attr('transform', (d,i) => {
+    .attr('transform', (d, i) => {
       return 'translate(0,' + (12 * multi + 15 * (i-1) * multi) + ')'
     });
     text1_1
     .data(dc.dataset, d => d.citycode)
     .transition()
     .duration(200)
-    .attr('transform', (d,i) => 'translate(0,' + (12 * multi + 15 * i * multi) + ')')
+    .attr('transform', (d, i) => 'translate(0,' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
     .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
@@ -181,7 +181,7 @@ export default function (val, parentDiv) {
     .data(dc.dataset, d => d.citycode)
     .transition()
     .duration(200)
-    .attr('transform', (d,i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
+    .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
     .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
@@ -194,12 +194,12 @@ export default function (val, parentDiv) {
     .transition()
     .duration(200)
     .attr('fill', d => dc.colorScale(d.data))
-    .attr('transform', (d,i) => 'translate(' + (0) + ',' + (12 * multi + 15 * (i-1) * multi) + ')');
+    .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * (i-1) * multi) + ')');
     text2_1
     .data(dc.dataset2, d => d.citycode)
     .transition()
     .duration(200)
-    .attr('transform', (d,i) => 'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
+    .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
     .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
@@ -210,7 +210,7 @@ export default function (val, parentDiv) {
     .data(dc.dataset2, d => d.citycode)
     .transition()
     .duration(200)
-    .attr('transform', (d,i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
+    .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
     .attr('fill', d => {
       const rgb = d3.rgb(dc.colorScale(d.data));
