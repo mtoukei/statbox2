@@ -13,7 +13,7 @@ Vue.config.productionTip = false;
 Vue.use(VueResize);
 global.d3 = d3;
 global.d3Tip = d3Tip;
-global.axios =axios;
+global.axios = axios;
 global.eStatApiId = '63bd852098e1a13aeea70ed78cba31f9f3918d2f';
 const useragent = window.navigator.userAgent.toLowerCase();
 if (useragent.indexOf('msie') < 0 && useragent.indexOf('trident') < 0) {

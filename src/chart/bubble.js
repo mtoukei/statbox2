@@ -3,7 +3,7 @@ import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
+  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   const rangeDiv = d3.select('#year-range-' + prefOrCity);
   const isEStat = val.estat === true;
@@ -75,7 +75,7 @@ export default function (val, parentDiv) {
       this.colorScale = d3.scaleLinear()
       .domain([minVal, maxVal])
       .range(['white', 'red']);
-      const maxFontSize = maxVal< 20?10: 20;
+      const maxFontSize = maxVal < 20 ? 10 : 20;
       this.fontScale = d3.scaleLinear()
       .domain([minVal, maxVal])
       .range([6 * multi, maxFontSize * multi]);
@@ -98,7 +98,7 @@ export default function (val, parentDiv) {
   .enter()
   .append('g')
   .attr('class', 'bubble')
-  .attr('transform', d => 'translate('+d.x+','+d.y+')');
+  .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
   const circle = bubbles.append('circle')
   .attr('fill', d => dc.colorScale(d.r));
   if (transitionFlg) {
@@ -110,7 +110,7 @@ export default function (val, parentDiv) {
     circle.attr('r', d => d.r);
   }
   // バブルのテキスト
-  const text =bubbles.append('text')
+  const text = bubbles.append('text')
   .text(d => {
     if(d.r !== 0) return d.data.name
   })
@@ -120,7 +120,7 @@ export default function (val, parentDiv) {
   .attr('fill', function (d) {
     const rgb = d3.rgb(dc.colorScale(d.r));
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
-    return cY > 200? 'black': 'white';
+    return cY > 200 ? 'black' : 'white';
   })
   .attr('opacity', 0);
   if (transitionFlg) {
@@ -170,7 +170,7 @@ export default function (val, parentDiv) {
     .attr('fill', function (d) {
       const rgb = d3.rgb(dc.colorScale(d.r));
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
-      return cY > 200? 'black': 'white';
+      return cY > 200 ? 'black' : 'white';
     });
     const year = val.statData[value].time.substr(0, 4);
     rangeDiv.select('.year-range-text').text(year);
@@ -179,7 +179,7 @@ export default function (val, parentDiv) {
   rangeDiv.select('.year-range')
   .attr('max', String(val.statData.length - 1));
   const length = val.statData.length;
-  const quarter =Math.floor((length -1) /4);
+  const quarter = Math.floor((length - 1) / 4);
   rangeDiv.select('.year-range-ticks').selectAll('.tick').remove();
   rangeDiv.select('.year-range-ticks')
   .selectAll('span')
@@ -188,9 +188,9 @@ export default function (val, parentDiv) {
   .append('span')
   .attr('class', 'tick')
   .text((d, i) =>{
-    if (length<=10) {
+    if (length <= 10) {
       return d.time.substr(0, 4)
-    } else if (i===0 || i === length -1) {
+    } else if (i === 0 || i === length - 1) {
       return d.time.substr(2, 2)
     } else if (i % quarter === 0) {
       return d.time.substr(2, 2)

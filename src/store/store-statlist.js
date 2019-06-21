@@ -245,7 +245,7 @@ const statList = {
         });
         const dataSet = [];
         for (const times2Value of times2) {
-          const data =dataAr.filter(val => val['@time'] === times2Value);
+          const data = dataAr.filter(val => val['@time'] === times2Value);
           const data2 = [];
           for (const dataValue of data) {
             if (payload.prefOrCity === 'pref') {
@@ -303,11 +303,11 @@ const statList = {
         let stat;
         let source = '';
         if (payload.prefOrCity === 'pref') {
-          stat = payload.side === 'leftSide'? state.leftStatEstatPref: state.rightStatEstatPref;
+          stat = payload.side === 'leftSide' ? state.leftStatEstatPref : state.rightStatEstatPref;
           const result = MetaSourcePref.find(val => val.sourceId === sourceId);
           if (result) source = result.source
         } else if (payload.prefOrCity === 'city'){
-          stat = payload.side === 'leftSide'? state.leftStatEstatCity: state.rightStatEstatCity;
+          stat = payload.side === 'leftSide' ? state.leftStatEstatCity : state.rightStatEstatCity;
           const result = MetaSourceCity.find(val => val.sourceId === sourceId);
           if (result) source = result.source
         }

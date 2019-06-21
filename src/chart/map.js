@@ -4,7 +4,7 @@ import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
+  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   const isEStat = val.estat === true;
   if(palentDiv.style('display') === 'none') return;
@@ -28,7 +28,7 @@ export default function (val, parentDiv) {
   const height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
-  const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
+  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
@@ -69,7 +69,7 @@ export default function (val, parentDiv) {
       }
       const data0 = String(this.dataset[0].citycode).substr(0, 2);
       const data1 = String(this.dataset[1].citycode).substr(0, 2);
-      this.prefCode = data0 !== data1? '00': data0
+      this.prefCode = data0 !== data1 ? '00' : data0
     }
   }
   //---------------------------------------------------------------------------------------------
@@ -172,7 +172,7 @@ export default function (val, parentDiv) {
   .selectAll('rect')
   .data(dc.legendDataSet)
   .enter();
-  const rect =g2.append('rect')
+  const rect = g2.append('rect')
   .attr('transform', (d, i) => 'translate(0,' + (20 * i * multi) + ')')
   .attr('width', 20 * multi)
   .attr('height', 20 * multi)
@@ -225,7 +225,7 @@ export default function (val, parentDiv) {
   };
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
-    const type = ie? 'change': 'input';
+    const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
       return e => rangeInput(e)

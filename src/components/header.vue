@@ -120,7 +120,7 @@
               divList[i].show = true;
               vm.$store.commit('base/rightSideDivShowChange', divList[i].rightSide);
             } else {
-              divList[i].show =false
+              divList[i].show = false
             }
           }
           this.mix_detectResize();

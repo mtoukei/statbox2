@@ -3,7 +3,7 @@ import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
+  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   if (palentDiv.style('display') === 'none') return;
   let dataset;
@@ -75,7 +75,7 @@ export default function (val, parentDiv) {
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
-  .attr('viewBox', '0 0 '+ width + ' ' + height)
+  .attr('viewBox', '0 0 ' + width + ' ' + height)
   .attr('preserveAspectRatio', 'xMidYMid')
   .classed("svg-content-responsive", true)
   .classed("chart-svg", true);
@@ -95,10 +95,10 @@ export default function (val, parentDiv) {
   })
   .attr('fill', 'rgba(0,0,0,0)');
   //--------------------------------------------------------------------------------------------
-  const rect =rectG.append('rect')
+  const rect = rectG.append('rect')
   .attr('width', rectSize * multi)
   .attr('height', rectSize * multi)
-  .attr('display', (d, i) => i <= 1? 'none': 'block');
+  .attr('display', (d, i) => i <= 1 ? 'none' : 'block');
   //--------------------------------------------------------------------------------------------
   const dash = d => {
     if (d.chihou8id) {
@@ -108,7 +108,7 @@ export default function (val, parentDiv) {
         case 'tl':case 'tr':
           return rectSize * 2 * multi + ',' + rectSize * 2 * multi;
         case 'tbl':
-          return rectSize * multi + ',' + rectSize * multi + ',' + rectSize *2 * multi;
+          return rectSize * multi + ',' + rectSize * multi + ',' + rectSize * 2 * multi;
         case 'tlr':
           return rectSize * 2 * multi + ',' + rectSize * multi;
         case 'tblr':
@@ -118,7 +118,7 @@ export default function (val, parentDiv) {
         case 'br':
           return 0 + ',' + rectSize * multi + ',' + rectSize * multi;
         case 'blr':
-          return 0 + ',' + rectSize * multi + ',' + rectSize *3 * multi;
+          return 0 + ',' + rectSize * multi + ',' + rectSize * 3 * multi;
         case 'l':case 'r':
           return 40 * multi + ',' + rectSize * 3 * multi;
         case 'lr':
@@ -180,7 +180,7 @@ export default function (val, parentDiv) {
   }
   // 県名---------------------------------------------------------------------------------------
   const prefText = rectG.append('text')
-  .attr('display', (d, i) => i <= 1? 'none': 'block')
+  .attr('display', (d, i) => i <= 1 ? 'none' : 'block')
   .attr('font-size', 10 * multi + 'px')
   .attr('x', 5 * multi)
   .attr('y', 10 * multi)
@@ -195,13 +195,13 @@ export default function (val, parentDiv) {
   }
   // サークル------------------------------------------------------------------------------------
   const circleG = g.append('g')
-  .attr('display', (d, i) => i <= 1? 'none': 'block')
+  .attr('display', (d, i) => i <= 1 ? 'none' : 'block')
   .attr('transform', (d, i) => {
     const y = rectSize * Math.floor(i / 7);
     const x = rectSize * (i % 7);
     return 'translate(' + (x * multi) + ',' + (y * multi) + ')';
   });
-  const circle =circleG.append('circle')
+  const circle = circleG.append('circle')
   .attr('cx', rectSize / 2 * multi)
   .attr('cy', rectSize / 2 * multi + 5 * multi)
   .attr('fill', d => {
@@ -226,8 +226,8 @@ export default function (val, parentDiv) {
     const result = dc.dataset.find(value => Number(value.citycode) === Number(d.prefcode));
     if (result) {
       const rgb = d3.rgb(dc.colorScale(result.data));
-      const cY = 0.3*rgb.r + 0.6*rgb.g + 0.1*rgb.b;
-      return cY > 200? 'gray': 'white';
+      const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
+      return cY > 200 ? 'gray' : 'white';
     }
   });
   if (transitionFlg) {
@@ -283,7 +283,7 @@ export default function (val, parentDiv) {
     });
   };
   //--------------------------------------------------------------------------------------------
-  const type = ie? 'change': 'input';
+  const type = ie ? 'change' : 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
   eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
     return e => rangeInput(e)

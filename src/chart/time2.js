@@ -1,7 +1,7 @@
 import storeBase from "../store/store-base";
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
+  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   if(palentDiv.style('display') === 'none') return;
   let dataset;
@@ -17,7 +17,7 @@ export default function (val, parentDiv) {
   const height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 600;
-  const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
+  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 20 * multi, 'bottom': 30 * multi, 'right': 100 * multi, 'left': 60 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
   let transitionFlg = storeBase.state.statList.transition;
@@ -48,7 +48,7 @@ export default function (val, parentDiv) {
       }
       this.maxVal = this.maxVal * 1.1;
       // -----------------------------------------------------------------------------------------
-      this.legendData = this.dataset[this.dataset.length -1].data2
+      this.legendData = this.dataset[this.dataset.length - 1].data2
     }
   }
   //---------------------------------------------------------------------------------------------
@@ -108,7 +108,7 @@ export default function (val, parentDiv) {
   .call(
     d3.axisBottom(xScale)
     .ticks((() => {
-      return timeData.length >10? 10: timeData.length
+      return timeData.length > 10 ? 10 : timeData.length
     })())
     .tickSize(margin.top + margin.bottom - height)
   )
@@ -149,7 +149,7 @@ export default function (val, parentDiv) {
     .y(function(d) { return yScale(d.data); }));
   }
   // --------------------------------------------------------------------------------------------
-  const legendG =svgRight.append('g')
+  const legendG = svgRight.append('g')
   .attr("transform", "translate(" + (2) + "," + (1 * multi) + ")")
   .style('overflow', 'auto')
   .selectAll('text')

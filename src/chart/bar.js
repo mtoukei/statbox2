@@ -4,7 +4,7 @@ import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
+  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   const isEStat = val.estat === true;
   if(palentDiv.style('display') === 'none') return;
@@ -27,7 +27,7 @@ export default function (val, parentDiv) {
   const height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 600;
-  const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
+  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 50 * multi, 'left': 50 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg = storeBase.state.statList.transition;
@@ -146,7 +146,7 @@ export default function (val, parentDiv) {
   .selectAll('text')
   .attr('font-size', fontSize);
   // バーの表示------------------------------------------------------------------------------
-  const g =svg.append('g')
+  const g = svg.append('g')
   .selectAll('rect')
   .data(dc.dataset)
   .enter();
@@ -159,7 +159,7 @@ export default function (val, parentDiv) {
     rect.transition()
     .duration(1000)
     .attr('y', function (d) {
-      if (d.data>=0) {
+      if (d.data >= 0) {
         d3.select(this).attr('fill', 'slategray');
         return yScale(d.data)
       } else {
@@ -170,7 +170,7 @@ export default function (val, parentDiv) {
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
   } else {
     rect.attr('y', function (d) {
-      if (d.data>=0) {
+      if (d.data >= 0) {
         d3.select(this).attr('fill', 'slategray');
         return yScale(d.data)
       } else {
@@ -226,7 +226,7 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
     .attr('y', function (d) {
-      if (d.data>=0) {
+      if (d.data >= 0) {
         d3.select(this).attr('fill', 'slategray');
         return yScale(d.data)
       } else {
@@ -242,7 +242,7 @@ export default function (val, parentDiv) {
   };
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
-    const type = ie? 'change': 'input';
+    const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
       return e => rangeInput(e)

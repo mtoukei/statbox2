@@ -25,7 +25,7 @@ export default function (val, palentDiv) {
   const height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 1200;
-  const multi = width / defaultWidth < 1? width / defaultWidth: 1;
+  const multi = width / defaultWidth < 1 ? width / defaultWidth : 1;
   const margin = { 'top': 40 * multi, 'bottom': 200 * multi, 'right': 100 * multi, 'left': 100 * multi };
     // SVG領域作成---------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
@@ -137,7 +137,7 @@ export default function (val, palentDiv) {
   .selectAll('text')
   .attr('font-size', d => {
     let len = String(d).length;
-    if (len===1) len = 2;
+    if (len === 1) len = 2;
     return fontScale(len) + 'px'
   });
   // y軸2
@@ -151,7 +151,7 @@ export default function (val, palentDiv) {
   .selectAll('text')
   .attr('font-size', d => {
     let len = String(d).length;
-    if (len===1) len = 2;
+    if (len === 1) len = 2;
     if (unit2) {
       return fontScale2(len) + 'px'
     } else {
@@ -180,7 +180,7 @@ export default function (val, palentDiv) {
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
   .attr('fill', 'none')
   .attr('pointer-events', 'all')
-  .attr("width", width - margin.left -margin.right)
+  .attr("width", width - margin.left - margin.right)
   .attr("height", height - margin.bottom - margin.top)
   .on("mouseover", () => {
     tooltip.style("visibility", "visible");
@@ -221,10 +221,10 @@ export default function (val, palentDiv) {
             if (!nen) {
               const heisei = Number(d.year) - 1988;
               const syouwa = Number(d.year) - 1925;
-              if (heisei >0) {
-                nen ='平成' + heisei + '年'
+              if (heisei > 0) {
+                nen = '平成' + heisei + '年'
               } else {
-                nen ='昭和' + syouwa + '年'
+                nen = '昭和' + syouwa + '年'
               }
             }
             strAr.push({
@@ -283,7 +283,7 @@ export default function (val, palentDiv) {
       if (!datasetCopy[j].data) datasetCopy.splice(j, 1);
     }
     // ラインの表示-------------------------------------------------------------------------------
-    const path =svg.append('path')
+    const path = svg.append('path')
     .datum(datasetCopy)
     .attr('class', 'line-graph')
     .attr('id', 'line-graph-' + i)
@@ -294,17 +294,17 @@ export default function (val, palentDiv) {
     .attr('stroke-dasharray', '20,5')
     .attr('d', d3.line()
     .x(d => xScale(d.year))
-    .y(d => statDatas[i].unit === unit? yScale(d.data): yScale2(d.data)));
+    .y(d => statDatas[i].unit === unit ? yScale(d.data) : yScale2(d.data)));
     // 丸の表示
-    const gc =svg.append('g')
+    const gc = svg.append('g')
     .selectAll('.circle' + i)
     .data(datasetCopy)
     .enter();
     const circle = gc.append('circle')
-    .attr('class', d => 'circle' + i + ' year' +d.year)
+    .attr('class', d => 'circle' + i + ' year' + d.year)
     .attr('r', 0)
     .attr('cx', d => xScale(d.year))
-    .attr('cy', d => statDatas[i].unit === unit? yScale(d.data): yScale2(d.data))
+    .attr('cy', d => statDatas[i].unit === unit ? yScale(d.data) : yScale2(d.data))
     .attr('fill', colorScale(Number(i)));
     if (statDatas[i].stat === endStat) {
       circle.transition()
@@ -342,14 +342,14 @@ export default function (val, palentDiv) {
       .attr('stroke-dashoffset', 0)
       .transition()
       .duration(0)
-      .attr('stroke-dasharray', () => statDatas[i].unit === unit? pathLength: '10 2')
+      .attr('stroke-dasharray', () => statDatas[i].unit === unit ? pathLength : '10 2')
     } else {
       path.attr('stroke-dashoffset', 0)
-      .attr('stroke-dasharray', () => statDatas[i].unit === unit? pathLength: '10 2')
+      .attr('stroke-dasharray', () => statDatas[i].unit === unit ? pathLength : '10 2')
     }
   }
   // 凡例---------------------------------------------------------------------------------------
-  const unit1g= [];
+  const unit1g = [];
   const unit2g = [];
   for (let i in statDatas) {
     if (statDatas[i].unit === unit) {
@@ -409,7 +409,7 @@ export default function (val, palentDiv) {
     .attr('stroke-dashoffset', 0)
     .transition()
     .duration(0)
-    .attr('stroke-dasharray', () => statDatas[i].unit === unit? pathLength: '10 2');
+    .attr('stroke-dasharray', () => statDatas[i].unit === unit ? pathLength : '10 2');
     if (line.style('display') !== 'none') {
       line.style('display', 'none');
       rect.style('opacity', '0.2');

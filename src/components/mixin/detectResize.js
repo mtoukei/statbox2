@@ -26,8 +26,8 @@ export default {
         document.querySelector('#footer-inner-left').style.height = (footerHeight - 40) + 'px';
         document.querySelector('#footer-inner-right').style.height = (footerHeight - 40) + 'px';
         // 幅設定。左右サイドのリサイズ---------------------------------------------------------
-        vTreeLefts[0].style.width = (leftSideDivWidth-30) + 'px';
-        vTreeRights[0].style.width = (rightSideDivWidth-30) + 'px';
+        vTreeLefts[0].style.width = (leftSideDivWidth - 30) + 'px';
+        vTreeRights[0].style.width = (rightSideDivWidth - 30) + 'px';
         contents.style.left = leftSideDivWidth + 'px';
         if (this.rightSideDivShow) {
           contents.style.width = (bodyWidth - leftSideDivWidth - rightSideDivWidth) + 'px';
