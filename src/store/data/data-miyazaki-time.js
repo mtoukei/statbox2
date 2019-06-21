@@ -1387,7 +1387,7 @@ export const unyu = {
     statName: '軽自動車',
     unit: '台',
   },
-  data:[
+  data: [
     {
       "nen": "昭和26年",
       "year": 1951,
@@ -1860,7 +1860,7 @@ export const roudou = {
     statName: '月間給与1人平均',
     unit: '円',
   },
-  data:[
+  data: [
     {
       "nen": "昭和33年",
       "year": 1958,
@@ -2186,7 +2186,7 @@ export const bukka = {
     statName: '年間収入',
     unit: '千円',
   },
-  data:[
+  data: [
     {
       "nen": "昭和34年",
       "year": 1959,
@@ -2723,7 +2723,7 @@ export const syougyou = {
     statName: '商店年間商品販売額',
     unit: '百万円',
   },
-  data:[
+  data: [
     {
       "nen": "昭和27年",
       "year": 1952,
@@ -3134,7 +3134,7 @@ export const kougyou = {
     statName: '製造品出荷額等',
     unit: '百万円',
   },
-  data:[
+  data: [
     // {
     //   "nen": "明治17年",
     //   "year": 1884,
@@ -4079,7 +4079,7 @@ export const gyogyou = {
     statName: '海面漁業漁獲量',
     unit: 'トン',
   },
-  data:[
+  data: [
     // {
     //   "nen": "明治17年",
     //   "year": 1884,
@@ -4755,7 +4755,7 @@ export const ringyou = {
     statName: '素材生産量',
     unit: '千㎥',
   },
-  data:[
+  data: [
     // {
     //   "nen": "明治17年",
     //   "year": 1884,
@@ -5438,7 +5438,7 @@ export const nougyou = {
     statName: '農業産出額',
     unit: '億円',
   },
-  data:[
+  data: [
     // {
     //   "nen": "明治17年",
     //   "year": 1884,

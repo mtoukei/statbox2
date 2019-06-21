@@ -493,7 +493,7 @@
         })
       },
       prefChange2 () {
-        this.$store.commit('statList/eStatReload', {side:'left'});
+        this.$store.commit('statList/eStatReload', {side: 'left'});
       },
       prefChange (prefCode) {
         const citys = Citycodes.filter(value => value.id.substr(0, 2) === prefCode.substr(0, 2));

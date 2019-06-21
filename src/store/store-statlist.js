@@ -20,13 +20,13 @@ const statList = {
     yearRangeScatterCity: 100,
     yearRangeScatterPref: 100,
     // 宮崎県市町村用-------------------------------------------------------------------------
-    leftStat:{
+    leftStat: {
       transition: true,
       count: 0,
       stat: '',
       statData: {},
     },
-    rightStat:{
+    rightStat: {
       transition: true,
       count: 0,
       stat: '',
@@ -35,7 +35,7 @@ const statList = {
     // 全国都道府県用-------------------------------------------------------------------------
     leftStatEstatPref: {
       count: 0,
-      statData:[],
+      statData: [],
       statsDataId: '',
       cdCat01: '',
       statName: '',
@@ -43,7 +43,7 @@ const statList = {
     },
     rightStatEstatPref: {
       count: 0,
-      statData:[],
+      statData: [],
       statsDataId: '',
       cdCat01: '',
       statName: '',
@@ -52,7 +52,7 @@ const statList = {
     // 全国市町村用----------------------------------------------------------------------------
     leftStatEstatCity: {
       count: 0,
-      statData:[],
+      statData: [],
       statsDataId: '',
       cdCat01: '',
       statName: '',
@@ -60,34 +60,34 @@ const statList = {
     },
     rightStatEstatCity: {
       count: 0,
-      statData:[],
+      statData: [],
       statsDataId: '',
       cdCat01: '',
       statName: '',
       source: ''
     },
     // 宮崎県時系列用-------------------------------------------------------------------------
-    leftStatTime:{
+    leftStatTime: {
       transition: true,
       count: 0,
       stat: '',
       statData: {},
     },
-    rightStatTime:{
+    rightStatTime: {
       transition: true,
       count: 0,
       stat: '',
       statData: {},
     },
     // 全国都道府県時系列用------------------------------------------------------------------
-    leftStatTimePref:{
+    leftStatTimePref: {
       transition: true,
       count: 0,
       stat: '',
       statData: {},
     },
     // 全国市町村時系列用--------------------------------------------------------------------
-    leftStatTimeCity:{
+    leftStatTimeCity: {
       transition: true,
       count: 0,
       stat: '',

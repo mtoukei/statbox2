@@ -141,7 +141,7 @@ const metaMiyazaki = [
           [
             {
               label: '自然動態',
-              children:[
+              children: [
                 {
                   label: '出生数',
                   statName: 'doutai/syusseisuu'
@@ -162,7 +162,7 @@ const metaMiyazaki = [
             },
             {
               label: '社会動態',
-              children:[
+              children: [
                 {
                   label: '転入者数',
                   statName: 'doutai/tennyuusyasuu'
