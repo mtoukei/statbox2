@@ -16,6 +16,7 @@ module.exports = {
     "comma-spacing": ["warn", {"before": false, "after": true}],
     "block-spacing": "warn",
     "key-spacing": ["warn", {"beforeColon": false, "afterColon": true}],
+    "space-infix-ops": "warn",
     "no-unneeded-ternary": "warn",
     "no-console": "off",
   },
