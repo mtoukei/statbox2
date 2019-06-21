@@ -16,7 +16,7 @@ export default function (leftVal, rightVal) {
   const height = palentDiv.node().getBoundingClientRect().height
     - d3.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 980;
-  const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
+  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 30 * multi, 'bottom': 100 * multi, 'right': 30 * multi, 'left': 60 * multi };
   //トランジションフラグ---------------------------------------------------------------------------
   const transitionFlg = storeBase.state.statList.leftStat.transition;
@@ -24,7 +24,7 @@ export default function (leftVal, rightVal) {
   const dataset = [];
   const leftDataAr = [], rightDataAr = [];
   const kaikiData = [];
-  for (let i in leftDataset) {
+  for (const i in leftDataset) {
     const obj = {
       cityname: leftDataset[i].cityname,
       leftData: leftDataset[i].data,
@@ -54,7 +54,7 @@ export default function (leftVal, rightVal) {
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 14 * multi + 'px')
-  .attr('transform', 'translate(' + (width/2) + ',' + (14 * multi + 10 * multi) + ')')
+  .attr('transform', 'translate(' + (width / 2) + ',' + (14 * multi + 10 * multi) + ')')
   .attr('class', 'no-print')
   .append('text')
   .text('縦=' + leftStatName + '　×　横=' + rightStatName)
@@ -102,30 +102,30 @@ export default function (leftVal, rightVal) {
   .attr('font-size', 12 * multi + 'px')
   .attr('fill', () => fill);
   // 軸スケールの設定---------------------------------------------------------------------------
-  const rightMax =d3.max(dataset, d => d.rightData);
-  let rightMin =d3.min(dataset, d => d.rightData);
-  const leftMax =d3.max(dataset, d => d.leftData);
-  let leftMin =d3.min(dataset, d => d.leftData);
+  const rightMax = d3.max(dataset, d => d.rightData);
+  let rightMin = d3.min(dataset, d => d.rightData);
+  const leftMax = d3.max(dataset, d => d.leftData);
+  let leftMin = d3.min(dataset, d => d.leftData);
   if (leftMin > 0) leftMin = 0;
     rightMin = rightMin * 0.9;
     leftMin = leftMin * 0.9;
   const xScale = d3.scaleLinear()
-  .domain([0, rightMax*1.1])
+  .domain([0, rightMax * 1.1])
   .range([margin.left, width - margin.right]);
   const yScale = d3.scaleLinear()
-  .domain([leftMin*1.1, leftMax*1.1])
+  .domain([leftMin * 1.1, leftMax * 1.1])
   .range([height - margin.bottom, margin.top]);
   // 0のラインx----------------------------------------------------------------------------------
-  const zeroLineX =svg.append('line')
+  const zeroLineX = svg.append('line')
   .attr('clip-path', 'url(#scatter-clip)')
   .attr('x1', margin.left)
   .attr('y1', yScale(0))
-  .attr('x2', width -margin.right)
+  .attr('x2', width - margin.right)
   .attr('y2', yScale(0))
   .attr('stroke-width', '1px')
   .attr('stroke', 'black');
   // 0のラインy----------------------------------------------------------------------------------
-  const zeroLineY =svg.append('line')
+  const zeroLineY = svg.append('line')
   .attr('clip-path', 'url(#scatter-clip)')
   .attr('x1', xScale(0))
   .attr('y1', margin.top)
@@ -237,7 +237,7 @@ export default function (leftVal, rightVal) {
   // 縦軸単位----------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
-  .attr('transform', 'translate(' + 20 * multi +',' + (12 * multi + 5 * multi) + ')')
+  .attr('transform', 'translate(' + 20 * multi + ',' + (12 * multi + 5 * multi) + ')')
   .append('text')
   .text('単位:' + leftUnit)
   .attr('text-anchor', 'start');
@@ -274,7 +274,7 @@ export default function (leftVal, rightVal) {
     zeroLineX
     .attr('x1', margin.left)
     .attr('y1', newYScale(0))
-    .attr('x2', width -margin.right)
+    .attr('x2', width - margin.right)
     .attr('y2', newYScale(0));
     // 0のラインy--------------------------------------------------------------------------------
     zeroLineY

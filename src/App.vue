@@ -61,7 +61,7 @@
         resizableDiv('#left-side-div');
         resizableDiv('#right-side-div');
         resizableDiv('#footer');
-        for (let i in this.s_leftDivList) {
+        for (const i in this.s_leftDivList) {
           resizableDiv('#left-' + this.s_leftDivList[i].divId);
         }
       });

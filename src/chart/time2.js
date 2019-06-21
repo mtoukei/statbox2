@@ -1,7 +1,7 @@
 import storeBase from "../store/store-base";
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
+  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   if(palentDiv.style('display') === 'none') return;
   let dataset;
@@ -17,10 +17,10 @@ export default function (val, parentDiv) {
   const height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 600;
-  const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
+  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 20 * multi, 'bottom': 30 * multi, 'right': 100 * multi, 'left': 60 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  let transitionFlg = storeBase.state.statList.transition;
+  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -30,8 +30,8 @@ export default function (val, parentDiv) {
       this.legendData = [];
     }
     create () {
-      for (let i in this.dataset) {
-        for (let j in this.dataset[i].data2) {
+      for (const i in this.dataset) {
+        for (const j in this.dataset[i].data2) {
           if (!this.timeDataset[this.dataset[i].data2[j].citycode]) {
             this.timeDataset[this.dataset[i].data2[j].citycode] = []
           }
@@ -48,11 +48,11 @@ export default function (val, parentDiv) {
       }
       this.maxVal = this.maxVal * 1.1;
       // -----------------------------------------------------------------------------------------
-      this.legendData = this.dataset[this.dataset.length -1].data2
+      this.legendData = this.dataset[this.dataset.length - 1].data2
     }
   }
   //---------------------------------------------------------------------------------------------
-  let dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
@@ -95,7 +95,7 @@ export default function (val, parentDiv) {
   margin.left = margin.left * multi;
   // スケール------------------------------------------------------------------------------------
   const xScale = d3.scaleLinear()
-  .domain([d3.min(timeData, d =>d.time), d3.max(timeData, d =>d.time)])
+  .domain([d3.min(timeData, d => d.time), d3.max(timeData, d => d.time)])
   .range([margin.left, width - margin.right]);
   const yScale = d3.scaleLinear()
   .domain([0, dc.maxVal])
@@ -108,7 +108,7 @@ export default function (val, parentDiv) {
   .call(
     d3.axisBottom(xScale)
     .ticks((() => {
-      return timeData.length >10? 10: timeData.length
+      return timeData.length > 10 ? 10 : timeData.length
     })())
     .tickSize(margin.top + margin.bottom - height)
   )
@@ -135,7 +135,7 @@ export default function (val, parentDiv) {
   // --------------------------------------------------------------------------------------------
   const colorScale = d3.scaleOrdinal(d3.schemeSet1);
   // パスをループで追加
-  for (let key in dc.timeDataset) {
+  for (const key in dc.timeDataset) {
     svg.append("path")
     .datum(dc.timeDataset[key])
     // .classed('time-path', true)
@@ -149,8 +149,8 @@ export default function (val, parentDiv) {
     .y(function(d) { return yScale(d.data); }));
   }
   // --------------------------------------------------------------------------------------------
-  const legendG =svgRight.append('g')
-  .attr("transform", "translate(" + (2) + "," + (1 * multi) + ")")
+  const legendG = svgRight.append('g')
+  .attr("transform", "translate(" + (2) + "," + (Number(multi)) + ")")
   .style('overflow', 'auto')
   .selectAll('text')
   .data(dc.legendData)
@@ -203,7 +203,7 @@ export default function (val, parentDiv) {
     timePaths.each( function() {
       if (d3.select(this).style('display') !== 'none') {
         const key = d3.select(this).attr('id').split('-')[2];
-        const maxData0 = d3.max(dc.timeDataset[key], d =>d.data);
+        const maxData0 = d3.max(dc.timeDataset[key], d => d.data);
         if (maxData0 > maxData ) maxData = maxData0
       }
     });

@@ -3,7 +3,7 @@ import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
+  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   const isEStat = val.estat === true;
   if(palentDiv.style('display') === 'none') return;
@@ -26,7 +26,7 @@ export default function (val, parentDiv) {
   const height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
-  const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
+  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 60 * multi, 'bottom': 60 * multi, 'right': 60 * multi, 'left': 20 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
   let transitionFlg = storeBase.state.statList.transition;
@@ -49,7 +49,7 @@ export default function (val, parentDiv) {
     const svg = palentDiv.select('.resizers').append('svg')
     .attr('width', width)
     .attr('height', height)
-    .attr('viewBox', '0 0 '+ width + ' ' + height)
+    .attr('viewBox', '0 0 ' + width + ' ' + height)
     .attr('preserveAspectRatio', 'xMidYMid')
     .classed("svg-content-responsive", true)
     .classed("chart-svg", true);
@@ -65,7 +65,7 @@ export default function (val, parentDiv) {
     .thresholds(xScale.ticks(6))(map);
     // console.log(histoData)
     // yスケール----------------------------------------------------------------------------------
-    const yScale= d3.scaleLinear()
+    const yScale = d3.scaleLinear()
     .domain([0, d3.max(histoData, d => d.length)])
     .range([height - margin.top - margin.bottom, 0]);
     // バー---------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ export default function (val, parentDiv) {
     .append("g")
     .attr("class", "bar")
     .attr("transform", function(d) {
-      return "translate(" + (xScale(d.x0) + margin.left )+ "," + margin.top + ")";
+      return "translate(" + (xScale(d.x0) + margin.left ) + "," + margin.top + ")";
     });
 // バー-----------------------------------------------------------------------------------------
 //     var tip = d3Tip()
@@ -130,7 +130,7 @@ export default function (val, parentDiv) {
     const xAxis = d3.axisBottom(xScale)
     .tickValues(tick);
     svg.append("g")
-    .attr("transform", "translate(" + margin.left + "," + (height- margin.bottom) + ")")
+    .attr("transform", "translate(" + margin.left + "," + (height - margin.bottom) + ")")
     .call(xAxis)
     .selectAll('text')
     .attr('font-size', 10 * multi + 'px')
@@ -162,7 +162,7 @@ export default function (val, parentDiv) {
   };
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
-    const type = ie? 'change': 'input';
+    const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
       return e => rangeInput(e)

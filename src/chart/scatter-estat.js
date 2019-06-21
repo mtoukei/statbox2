@@ -20,11 +20,11 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   const height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 980;
-  const multi = width / defaultWidth < 1? width / defaultWidth: 1;
+  const multi = width / defaultWidth < 1 ? width / defaultWidth : 1;
   const margin = { 'top': 50 * multi, 'bottom': 100 * multi, 'right': 30 * multi, 'left': 70 * multi };
   // データセットの元を作成----------------------------------------------------------------------
   const mixDataset = [];
-  for (let i in leftDataset) {
+  for (const i in leftDataset) {
     const leftTiime = leftDataset[i].data[0]['@time'];
     const rightData = rightDataset.find(value => value.data[0]['@time'] === leftTiime);
     if (rightData) {
@@ -55,7 +55,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
       const rightDataAr = [];
       const kaikiData = [];
       // ４７都道府県でループ
-      for (let i in tgtLeftData) {
+      for (const i in tgtLeftData) {
         if (tgtLeftData[i].citycode !== '00000') {
           const leftData = Number(tgtLeftData[i].data);
           const rightData = Number(tgtRightData[i].data);
@@ -98,7 +98,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   // 表名------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 14 * multi + 'px')
-  .attr('transform', 'translate(' + (width/2) + ',' + (14 * multi + 20 * multi) + ')')
+  .attr('transform', 'translate(' + (width / 2) + ',' + (14 * multi + 20 * multi) + ')')
   .attr('class', 'no-print')
   .append('text')
   .text('縦=' + leftStatName + '　×　横=' + rightStatName)
@@ -159,16 +159,16 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .domain([leftMin * 1.1, leftMax * 1.1])
   .range([height - margin.bottom, margin.top]);
   // 0のラインx----------------------------------------------------------------------------------
-  const zeroLineX =svg.append('line')
+  const zeroLineX = svg.append('line')
   .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
   .attr('x1', margin.left * multi)
   .attr('y1', yScale(0))
-  .attr('x2', width -margin.right * multi)
+  .attr('x2', width - margin.right * multi)
   .attr('y2', yScale(0))
   .attr('stroke-width', '1px')
   .attr('stroke', 'black');
   // 0のラインy----------------------------------------------------------------------------------
-  const zeroLineY =svg.append('line')
+  const zeroLineY = svg.append('line')
   .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
   .attr('x1', xScale(0))
   .attr('y1', margin.top * multi)
@@ -223,7 +223,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   if (d3.select('#scatter-pref-input').size()) {
     const tgtPrefName = d3.select('#scatter-pref-input').property("value");
     const prefOptions = storeBase.state.base.prefOptions;
-    tgtprefCode = prefOptions.find(value=> value.label === tgtPrefName).value
+    tgtprefCode = prefOptions.find(value => value.label === tgtPrefName).value
   } else {
     tgtprefCode = '45000'
   }
@@ -236,7 +236,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .attr('id', d => 'circle' + d.cityname)
   .attr('cx', d => xScale( d.rightData ))
   .attr('cy', d => yScale( d.leftData ))
-  .attr('fill', d => d.cityname === tgtprefCode? 'red': 'orange')
+  .attr('fill', d => d.cityname === tgtprefCode ? 'red' : 'orange')
   .attr('r', 6);
   // テキスト表示--------------------------------------------------------------------------------
   const textG = svg.append('g')
@@ -253,7 +253,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   // 縦軸単位----------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
-  .attr('transform', () => 'translate(' + (20 * multi) + ',' + (12 * multi +10) + ')')
+  .attr('transform', () => 'translate(' + (20 * multi) + ',' + (12 * multi + 10) + ')')
   .append('text')
   .text('単位:' + leftUnit)
   .attr('text-anchor', 'start');
@@ -313,7 +313,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   rangeDiv.select('.year-range')
   .attr('max', String(mixDataset.length - 1));
   const length = mixDataset.length;
-  const quarter =Math.floor((length -1) / 4);
+  const quarter = Math.floor((length - 1) / 4);
   rangeDiv.select('.year-range-ticks').selectAll('.tick').remove();
   rangeDiv.select('.year-range-ticks')
   .selectAll('span')
@@ -321,10 +321,10 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .enter()
   .append('span')
   .attr('class', 'tick')
-  .text((d, i) =>{
-    if (length<=10) {
+  .text((d, i) => {
+    if (length <= 10) {
       return d.time.substr(0, 4)
-    } else if (i===0 || i === length -1) {
+    } else if (i === 0 || i === length - 1) {
       return d.time.substr(2, 2)
     } else if (i % quarter === 0) {
       return d.time.substr(2, 2)
@@ -332,7 +332,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   });
   // インプットテキスト----------------------------------------------------------------------------
   const textInput = cityName => {
-    circle.attr('fill', d => d.cityname === cityName? 'red': 'orange')
+    circle.attr('fill', d => d.cityname === cityName ? 'red' : 'orange')
   };
   if (!d3.select('#scatter-pref-input-' + prefOrCity).size()) {
     palentDiv.append('div')
@@ -348,9 +348,9 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     .attr('value', () => {
       if (prefOrCity === 'pref') {
         return '宮崎県'
-      } else {
+      } 
         return '宮崎市'
-      }
+      
     })
     .style('width', '70px')
   }
@@ -395,7 +395,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     zeroLineX
     .attr('x1', margin.left * multi)
     .attr('y1', newYScale(0))
-    .attr('x2', width -margin.right * multi)
+    .attr('x2', width - margin.right * multi)
     .attr('y2', newYScale(0));
     // 0のラインy--------------------------------------------------------------------------------
     zeroLineY
@@ -422,7 +422,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   const zoom = d3.zoom().on('zoom', zoomed);
   svg.call(zoom);
   //--------------------------------------------------------------------------------------------
-  const type = ie? 'change': 'input';
+  const type = ie ? 'change' : 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
   eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-scatter-' + prefOrCity + ' .year-range'), type, (() => {
     return e => rangeInput(e)

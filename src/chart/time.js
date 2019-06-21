@@ -11,7 +11,7 @@ export default function (val, palentDiv) {
   const unit = statDatas[0].unit;
   const units = [];
   let unit2;
-  for (let i in statDatas) {
+  for (const i in statDatas) {
     if (statDatas[i].unit !== unit) {
       unit2 = statDatas[i].unit
     }
@@ -25,7 +25,7 @@ export default function (val, palentDiv) {
   const height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 1200;
-  const multi = width / defaultWidth < 1? width / defaultWidth: 1;
+  const multi = width / defaultWidth < 1 ? width / defaultWidth : 1;
   const margin = { 'top': 40 * multi, 'bottom': 200 * multi, 'right': 100 * multi, 'left': 100 * multi };
     // SVG領域作成---------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
@@ -75,7 +75,7 @@ export default function (val, palentDiv) {
   let maxData = 0;
   let minData2 = 0;
   let maxData2 = 0;
-  for (let i in statDatas) {
+  for (const i in statDatas) {
     const min = d3.min(statDatas[i].data, d => d.data);
     const max = d3.max(statDatas[i].data, d => d.data);
     if (statDatas[i].unit === unit) {
@@ -137,7 +137,7 @@ export default function (val, palentDiv) {
   .selectAll('text')
   .attr('font-size', d => {
     let len = String(d).length;
-    if (len===1) len = 2;
+    if (len === 1) len = 2;
     return fontScale(len) + 'px'
   });
   // y軸2
@@ -151,12 +151,12 @@ export default function (val, palentDiv) {
   .selectAll('text')
   .attr('font-size', d => {
     let len = String(d).length;
-    if (len===1) len = 2;
+    if (len === 1) len = 2;
     if (unit2) {
       return fontScale2(len) + 'px'
-    } else {
+    } 
       return fontScale(len) + 'px'
-    }
+    
   });
   svg.selectAll(".tick line")
   .attr('stroke', '#ccc')
@@ -180,7 +180,7 @@ export default function (val, palentDiv) {
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
   .attr('fill', 'none')
   .attr('pointer-events', 'all')
-  .attr("width", width - margin.left -margin.right)
+  .attr("width", width - margin.left - margin.right)
   .attr("height", height - margin.bottom - margin.top)
   .on("mouseover", () => {
     tooltip.style("visibility", "visible");
@@ -205,9 +205,9 @@ export default function (val, palentDiv) {
       .style('top', (d3.event.pageY + 10) + 'px')
       .style('text-align', 'left')
       .html(() => {
-        let strAr = [];
+        const strAr = [];
         let str = '';
-        for (let i in statDatas) {
+        for (const i in statDatas) {
           const x0 = xScale.invert(d3.mouse(this)[0] + margin.left);
           //下三行の０は要変更。毎年データがある線を選ぶ必要がある
           const ii = bisectDate(statDatas[0].data, x0, 1);
@@ -221,10 +221,10 @@ export default function (val, palentDiv) {
             if (!nen) {
               const heisei = Number(d.year) - 1988;
               const syouwa = Number(d.year) - 1925;
-              if (heisei >0) {
-                nen ='平成' + heisei + '年'
+              if (heisei > 0) {
+                nen = '平成' + heisei + '年'
               } else {
-                nen ='昭和' + syouwa + '年'
+                nen = '昭和' + syouwa + '年'
               }
             }
             strAr.push({
@@ -254,7 +254,7 @@ export default function (val, palentDiv) {
         });
         // 複数あるラインのうち最も古い年を取得する
         const minYear = d3.min(strAr, d => d.year);
-        for (let i in strAr) {
+        for (const i in strAr) {
           let dataUnit;
           if (!strAr[i].data) {
             dataUnit = 'データ無'
@@ -277,13 +277,13 @@ export default function (val, palentDiv) {
   });
   // データセットをコピーしてデータのない行を削除する。--------------------------------------------
   const colorScale = d3.scaleOrdinal(d3.schemeSet1);
-  for (let i in statDatas) {
+  for (const i in statDatas) {
     const datasetCopy = JSON.parse(JSON.stringify(statDatas[i].data));
     for (let j = datasetCopy.length - 1; j >= 0; j--) {
       if (!datasetCopy[j].data) datasetCopy.splice(j, 1);
     }
     // ラインの表示-------------------------------------------------------------------------------
-    const path =svg.append('path')
+    const path = svg.append('path')
     .datum(datasetCopy)
     .attr('class', 'line-graph')
     .attr('id', 'line-graph-' + i)
@@ -294,17 +294,17 @@ export default function (val, palentDiv) {
     .attr('stroke-dasharray', '20,5')
     .attr('d', d3.line()
     .x(d => xScale(d.year))
-    .y(d => statDatas[i].unit === unit? yScale(d.data): yScale2(d.data)));
+    .y(d => statDatas[i].unit === unit ? yScale(d.data) : yScale2(d.data)));
     // 丸の表示
-    const gc =svg.append('g')
+    const gc = svg.append('g')
     .selectAll('.circle' + i)
     .data(datasetCopy)
     .enter();
     const circle = gc.append('circle')
-    .attr('class', d => 'circle' + i + ' year' +d.year)
+    .attr('class', d => 'circle' + i + ' year' + d.year)
     .attr('r', 0)
     .attr('cx', d => xScale(d.year))
-    .attr('cy', d => statDatas[i].unit === unit? yScale(d.data): yScale2(d.data))
+    .attr('cy', d => statDatas[i].unit === unit ? yScale(d.data) : yScale2(d.data))
     .attr('fill', colorScale(Number(i)));
     if (statDatas[i].stat === endStat) {
       circle.transition()
@@ -314,9 +314,9 @@ export default function (val, palentDiv) {
           return 10
         // } else if (datasetCopy.length < 10) {
         //   return 4
-        } else {
+        } 
           return 2
-        }
+        
       });
     } else {
       circle.attr('r', () => {
@@ -324,9 +324,9 @@ export default function (val, palentDiv) {
           return 10
         // } else if (datasetCopy.length < 10) {
         //   return 4
-        } else {
+        } 
           return 2
-        }
+        
       });
     }
     //パスの長さを取得----------------------------------------------------------------------------
@@ -342,16 +342,16 @@ export default function (val, palentDiv) {
       .attr('stroke-dashoffset', 0)
       .transition()
       .duration(0)
-      .attr('stroke-dasharray', () => statDatas[i].unit === unit? pathLength: '10 2')
+      .attr('stroke-dasharray', () => statDatas[i].unit === unit ? pathLength : '10 2')
     } else {
       path.attr('stroke-dashoffset', 0)
-      .attr('stroke-dasharray', () => statDatas[i].unit === unit? pathLength: '10 2')
+      .attr('stroke-dasharray', () => statDatas[i].unit === unit ? pathLength : '10 2')
     }
   }
   // 凡例---------------------------------------------------------------------------------------
-  const unit1g= [];
+  const unit1g = [];
   const unit2g = [];
-  for (let i in statDatas) {
+  for (const i in statDatas) {
     if (statDatas[i].unit === unit) {
       unit1g.push(statDatas[i])
     } else {
@@ -369,9 +369,9 @@ export default function (val, palentDiv) {
   .attr('transform', (d, i) => {
     if(d.stat.split('/')[2] === unit) {
       return 'translate(0,' + (25 * i ) + ')'
-    } else {
+    } 
       return 'translate(25,' + (25 * i ) + ')'
-    }
+    
   })
   .attr('id', (d, i) => 'rect-' + i)
   .style('cursor', 'pointer')
@@ -387,9 +387,9 @@ export default function (val, palentDiv) {
   .attr('transform', (d, i) => {
     if (d.stat.split('/')[2] === unit) {
       return 'translate(25,' + (14 * multi + 25 * i ) + ')'
-    } else {
+    } 
       return 'translate(50,' + (14 * multi + 25 * i ) + ')'
-    }
+    
   })
   .style('cursor', 'pointer')
   .style('text-decoration', 'underline')
@@ -409,7 +409,7 @@ export default function (val, palentDiv) {
     .attr('stroke-dashoffset', 0)
     .transition()
     .duration(0)
-    .attr('stroke-dasharray', () => statDatas[i].unit === unit? pathLength: '10 2');
+    .attr('stroke-dasharray', () => statDatas[i].unit === unit ? pathLength : '10 2');
     if (line.style('display') !== 'none') {
       line.style('display', 'none');
       rect.style('opacity', '0.2');

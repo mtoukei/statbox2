@@ -11,12 +11,12 @@ export default {
     // const targets = [this.$store.state.statList.eStatMetaPreh];
     const targets = [this.$store.state.statList.eStatMetaCity];
     const vm = this;
-    for (let h in targets) {
+    for (const h in targets) {
       const target = targets[h];
       const plomises = [];
       let count = 0;
-      for (let i in target) {
-        for (let j in target[i].children) {
+      for (const i in target) {
+        for (const j in target[i].children) {
           const statId = target[i].children[j].statId;
           vm.$store.commit('base/chartDivLoadingShow', true);
           plomises[count] = new Promise(function(resolve) {
@@ -38,11 +38,11 @@ export default {
         }
       }
       Promise.all(plomises).then(function (result) {
-        for (let i in result) {
+        for (const i in result) {
           const childrenArr = [];
           let sourceId = '';
           if (result[i].cat01s.length) {
-            for (let j in result[i].cat01s) {
+            for (const j in result[i].cat01s) {
               const tgt = result[i].cat01s[j];
               // const aaa = metaSourceIDPref.find(val => val.項目符号 === tgt['@code']);
               const aaa = metaSourceIDCity.find(val => val.項目符号 === tgt['@code']);
@@ -69,7 +69,7 @@ export default {
             });
           }
           // -------------------------------------------------------------------------------------
-          for (let j in target) {
+          for (const j in target) {
             target[j].children.find((value, index, array) => {
               if (value.statId === result[i].statId) {
                 array[index].children = childrenArr

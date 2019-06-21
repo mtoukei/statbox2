@@ -119,7 +119,7 @@
         const csvData = [];
         if (this.statType === 'miyazakiCity') {
           statData = this.$store.state.statList.leftStat.statData.data;
-          for (let i in statData) {
+          for (const i in statData) {
             csvData.push({
               citycode: statData[i].citycode,
               cityname: statData[i].cityname,
@@ -133,8 +133,8 @@
           } else {
             statData = this.$store.state.statList.leftStatEstatCity.statData
           }
-          for (let i in statData) {
-            for (let j in statData[i].data2) {
+          for (const i in statData) {
+            for (const j in statData[i].data2) {
               csvData.push({
                 year: statData[i].data2[j].time.substr(0, 4),
                 citycode: statData[i].data2[j].citycode,
@@ -152,9 +152,9 @@
           } else if (this.statType === 'timeCity') {
             statData = this.$store.state.statList.leftStatTimeCity.statData;
           }
-          for (let i in statData) {
-            for (let j in statData[i]) {
-              for (let k in statData[i][j]) {
+          for (const i in statData) {
+            for (const j in statData[i]) {
+              for (const k in statData[i][j]) {
                 if (statData[i][j][k].data) {
                   csvData.push({
                     year: statData[i][j][k].year,

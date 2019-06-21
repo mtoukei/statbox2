@@ -71,9 +71,9 @@
       m_divShow (statType, side) {
         if (side === 'leftSide') {
           return statType === 'pref' || statType === 'scatterPref' || statType === 'city' || statType === 'scatterCity'
-        } else {
+        } 
           return statType === 'scatterPref' || statType === 'scatterCity'
-        }
+        
       },
       m_metaData (statType, side) {
         let stat;

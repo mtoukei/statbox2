@@ -86,10 +86,10 @@
     data() {
       return {
         rangeDiv: [
-          {id:'year-range-pref', statType: 'pref'},
-          {id:'year-range-city', statType: 'city'},
-          {id:'year-range-scatter-pref', statType: 'scatterPref'},
-          {id:'year-range-scatter-city', statType: 'scatterCity'}
+          {id: 'year-range-pref', statType: 'pref'},
+          {id: 'year-range-city', statType: 'city'},
+          {id: 'year-range-scatter-pref', statType: 'scatterPref'},
+          {id: 'year-range-scatter-city', statType: 'scatterCity'}
         ],
         timer: false,
       }

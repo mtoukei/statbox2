@@ -1,70 +1,70 @@
 export const menseki = {
-  soumenseki:{// ←このキー名は重要。storeにあるstatListのstatNameの[1]に対応している。
-    column:"column01",
+  soumenseki: {// ←このキー名は重要。storeにあるstatListのstatNameの[1]に対応している。
+    column: "column01",
     statName: '総面積',
-    unit:'km2',
+    unit: 'km2',
   },
-  soumensekikouseihi:{
-    column:"column02",
+  soumensekikouseihi: {
+    column: "column02",
     statName: '総面積の構成比',
-    unit:'％',
+    unit: '％',
   },
-  rinyamenseki:{
-    column:"column03",
+  rinyamenseki: {
+    column: "column03",
     statName: '林野面積',
-    unit:'ha',
+    unit: 'ha',
   },
-  rinyamensekitaisoumensekiwariai:{
-    column:"column04",
+  rinyamensekitaisoumensekiwariai: {
+    column: "column04",
     statName: '林野面積の対総面積割合',
-    unit:'％',
+    unit: '％',
   },
-  kokuyuurinmenseki:{
-    column:"column05",
+  kokuyuurinmenseki: {
+    column: "column05",
     statName: '国有林面積',
-    unit:'ha',
+    unit: 'ha',
   },
-  kokuyuurinmensekinowariai:{
-    column:"column06",
+  kokuyuurinmensekinowariai: {
+    column: "column06",
     statName: '国有林面積の割合',
-    unit:'％',
+    unit: '％',
   },
-  tamenseki:{
-    column:"column07",
+  tamenseki: {
+    column: "column07",
     statName: '田面積',
-    unit:'ha',
+    unit: 'ha',
   },
-  hatamenseki:{
-    column:"column08",
+  hatamenseki: {
+    column: "column08",
     statName: '畑面積',
-    unit:'ha',
+    unit: 'ha',
   },
-  tahatamensekiwariai:{
-    column:"column09",
+  tahatamensekiwariai: {
+    column: "column09",
     statName: '田・畑対総面積割合',
-    unit:'％',
+    unit: '％',
   },
-  takuchimenseki:{
-    column:"column10",
+  takuchimenseki: {
+    column: "column10",
     statName: '宅地面積',
-    unit:'ha',
+    unit: 'ha',
   },
-  takuchimensekiwariai:{
-    column:"column11",
+  takuchimensekiwariai: {
+    column: "column11",
     statName: '宅地面積の総面積割合',
-    unit:'％',
+    unit: '％',
   },
-  kazyuuchimenseki:{
-    column:"column12",
+  kazyuuchimenseki: {
+    column: "column12",
     statName: '可住地面積',
-    unit:'he',
+    unit: 'he',
   },
-  kazyuuchimensekiwariai:{
-    column:"column13",
+  kazyuuchimensekiwariai: {
+    column: "column13",
     statName: '可住地面積の対総面積割合',
-    unit:'％',
+    unit: '％',
   },
-  data:  [
+  data: [
     {
       "citycode": 45201,
       "cityname": "宮崎市",
@@ -830,7 +830,7 @@ export const nenrei = {
     statName: '平成２８年～２９年の人口増加率',
     unit: '％',
   },
-  data:[
+  data: [
     {
       "citycode": 45201,
       "cityname": "宮崎市",

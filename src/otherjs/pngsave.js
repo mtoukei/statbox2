@@ -3,7 +3,7 @@ import { saveAs } from 'file-saver';
 export default function (svg, width, height, statName) {
   const svgString = getSVGString(svg.node());
   const save = dataBlob => saveAs( dataBlob, statName + '.png' );// FileSaver.js function
-  svgString2Image( svgString, width*1.1, height*1.1, 'png', save ); // passes Blob and filesize String to the callback
+  svgString2Image( svgString, width * 1.1, height * 1.1, 'png', save ); // passes Blob and filesize String to the callback
 }
 // Below are the functions that handle actual exporting:
 // getSVGString ( svgNode ) and svgString2Image( svgString, width, height, format, callback )
@@ -19,20 +19,20 @@ function getSVGString( svgNode ) {
   function getCSSStyles( parentElement ) {
     const selectorTextArr = [];
     // Add Parent element Id and Classes to the list
-    selectorTextArr.push( '#'+parentElement.id );
+    selectorTextArr.push( '#' + parentElement.id );
     for (let c = 0; c < parentElement.classList.length; c++)
-      if ( !contains('.'+parentElement.classList[c], selectorTextArr) )
-        selectorTextArr.push( '.'+parentElement.classList[c] );
+      if ( !contains('.' + parentElement.classList[c], selectorTextArr) )
+        selectorTextArr.push( '.' + parentElement.classList[c] );
     // Add Children element Ids and Classes to the list
     const nodes = parentElement.getElementsByTagName("*");
     for (let i = 0; i < nodes.length; i++) {
       const id = nodes[i].id;
-      if ( !contains('#'+id, selectorTextArr) )
-        selectorTextArr.push( '#'+id );
+      if ( !contains('#' + id, selectorTextArr) )
+        selectorTextArr.push( '#' + id );
       const classes = nodes[i].classList;
       for (let c = 0; c < classes.length; c++)
-        if ( !contains('.'+classes[c], selectorTextArr) )
-          selectorTextArr.push( '.'+classes[c] );
+        if ( !contains('.' + classes[c], selectorTextArr) )
+          selectorTextArr.push( '.' + classes[c] );
     }
     // Extract CSS Rules
     let extractedCSSText = "";
@@ -52,7 +52,7 @@ function getSVGString( svgNode ) {
     }
     return extractedCSSText;
     function contains(str, arr) {
-      return arr.indexOf( str ) === -1 ? false : true;
+      return arr.indexOf( str ) !== -1;
     }
   }
   function appendCSS( cssText, element ) {
@@ -65,7 +65,7 @@ function getSVGString( svgNode ) {
 }
 function svgString2Image( svgString, width, height, format, callback ) {
   format = format ? format : 'png';
-  const imgsrc = 'data:image/svg+xml;base64,'+ btoa( unescape( encodeURIComponent( svgString ) ) ); // Convert SVG string to data URL
+  const imgsrc = 'data:image/svg+xml;base64,' + btoa( unescape( encodeURIComponent( svgString ) ) ); // Convert SVG string to data URL
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
   canvas.width = width;
@@ -75,7 +75,7 @@ function svgString2Image( svgString, width, height, format, callback ) {
     context.clearRect ( 0, 0, width, height );
     context.drawImage(image, 0, 0, width, height);
     canvas.toBlob( function(blob) {
-      var filesize = Math.round( blob.length/1024 ) + ' KB';
+      var filesize = Math.round( blob.length / 1024 ) + ' KB';
       if ( callback ) callback( blob, filesize );
     });
   };

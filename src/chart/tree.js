@@ -3,7 +3,7 @@ import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
+  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   const isEStat = val.estat === true;
   if(palentDiv.style('display') === 'none') return;
@@ -26,7 +26,7 @@ export default function (val, parentDiv) {
   const height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
-  const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
+  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
@@ -145,7 +145,7 @@ export default function (val, parentDiv) {
 
       if (val.estat) {
         dataKeniki = japanKeniki;
-        for (let i in this.dataset) {
+        for (const i in this.dataset) {
           let result, result2;
           switch(this.dataset[i].cityname) {
             case '北海道':
@@ -187,7 +187,7 @@ export default function (val, parentDiv) {
         }
       } else {
         dataKeniki = miyazakiKeniki;
-        for (let i in this.dataset) {
+        for (const i in this.dataset) {
           let result, result2;
           switch(this.dataset[i].cityname) {
             case '宮崎市':case '国富町':case '綾町':
@@ -237,11 +237,11 @@ export default function (val, parentDiv) {
     }
   }
   //--------------------------------------------------------------------------------------------
-  let dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   // --------------------------------------------------------------------------------------------
   const treemap = d3.treemap()
-  .size([width-20, height-40])// ツリーマップ全体の大きさ
+  .size([width - 20, height - 40])// ツリーマップ全体の大きさ
   .padding(0)
   // .paddingOuter(2)
   .round(true);
@@ -262,15 +262,15 @@ export default function (val, parentDiv) {
   .enter()
   .append('g')
   .attr('class', 'node')
-  .attr('transform', d =>'translate(' + (d.x0 + 10 * multi) + ',' + (d.y0 + 30) + ')')
+  .attr('transform', d => 'translate(' + (d.x0 + 10 * multi) + ',' + (d.y0 + 30) + ')')
   .attr('fill', 'black')
   .on('mouseover', function (d) {
     const value = d.data.value;
     const keinikiTotal = d.parent.value;
     const total = d.parent.parent.value;
-    const ritu0 = Math.floor(keinikiTotal / total*1000)/10 + '%';
-    const ritu1 = Math.floor(value / total*1000)/10 + '%';
-    return tip.show(d.parent.data.name + '計 = ' + ritu0 + '<br>' +d.data.name + ' = ' + ritu1 + '<br>' + value + unit, this)
+    const ritu0 = Math.floor(keinikiTotal / total * 1000) / 10 + '%';
+    const ritu1 = Math.floor(value / total * 1000) / 10 + '%';
+    return tip.show(d.parent.data.name + '計 = ' + ritu0 + '<br>' + d.data.name + ' = ' + ritu1 + '<br>' + value + unit, this)
   })
   .on('mouseout', tip.hide);
   // ブロック作成------------------------------------------------------------------------------
@@ -318,14 +318,14 @@ export default function (val, parentDiv) {
   // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     treemap(dc.root);
     treeSvg
     .data(dc.root.leaves())
     .transition()
     .duration(500)
-    .attr('transform', d =>'translate(' + (d.x0 + 10 * multi) + ',' + (d.y0 + 30) + ')');
+    .attr('transform', d => 'translate(' + (d.x0 + 10 * multi) + ',' + (d.y0 + 30) + ')');
     rect
     .data(dc.root.leaves())
     .transition()
@@ -346,7 +346,7 @@ export default function (val, parentDiv) {
   };
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
-    const type = ie? 'change': 'input';
+    const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
       return e => rangeInput(e)

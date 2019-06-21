@@ -3,7 +3,7 @@ import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length -1 ];
+  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   const isEStat = val.estat === true;
   if(palentDiv.style('display') === 'none') return;
@@ -26,7 +26,7 @@ export default function (val, parentDiv) {
   const height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
-  const multi = width / defaultWidth < 1.5? width / defaultWidth: 1.5;
+  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const radius = Math.min(width, height) / 2 - 10;
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg = storeBase.state.statList.transition;
@@ -58,7 +58,7 @@ export default function (val, parentDiv) {
   .classed("chart-svg", true);
   const colorScale = d3.scaleOrdinal(d3.schemeSet1);
   //--------------------------------------------------------------------------------------------
-  const g =svg.append('g')
+  const g = svg.append('g')
   .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
   //--------------------------------------------------------------------------------------------
   const pie = d3.pie()
@@ -79,12 +79,12 @@ export default function (val, parentDiv) {
     if (val.estat) {
       if (prefOrCity === 'pref') {
         return colorScale(Number(d.data.citycode.substr(0, 2)))
-      } else{
+      } 
         return colorScale(Number(d.data.citycode.substr(3, 2)))
-      }
-    } else {
+      
+    } 
       return colorScale(d.index)
-    }
+    
   })
   .attr('stroke', 'whitesmoke');
   if (transitionFlg) {
@@ -119,9 +119,9 @@ export default function (val, parentDiv) {
     }
     if (0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b > 200) {
       return "black";
-    }else {
-      return "white";
     }
+      return "white";
+    
   })
   .attr('transform', d => 'translate(' + text.centroid(d) + ')')
   .attr('dy', '5px')
@@ -171,12 +171,12 @@ export default function (val, parentDiv) {
       if (val.estat) {
         if (prefOrCity === 'pref') {
           return colorScale(Number(d.data.citycode.substr(0, 2)))
-        } else {
+        } 
           return colorScale(Number(d.data.citycode.substr(3, 2)))
-        }
-      } else {
+        
+      } 
         return colorScale(d.index)
-      }
+      
     });
     textP
     .data(pie(dc.dataset, d => d.citycode))
@@ -200,9 +200,9 @@ export default function (val, parentDiv) {
       }
       if (0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b > 200) {
         return "black";
-      }else {
-        return "white";
       }
+        return "white";
+      
     });
   };
   //--------------------------------------------------------------------------------------------
