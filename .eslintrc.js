@@ -14,6 +14,7 @@ module.exports = {
     "no-eval": "error",
     "arrow-parens": ["warn", "as-needed"],
     "comma-spacing": ["warn", {"before": false, "after": true}],
+    "block-spacing": "warn",
     "no-console": "off",
   },
   "parserOptions": {
