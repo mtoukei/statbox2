@@ -10,8 +10,6 @@ module.exports = {
   "rules": {
     "space-before-blocks": ["warn", { "functions": "always" }],
     "eqeqeq": ["warn", "always"],
-    "no-multi-spaces": "warn",
-    "no-eval": "error",
     "arrow-parens": ["warn", "as-needed"],
     "arrow-spacing": "warn",
     "prefer-const": "warn",
@@ -19,6 +17,9 @@ module.exports = {
     "block-spacing": "warn",
     "key-spacing": ["warn", {"beforeColon": false, "afterColon": true}],
     "space-infix-ops": "warn",
+    "vars-on-top": "warn",
+    "no-multi-spaces": "warn",
+    "no-eval": "error",
     "no-unneeded-ternary": "warn",
     "no-implicit-coercion": "warn",
     "no-else-return": "warn",
