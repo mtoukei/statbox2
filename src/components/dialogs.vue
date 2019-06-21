@@ -49,8 +49,8 @@
     },
     computed: {
       s_dialogVisible: {
-        get() {return this.$store.state.base.dialog.visible},
-        set(value) {this.$store.commit('base/dialogVisibleChange', {visible: value})}
+        get() { return this.$store.state.base.dialog.visible },
+        set(value) { this.$store.commit('base/dialogVisibleChange', {visible: value}) }
       },
     },
     methods: {

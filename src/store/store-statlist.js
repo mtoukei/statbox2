@@ -263,15 +263,15 @@ const statList = {
                 const citysResult = Citycodes.find(val => val.id === dataValue['@area']);
                 if (citysResult) {
                   const kuFlg = function () {
-                    if (dataValue['@area'].substr(0, 2) === '13') {// 東京都の区は区ではない。
+                    if (dataValue['@area'].substr(0, 2) === '13') { // 東京都の区は区ではない。
                       return false
-                    } else if (dataValue['@area'].substr(2, 2) === '13' || dataValue['@area'].substr(2, 2) === '14' || dataValue['@area'].substr(2, 2) === '15') {// 3桁目が1または13は政令都市
+                    } else if (dataValue['@area'].substr(2, 2) === '13' || dataValue['@area'].substr(2, 2) === '14' || dataValue['@area'].substr(2, 2) === '15') { // 3桁目が1または13は政令都市
                       if (dataValue['@area'].substr(4, 1) !== '0') {
                         return true
                       } else {
                         return false
                       }
-                    } else if (dataValue['@area'].substr(2, 1) === '1') {// 3桁目が1または13は政令都市
+                    } else if (dataValue['@area'].substr(2, 1) === '1') { // 3桁目が1または13は政令都市
                       if (Number(dataValue['@area'].substr(3, 3)) > 0) {
                         return true
                       } else {
