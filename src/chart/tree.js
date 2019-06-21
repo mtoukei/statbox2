@@ -145,7 +145,7 @@ export default function (val, parentDiv) {
 
       if (val.estat) {
         dataKeniki = japanKeniki;
-        for (let i in this.dataset) {
+        for (const i in this.dataset) {
           let result, result2;
           switch(this.dataset[i].cityname) {
             case '北海道':
@@ -187,7 +187,7 @@ export default function (val, parentDiv) {
         }
       } else {
         dataKeniki = miyazakiKeniki;
-        for (let i in this.dataset) {
+        for (const i in this.dataset) {
           let result, result2;
           switch(this.dataset[i].cityname) {
             case '宮崎市':case '国富町':case '綾町':
@@ -237,7 +237,7 @@ export default function (val, parentDiv) {
     }
   }
   //--------------------------------------------------------------------------------------------
-  let dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   // --------------------------------------------------------------------------------------------
   const treemap = d3.treemap()
@@ -262,7 +262,7 @@ export default function (val, parentDiv) {
   .enter()
   .append('g')
   .attr('class', 'node')
-  .attr('transform', d =>'translate(' + (d.x0 + 10 * multi) + ',' + (d.y0 + 30) + ')')
+  .attr('transform', d => 'translate(' + (d.x0 + 10 * multi) + ',' + (d.y0 + 30) + ')')
   .attr('fill', 'black')
   .on('mouseover', function (d) {
     const value = d.data.value;
@@ -318,14 +318,14 @@ export default function (val, parentDiv) {
   // -------------------------------------------------------------------------------------------
   const rangeInput = e => {
     const value = Number(e.target.value);
-    let dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
     treemap(dc.root);
     treeSvg
     .data(dc.root.leaves())
     .transition()
     .duration(500)
-    .attr('transform', d =>'translate(' + (d.x0 + 10 * multi) + ',' + (d.y0 + 30) + ')');
+    .attr('transform', d => 'translate(' + (d.x0 + 10 * multi) + ',' + (d.y0 + 30) + ')');
     rect
     .data(dc.root.leaves())
     .transition()

@@ -99,7 +99,7 @@
         } else if (key === 'miyazakiCity' || key === 'pref') {
           vm.$store.commit('base/statTypeChange', key);
           vm.$store.commit('base/activeIndexChange', key);
-          for (let i in divList) {
+          for (const i in divList) {
             divList[i].show = divList[i].statType === key;
           }
           vm.$store.commit('base/rightSideDivShowChange', false);
@@ -107,7 +107,7 @@
         } else if (key === 'city') {
           vm.$store.commit('base/statTypeChange', key);
           vm.$store.commit('base/activeIndexChange', key);
-          for (let i in divList) {
+          for (const i in divList) {
             divList[i].show = divList[i].statType === key;
           }
           vm.$store.commit('base/rightSideDivShowChange', false);
@@ -115,7 +115,7 @@
         } else {
           vm.$store.commit('base/statTypeChange', key);
           vm.$store.commit('base/activeIndexChange', key);
-          for (let i in divList) {
+          for (const i in divList) {
             if (divList[i].divId === key) {
               divList[i].show = true;
               vm.$store.commit('base/rightSideDivShowChange', divList[i].rightSide);

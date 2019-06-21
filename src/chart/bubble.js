@@ -187,7 +187,7 @@ export default function (val, parentDiv) {
   .enter()
   .append('span')
   .attr('class', 'tick')
-  .text((d, i) =>{
+  .text((d, i) => {
     if (length <= 10) {
       return d.time.substr(0, 4)
     } else if (i === 0 || i === length - 1) {

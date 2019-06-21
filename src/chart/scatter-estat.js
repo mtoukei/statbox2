@@ -24,7 +24,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   const margin = { 'top': 50 * multi, 'bottom': 100 * multi, 'right': 30 * multi, 'left': 70 * multi };
   // データセットの元を作成----------------------------------------------------------------------
   const mixDataset = [];
-  for (let i in leftDataset) {
+  for (const i in leftDataset) {
     const leftTiime = leftDataset[i].data[0]['@time'];
     const rightData = rightDataset.find(value => value.data[0]['@time'] === leftTiime);
     if (rightData) {
@@ -55,7 +55,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
       const rightDataAr = [];
       const kaikiData = [];
       // ４７都道府県でループ
-      for (let i in tgtLeftData) {
+      for (const i in tgtLeftData) {
         if (tgtLeftData[i].citycode !== '00000') {
           const leftData = Number(tgtLeftData[i].data);
           const rightData = Number(tgtRightData[i].data);
@@ -223,7 +223,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   if (d3.select('#scatter-pref-input').size()) {
     const tgtPrefName = d3.select('#scatter-pref-input').property("value");
     const prefOptions = storeBase.state.base.prefOptions;
-    tgtprefCode = prefOptions.find(value=> value.label === tgtPrefName).value
+    tgtprefCode = prefOptions.find(value => value.label === tgtPrefName).value
   } else {
     tgtprefCode = '45000'
   }
@@ -321,7 +321,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .enter()
   .append('span')
   .attr('class', 'tick')
-  .text((d, i) =>{
+  .text((d, i) => {
     if (length <= 10) {
       return d.time.substr(0, 4)
     } else if (i === 0 || i === length - 1) {
@@ -348,9 +348,9 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     .attr('value', () => {
       if (prefOrCity === 'pref') {
         return '宮崎県'
-      } else {
+      } 
         return '宮崎市'
-      }
+      
     })
     .style('width', '70px')
   }

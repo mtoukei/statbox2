@@ -17,7 +17,7 @@ export default {
         const vTreeRights = document.querySelectorAll('#right-side-div' + ' .v-tree');
         const contents = document.querySelector('#contents');
         // 高さ設定。画面ボトムのリサイズ-------------------------------------------------------
-        for (let i in treeDivs) {
+        for (const i in treeDivs) {
           if (treeDivs[i].style) treeDivs[i].style.height = (bodyHeight - footerHeight - 120) + 'px';
         }
         resizersLeft.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';

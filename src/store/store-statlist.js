@@ -187,7 +187,7 @@ const statList = {
       const unit = statDataObj[target].unit;
       const data0 = statDataObj.data;
       const data1 = [];
-      for (let i in data0) {
+      for (const i in data0) {
         const obj = {
           citycode: data0[i].citycode,
           cityname: data0[i].cityname,
@@ -237,7 +237,7 @@ const statList = {
       .then(response => {
         const times = [];
         const dataAr = response.data['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF'].VALUE;
-        for (let i in dataAr) {
+        for (const i in dataAr) {
           times.push(dataAr[i]['@time'])
         }
         const times2 = times.filter(function (x, i, self) {
@@ -268,18 +268,18 @@ const statList = {
                     } else if (dataValue['@area'].substr(2, 2) === '13' || dataValue['@area'].substr(2, 2) === '14' || dataValue['@area'].substr(2, 2) === '15') { // 3桁目が1または13は政令都市
                       if (dataValue['@area'].substr(4, 1) !== '0') {
                         return true
-                      } else {
+                      } 
                         return false
-                      }
+                      
                     } else if (dataValue['@area'].substr(2, 1) === '1') { // 3桁目が1または13は政令都市
                       if (Number(dataValue['@area'].substr(3, 3)) > 0) {
                         return true
-                      } else {
+                      } 
                         return false
-                      }
-                    } else {
+                      
+                    } 
                       return false
-                    }
+                    
                   }();
                   if (!kuFlg) {
                     const cityName = citysResult.name;
@@ -402,7 +402,7 @@ const statList = {
       const data = statDataTime;
       const statNames = payload.statNames;
       const statData = [];
-      for (let i in statNames) {
+      for (const i in statNames) {
         // console.log(statNames[i])
         const statName = statNames[i].split('/')[0];
         // console.log(statName)
@@ -417,7 +417,7 @@ const statList = {
         const data0 = statDataObj.data;
         // console.log(data0)
         const data1 = [];
-        for (let j in data0) {
+        for (const j in data0) {
           const obj = {
             nen: data0[j].nen,
             year: data0[j].year,
@@ -450,7 +450,7 @@ const statList = {
     selectStatTimePref (state, payload) {
       const statIds = payload.statIds;
       const plomises = [];
-      for (let i in statIds) {
+      for (const i in statIds) {
         plomises[i] =
           new Promise(function (resolve) {
             const statId = statIds[i].split('/')[0];
@@ -480,7 +480,7 @@ const statList = {
               const data0 = rStatData['DATA_INF'].VALUE;
               const data1 = [];
               if (data0.length) {
-                for (let j in data0) {
+                for (const j in data0) {
                   const obj = {
                     nen: '',
                     year: data0[j]['@time'].substr(0, 4),
@@ -523,7 +523,7 @@ const statList = {
       }
       const statIds = payload.statIds;
       const plomises = [];
-      for (let i in statIds) {
+      for (const i in statIds) {
         plomises[i] =
           new Promise(function (resolve) {
             const statId = statIds[i].split('/')[0];
@@ -552,7 +552,7 @@ const statList = {
               const data0 = rStatData['DATA_INF'].VALUE;
               const data1 = [];
               if (data0.length) {
-                for (let j in data0) {
+                for (const j in data0) {
                   const obj = {
                     nen: '',
                     year: data0[j]['@time'].substr(0, 4),

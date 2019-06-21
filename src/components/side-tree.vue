@@ -432,23 +432,23 @@
       c_divId () {
         if (this.side === 'leftSide') {
           return 'left-side-div'
-        } else {
+        } 
           return 'right-side-div'
-        }
+        
       },
       c_divClass () {
         if (this.side === 'leftSide') {
           return 'resizer right'
-        } else {
+        } 
           return 'resizer left'
-        }
+        
       },
       c_iClass () {
         if (this.side === 'leftSide') {
           return 'el-icon-arrow-right'
-        } else {
+        } 
           return 'el-icon-arrow-left'
-        }
+        
       },
       s_prefCode: {
         get () { return this.$store.state.base.prefCode },
@@ -457,7 +457,7 @@
       s_prefOptions () { return this.$store.state.base.prefOptions },
       prefOptions2 () {
         const options = [];
-        for (let i in this.s_prefOptions) {
+        for (const i in this.s_prefOptions) {
           if (i > 0) options.push(this.s_prefOptions[i])
         }
         return options
@@ -498,7 +498,7 @@
       prefChange (prefCode) {
         const citys = Citycodes.filter(value => value.id.substr(0, 2) === prefCode.substr(0, 2));
         const citys2 = [];
-        for (let i in citys) {
+        for (const i in citys) {
           citys2.push({
             value: citys[i].id,
             label: citys[i].name
@@ -594,8 +594,8 @@
         if (!e.children) {
           const keys = this.$refs.treeTime.getCheckedKeys();
           const statNames = [];
-          let units = [];
-          for (let i in keys) {
+          const units = [];
+          for (const i in keys) {
             if (keys[i]) {
               statNames.push(keys[i]);
               units.push(keys[i].split('/')[2]);
@@ -626,8 +626,8 @@
           const refs = this.$refs.treeTimePref;
           const keys = refs.getCheckedKeys();
           const statIds = [];
-          let units = [];
-          for (let i in keys) {
+          const units = [];
+          for (const i in keys) {
             if (keys[i]) {
               if (keys[i].length > 10) {
                 statIds.push(keys[i]);
@@ -654,8 +654,8 @@
         if (!e.children) {
           const keys = this.$refs.treeTimeCity.getCheckedKeys();
           const statIds = [];
-          let units = [];
-          for (let i in keys) {
+          const units = [];
+          for (const i in keys) {
             if (keys[i]) {
               if (keys[i].length > 10) {
                 statIds.push(keys[i]);

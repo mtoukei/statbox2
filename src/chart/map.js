@@ -151,9 +151,9 @@ export default function (val, parentDiv) {
       if (d.properties.citycode) {
         const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
         return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
-      } else {
+      } 
         return 'rgba(0,0,0,0)'
-      }
+      
     });
   } else {
     p
@@ -161,9 +161,9 @@ export default function (val, parentDiv) {
       if (d.properties.citycode) {
         const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
         return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
-      } else {
+      } 
         return 'rgba(0,0,0,0)'
-      }
+      
     });
   }
   // 凡例---------------------------------------------------------------------------------------
@@ -212,9 +212,9 @@ export default function (val, parentDiv) {
       if (d.properties.citycode) {
         const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
         return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
-      } else {
+      } 
         return 'rgba(0,0,0,0)'
-      }
+      
     });
     rect
     .data(dc.legendDataSet)

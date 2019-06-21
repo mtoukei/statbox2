@@ -24,7 +24,7 @@ export default function (leftVal, rightVal) {
   const dataset = [];
   const leftDataAr = [], rightDataAr = [];
   const kaikiData = [];
-  for (let i in leftDataset) {
+  for (const i in leftDataset) {
     const obj = {
       cityname: leftDataset[i].cityname,
       leftData: leftDataset[i].data,

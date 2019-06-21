@@ -56,7 +56,7 @@ export default function (val, parentDiv) {
     }
   }
   //--------------------------------------------------------------------------------------------
-  let dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
@@ -88,7 +88,7 @@ export default function (val, parentDiv) {
   // テキスト------------------------------------------------------------------------------------
   const text1_1 = g.append('g')
   .append('text')
-  .attr('transform', (d, i) =>'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname )
@@ -99,7 +99,7 @@ export default function (val, parentDiv) {
   });
   const text1_2 = g.append('g')
   .append('text')
-  .attr('transform', (d, i) =>'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.data.toLocaleString())
@@ -126,7 +126,7 @@ export default function (val, parentDiv) {
   // テキスト------------------------------------------------------------------------------------
   const text2_1 = g2.append('g')
   .append('text')
-  .attr('transform', (d, i) =>'translate(0,' + (12 * multi + 15 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(0,' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname)
@@ -137,7 +137,7 @@ export default function (val, parentDiv) {
   });
   const text2_2 = g2.append('g')
   .append('text')
-  .attr('transform', (d, i) =>'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.data.toLocaleString())

@@ -79,7 +79,7 @@ export default function (val, parentDiv) {
       }
       //-----------------------------------------------------------------------------------------
       const dataArr = [];
-      for (let i in this.dataset) {
+      for (const i in this.dataset) {
         dataArr.push(this.dataset[i].data)
       }
       this.median = ss.median(dataArr)
@@ -162,10 +162,10 @@ export default function (val, parentDiv) {
       if (d.data >= 0) {
         d3.select(this).attr('fill', 'slategray');
         return yScale(d.data)
-      } else {
+      } 
         d3.select(this).attr('fill', 'coral');
         return yScale(0)
-      }
+      
     })
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
   } else {
@@ -173,10 +173,10 @@ export default function (val, parentDiv) {
       if (d.data >= 0) {
         d3.select(this).attr('fill', 'slategray');
         return yScale(d.data)
-      } else {
+      } 
         d3.select(this).attr('fill', 'coral');
         return yScale(0)
-      }
+      
     })
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
   }
@@ -229,10 +229,10 @@ export default function (val, parentDiv) {
       if (d.data >= 0) {
         d3.select(this).attr('fill', 'slategray');
         return yScale(d.data)
-      } else {
+      } 
         d3.select(this).attr('fill', 'coral');
         return yScale(0)
-      }
+      
     });
     // 中央値-----------------------------------------------------------------------------------
     medianPolyline

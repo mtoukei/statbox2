@@ -79,12 +79,12 @@ export default function (val, parentDiv) {
     if (val.estat) {
       if (prefOrCity === 'pref') {
         return colorScale(Number(d.data.citycode.substr(0, 2)))
-      } else{
+      } 
         return colorScale(Number(d.data.citycode.substr(3, 2)))
-      }
-    } else {
+      
+    } 
       return colorScale(d.index)
-    }
+    
   })
   .attr('stroke', 'whitesmoke');
   if (transitionFlg) {
@@ -119,9 +119,9 @@ export default function (val, parentDiv) {
     }
     if (0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b > 200) {
       return "black";
-    }else {
-      return "white";
     }
+      return "white";
+    
   })
   .attr('transform', d => 'translate(' + text.centroid(d) + ')')
   .attr('dy', '5px')
@@ -171,12 +171,12 @@ export default function (val, parentDiv) {
       if (val.estat) {
         if (prefOrCity === 'pref') {
           return colorScale(Number(d.data.citycode.substr(0, 2)))
-        } else {
+        } 
           return colorScale(Number(d.data.citycode.substr(3, 2)))
-        }
-      } else {
+        
+      } 
         return colorScale(d.index)
-      }
+      
     });
     textP
     .data(pie(dc.dataset, d => d.citycode))
@@ -200,9 +200,9 @@ export default function (val, parentDiv) {
       }
       if (0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b > 200) {
         return "black";
-      }else {
-        return "white";
       }
+        return "white";
+      
     });
   };
   //--------------------------------------------------------------------------------------------

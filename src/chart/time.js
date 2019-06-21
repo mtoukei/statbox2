@@ -11,7 +11,7 @@ export default function (val, palentDiv) {
   const unit = statDatas[0].unit;
   const units = [];
   let unit2;
-  for (let i in statDatas) {
+  for (const i in statDatas) {
     if (statDatas[i].unit !== unit) {
       unit2 = statDatas[i].unit
     }
@@ -75,7 +75,7 @@ export default function (val, palentDiv) {
   let maxData = 0;
   let minData2 = 0;
   let maxData2 = 0;
-  for (let i in statDatas) {
+  for (const i in statDatas) {
     const min = d3.min(statDatas[i].data, d => d.data);
     const max = d3.max(statDatas[i].data, d => d.data);
     if (statDatas[i].unit === unit) {
@@ -154,9 +154,9 @@ export default function (val, palentDiv) {
     if (len === 1) len = 2;
     if (unit2) {
       return fontScale2(len) + 'px'
-    } else {
+    } 
       return fontScale(len) + 'px'
-    }
+    
   });
   svg.selectAll(".tick line")
   .attr('stroke', '#ccc')
@@ -205,9 +205,9 @@ export default function (val, palentDiv) {
       .style('top', (d3.event.pageY + 10) + 'px')
       .style('text-align', 'left')
       .html(() => {
-        let strAr = [];
+        const strAr = [];
         let str = '';
-        for (let i in statDatas) {
+        for (const i in statDatas) {
           const x0 = xScale.invert(d3.mouse(this)[0] + margin.left);
           //下三行の０は要変更。毎年データがある線を選ぶ必要がある
           const ii = bisectDate(statDatas[0].data, x0, 1);
@@ -254,7 +254,7 @@ export default function (val, palentDiv) {
         });
         // 複数あるラインのうち最も古い年を取得する
         const minYear = d3.min(strAr, d => d.year);
-        for (let i in strAr) {
+        for (const i in strAr) {
           let dataUnit;
           if (!strAr[i].data) {
             dataUnit = 'データ無'
@@ -277,7 +277,7 @@ export default function (val, palentDiv) {
   });
   // データセットをコピーしてデータのない行を削除する。--------------------------------------------
   const colorScale = d3.scaleOrdinal(d3.schemeSet1);
-  for (let i in statDatas) {
+  for (const i in statDatas) {
     const datasetCopy = JSON.parse(JSON.stringify(statDatas[i].data));
     for (let j = datasetCopy.length - 1; j >= 0; j--) {
       if (!datasetCopy[j].data) datasetCopy.splice(j, 1);
@@ -314,9 +314,9 @@ export default function (val, palentDiv) {
           return 10
         // } else if (datasetCopy.length < 10) {
         //   return 4
-        } else {
+        } 
           return 2
-        }
+        
       });
     } else {
       circle.attr('r', () => {
@@ -324,9 +324,9 @@ export default function (val, palentDiv) {
           return 10
         // } else if (datasetCopy.length < 10) {
         //   return 4
-        } else {
+        } 
           return 2
-        }
+        
       });
     }
     //パスの長さを取得----------------------------------------------------------------------------
@@ -351,7 +351,7 @@ export default function (val, palentDiv) {
   // 凡例---------------------------------------------------------------------------------------
   const unit1g = [];
   const unit2g = [];
-  for (let i in statDatas) {
+  for (const i in statDatas) {
     if (statDatas[i].unit === unit) {
       unit1g.push(statDatas[i])
     } else {
@@ -369,9 +369,9 @@ export default function (val, palentDiv) {
   .attr('transform', (d, i) => {
     if(d.stat.split('/')[2] === unit) {
       return 'translate(0,' + (25 * i ) + ')'
-    } else {
+    } 
       return 'translate(25,' + (25 * i ) + ')'
-    }
+    
   })
   .attr('id', (d, i) => 'rect-' + i)
   .style('cursor', 'pointer')
@@ -387,9 +387,9 @@ export default function (val, palentDiv) {
   .attr('transform', (d, i) => {
     if (d.stat.split('/')[2] === unit) {
       return 'translate(25,' + (14 * multi + 25 * i ) + ')'
-    } else {
+    } 
       return 'translate(50,' + (14 * multi + 25 * i ) + ')'
-    }
+    
   })
   .style('cursor', 'pointer')
   .style('text-decoration', 'underline')
