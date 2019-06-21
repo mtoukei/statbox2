@@ -128,7 +128,7 @@
         const vm = this;
         if (!vm.s_menuChange) {
           // 連続でのリサイズを抑制する。
-          if (vm.timer !== false) {
+          if (vm.timer) {
             clearTimeout(vm.timer);
           }
           vm.timer = setTimeout(() => {
@@ -139,7 +139,7 @@
             vm.$store.commit('statList/timeReload');
             vm.$store.commit('statList/timePrefReload');
             vm.$store.commit('statList/timeCityReload');
-          }, 100);
+          }, 50);
         }
       },
     },
