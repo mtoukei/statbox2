@@ -120,8 +120,8 @@
       s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
     },
     methods: {
-      dialogOpen (e,el) {
-        this.$store.commit('base/dialogVisibleChange', {visible: true,target: el.divId})
+      dialogOpen (e, el) {
+        this.$store.commit('base/dialogVisibleChange', {visible: true, target: el.divId})
       },
       // グラフダイアログのリサイズ検知-------------------------------------------------------------
       chartDivDetectResize () {

@@ -35,7 +35,7 @@ export default function (leftVal, rightVal) {
     leftDataAr.push(leftDataset[i].data);
     rightDataAr.push(rightDataset[i].data);
     // 回帰直線計算用-------------------------------------------------------------------------
-    const arr = [rightDataset[i].data,leftDataset[i].data];
+    const arr = [rightDataset[i].data, leftDataset[i].data];
     kaikiData.push(arr)
   }
   const soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
@@ -55,7 +55,7 @@ export default function (leftVal, rightVal) {
   svg.append('g')
   .attr('font-size', 14 * multi + 'px')
   .attr('transform', 'translate(' + (width/2) + ',' + (14 * multi + 10 * multi) + ')')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text('縦=' + leftStatName + '　×　横=' + rightStatName)
   .attr('text-anchor', 'middle ')
@@ -118,19 +118,19 @@ export default function (leftVal, rightVal) {
   // 0のラインx----------------------------------------------------------------------------------
   const zeroLineX =svg.append('line')
   .attr('clip-path', 'url(#scatter-clip)')
-  .attr('x1',margin.left)
-  .attr('y1',yScale(0))
-  .attr('x2',width -margin.right)
-  .attr('y2',yScale(0))
+  .attr('x1', margin.left)
+  .attr('y1', yScale(0))
+  .attr('x2', width -margin.right)
+  .attr('y2', yScale(0))
   .attr('stroke-width', '1px')
   .attr('stroke', 'black');
   // 0のラインy----------------------------------------------------------------------------------
   const zeroLineY =svg.append('line')
   .attr('clip-path', 'url(#scatter-clip)')
-  .attr('x1',xScale(0))
-  .attr('y1',margin.top)
-  .attr('x2',xScale(0))
-  .attr('y2',height - margin.bottom)
+  .attr('x1', xScale(0))
+  .attr('y1', margin.top)
+  .attr('x2', xScale(0))
+  .attr('y2', height - margin.bottom)
   .attr('stroke-width', '1px')
   .attr('stroke', 'black');
   // 回帰直線----------------------------------------------------------------------------------
@@ -139,10 +139,10 @@ export default function (leftVal, rightVal) {
   const kaikiLine = svg.append('g')
   .attr('clip-path', 'url(#scatter-clip)')
   .append('line')
-  .attr('x1',xScale(rightMin))
-  .attr('y1',yScale(linRegLine(rightMin)))
-  .attr('x2',xScale(rightMin))
-  .attr('y2',yScale(linRegLine(rightMin)))
+  .attr('x1', xScale(rightMin))
+  .attr('y1', yScale(linRegLine(rightMin)))
+  .attr('x2', xScale(rightMin))
+  .attr('y2', yScale(linRegLine(rightMin)))
   .attr('stroke-width', '1px')
   .attr('stroke', 'black')
   .attr('stroke-dasharray', '4,4');
@@ -151,12 +151,12 @@ export default function (leftVal, rightVal) {
     .transition()
     .duration(1000)
     .ease(d3.easeCircleOut)
-    .attr('x2',xScale(rightMax))
-    .attr('y2',yScale(linRegLine(rightMax)));
+    .attr('x2', xScale(rightMax))
+    .attr('y2', yScale(linRegLine(rightMax)));
   } else {
     kaikiLine
-    .attr('x2',xScale(rightMax))
-    .attr('y2',yScale(linRegLine(rightMax)));
+    .attr('x2', xScale(rightMax))
+    .attr('y2', yScale(linRegLine(rightMax)));
   }
   // 軸の表示----------------------------------------------------------------------------------
   const axisx = d3.axisBottom(xScale)
@@ -211,7 +211,7 @@ export default function (leftVal, rightVal) {
   svg.call(tip);
   circle
   .on('mouseover', function (d) {
-    return tip.show(d.cityname + '<br>' + d.leftData.toLocaleString() + leftUnit + '<br>' + d.rightData.toLocaleString() + rightUnit,this)
+    return tip.show(d.cityname + '<br>' + d.leftData.toLocaleString() + leftUnit + '<br>' + d.rightData.toLocaleString() + rightUnit, this)
   })
   .on('mouseout', tip.hide);
   // テキスト表示--------------------------------------------------------------------------------
@@ -229,7 +229,7 @@ export default function (leftVal, rightVal) {
   if (transitionFlg) {
     text.attr('opacity', 0)
     .transition()
-    .delay((d,i) => i * 30)
+    .delay((d, i) => i * 30)
     .attr('opacity', '1');
   } else {
     text.attr('opacity', '1');
@@ -272,22 +272,22 @@ export default function (leftVal, rightVal) {
     .attr('text-anchor', 'end');
     // 0のラインx--------------------------------------------------------------------------------
     zeroLineX
-    .attr('x1',margin.left)
-    .attr('y1',newYScale(0))
-    .attr('x2',width -margin.right)
-    .attr('y2',newYScale(0));
+    .attr('x1', margin.left)
+    .attr('y1', newYScale(0))
+    .attr('x2', width -margin.right)
+    .attr('y2', newYScale(0));
     // 0のラインy--------------------------------------------------------------------------------
     zeroLineY
-    .attr('x1',newXScale(0))
-    .attr('y1',margin.top)
-    .attr('x2',newXScale(0))
-    .attr('y2',height - margin.bottom);
+    .attr('x1', newXScale(0))
+    .attr('y1', margin.top)
+    .attr('x2', newXScale(0))
+    .attr('y2', height - margin.bottom);
     // 回帰直線--------------------------------------------------------------------------------
     kaikiLine
-    .attr('x1',newXScale(rightMin))
-    .attr('y1',newYScale(linRegLine(rightMin)))
-    .attr('x2',newXScale(rightMax))
-    .attr('y2',newYScale(linRegLine(rightMax)));
+    .attr('x1', newXScale(rightMin))
+    .attr('y1', newYScale(linRegLine(rightMin)))
+    .attr('x2', newXScale(rightMax))
+    .attr('y2', newYScale(linRegLine(rightMax)));
     //-------------------------------------------------------------------------------------------
     svg.selectAll('.axis line')
     .attr('stroke', 'lightgray')

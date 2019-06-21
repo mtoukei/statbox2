@@ -51,13 +51,13 @@ function getSVGString( svgNode ) {
       }
     }
     return extractedCSSText;
-    function contains(str,arr) {
+    function contains(str, arr) {
       return arr.indexOf( str ) === -1 ? false : true;
     }
   }
   function appendCSS( cssText, element ) {
     const styleElement = document.createElement("style");
-    styleElement.setAttribute("type","text/css");
+    styleElement.setAttribute("type", "text/css");
     styleElement.innerHTML = cssText;
     const refNode = element.hasChildNodes() ? element.children[0] : null;
     element.insertBefore( styleElement, refNode );

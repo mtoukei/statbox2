@@ -465,7 +465,7 @@
       s_metaMiyazaki () { return this.$store.state.statList.metaMiyazaki },
       s_metaMiyazakiTime () { return this.$store.state.statList.metaMiyazakiTime },
       s_eStatMetaCity () { return this.$store.state.statList.eStatMetaCity },
-      s_eStatMetaPreh () { return this.$store.state.statList.eStatMetaPreh}
+      s_eStatMetaPreh () { return this.$store.state.statList.eStatMetaPreh }
     },
     methods: {
       filterNode(value, data) {

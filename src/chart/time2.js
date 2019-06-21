@@ -36,7 +36,7 @@ export default function (val, parentDiv) {
             this.timeDataset[this.dataset[i].data2[j].citycode] = []
           }
           this.timeDataset[this.dataset[i].data2[j].citycode].push({
-            time: this.dataset[i].data2[j].time.substr(0,4),
+            time: this.dataset[i].data2[j].time.substr(0, 4),
             data: this.dataset[i].data2[j].data,
             citycode: this.dataset[i].data2[j].citycode,
             cityname: this.dataset[i].data2[j].cityname
@@ -113,7 +113,7 @@ export default function (val, parentDiv) {
     .tickSize(margin.top + margin.bottom - height)
   )
   .selectAll('text')
-  .text(d => String(d).substr(2,2))
+  .text(d => String(d).substr(2, 2))
   .attr('x', 0)
   .attr('y', 10)
   .attr('font-size', 10 * multi + 'px')
@@ -158,7 +158,7 @@ export default function (val, parentDiv) {
   // ボックス-------------------------------------------------------------------------------------
   legendG
   .append('rect')
-  .attr('transform',(d,i) => 'translate(0,' + (20 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(0,' + (20 * i * multi) + ')')
   .attr('id', d => 'time-legend-rect-' + d.citycode)
   .attr('class', 'time-legend-rect')
   .attr('width', 20 * multi)
@@ -172,7 +172,7 @@ export default function (val, parentDiv) {
   // テキスト-------------------------------------------------------------------------------------
   legendG
   .append('text')
-  .attr('transform',(d,i) => 'translate(' + (22 * multi) + ',' + (10 * multi + 20 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(' + (22 * multi) + ',' + (10 * multi + 20 * i * multi) + ')')
   .attr('id', d => 'time-legend-text-' + d.citycode)
   .attr('class', 'time-legend-text')
   .attr('font-size', 10 * multi + 'px')

@@ -49,8 +49,8 @@
     },
     computed: {
       s_dialogVisible: {
-        get() {return this.$store.state.base.dialog.visible},
-        set(value) {this.$store.commit('base/dialogVisibleChange', {visible: value})}
+        get() { return this.$store.state.base.dialog.visible },
+        set(value) { this.$store.commit('base/dialogVisibleChange', {visible: value}) }
       },
     },
     methods: {
@@ -85,7 +85,7 @@
           const delimiterString = Papa.unparse(csvData, config);
           // blobUrlへの変換
           const strArray = Encoding.stringToCode(delimiterString);
-          const convertedArray = Encoding.convert(strArray,'SJIS', 'UNICODE');
+          const convertedArray = Encoding.convert(strArray, 'SJIS', 'UNICODE');
           const UintArray = new Uint8Array(convertedArray);
           const blobUrl = new Blob([UintArray], {type: 'text/csv'});
           const blob = blobUrl;

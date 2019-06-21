@@ -55,7 +55,7 @@ export default function (val, parentDiv) {
         if (a.val < b.val) return 1;
         return 0;
       });
-      children.forEach((v,i) => v['top'] = i + 1);
+      children.forEach((v, i) => v['top'] = i + 1);
       const data_set = {children: children};
       const bubble = d3.pack()
       .size([width, height])
@@ -104,7 +104,7 @@ export default function (val, parentDiv) {
   if (transitionFlg) {
     circle.attr('r', 0)
     .transition()
-    .delay((d,i) => i * 70)
+    .delay((d, i) => i * 70)
     .attr('r', d => d.r);
   } else {
     circle.attr('r', d => d.r);
@@ -135,14 +135,14 @@ export default function (val, parentDiv) {
   svg.call(tip);
   bubbles
   .on('mouseover', function (d) {
-    return tip.show(d.data.top + '位　' + d.data.name + '<br>' + d.data.val + unit,this)
+    return tip.show(d.data.top + '位　' + d.data.name + '<br>' + d.data.val + unit, this)
   })
   .on('mouseout', tip.hide);
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', (12 * multi) + 'px')
   .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text(statName);
   // -------------------------------------------------------------------------------------------
@@ -172,7 +172,7 @@ export default function (val, parentDiv) {
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 200? 'black': 'white';
     });
-    const year = val.statData[value].time.substr(0,4);
+    const year = val.statData[value].time.substr(0, 4);
     rangeDiv.select('.year-range-text').text(year);
   };
   //--------------------------------------------------------------------------------------------
@@ -187,13 +187,13 @@ export default function (val, parentDiv) {
   .enter()
   .append('span')
   .attr('class', 'tick')
-  .text((d,i) =>{
+  .text((d, i) =>{
     if (length<=10) {
-      return d.time.substr(0,4)
+      return d.time.substr(0, 4)
     } else if (i===0 || i === length -1) {
-      return d.time.substr(2,2)
+      return d.time.substr(2, 2)
     } else if (i % quarter === 0) {
-      return d.time.substr(2,2)
+      return d.time.substr(2, 2)
     }
   });
   //--------------------------------------------------------------------------------------------

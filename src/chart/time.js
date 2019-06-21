@@ -48,14 +48,14 @@ export default function (val, palentDiv) {
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(' + (width - margin.right + 5) + ',' + (height - margin.bottom + 25) + ')')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text('年');
   // 単位----------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', () => 'translate(' + (margin.left - 20) + ',' + (12 * multi + margin.top - 30 * multi) + ')')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text('単位:' + unit);
   // 単位2--------------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ export default function (val, palentDiv) {
     svg.append('g')
     .attr('font-size', 12 * multi + 'px')
     .attr('transform', () => 'translate(' + (width - margin.right + 10) + ',' + (12 * multi + margin.top - 30) + ')')
-    .attr('class' ,'no-print')
+    .attr('class', 'no-print')
     .append('text')
     .text('単位:' + unit2);
   }
@@ -247,7 +247,7 @@ export default function (val, palentDiv) {
             .attr('r', 5)
           }
         }
-        strAr.sort((a,b) => {
+        strAr.sort((a, b) => {
           if (a.data > b.data) return -1;
           if (a.data < b.data) return 1;
           return 0;
@@ -308,7 +308,7 @@ export default function (val, palentDiv) {
     .attr('fill', colorScale(Number(i)));
     if (statDatas[i].stat === endStat) {
       circle.transition()
-      .delay((d,i) => 1000 + (i * 20))
+      .delay((d, i) => 1000 + (i * 20))
       .attr('r', () => {
         if(datasetCopy.length === 1) {
           return 10
@@ -366,25 +366,25 @@ export default function (val, palentDiv) {
   .data(sortData)
   .enter();
   g2.append('rect')
-  .attr('transform',(d,i) => {
+  .attr('transform', (d, i) => {
     if(d.stat.split('/')[2] === unit) {
       return 'translate(0,' + (25 * i ) + ')'
     } else {
       return 'translate(25,' + (25 * i ) + ')'
     }
   })
-  .attr('id', (d,i) => 'rect-' + i)
+  .attr('id', (d, i) => 'rect-' + i)
   .style('cursor', 'pointer')
   .attr('width', 20)
   .attr('height', 20)
   .attr('stroke', 'black')
   .attr('stroke-width', '0.3px')
-  .attr('fill', (d,i) => colorScale(Number(i)))
-  .on('click', (d,i) => lineHide(i));
+  .attr('fill', (d, i) => colorScale(Number(i)))
+  .on('click', (d, i) => lineHide(i));
   g2.append('text')
   .text(d => d.title)
   .attr('font-size', 14 + 'px')
-  .attr('transform',(d,i) => {
+  .attr('transform', (d, i) => {
     if (d.stat.split('/')[2] === unit) {
       return 'translate(25,' + (14 * multi + 25 * i ) + ')'
     } else {
@@ -393,7 +393,7 @@ export default function (val, palentDiv) {
   })
   .style('cursor', 'pointer')
   .style('text-decoration', 'underline')
-  .on('click', (d,i) => lineHide(i));
+  .on('click', (d, i) => lineHide(i));
   //---------------------------------------------------------------------------------------------
   const lineHide = i => {
     const line = svg.select('#line-graph-' + i);
@@ -411,12 +411,12 @@ export default function (val, palentDiv) {
     .duration(0)
     .attr('stroke-dasharray', () => statDatas[i].unit === unit? pathLength: '10 2');
     if (line.style('display') !== 'none') {
-      line.style('display' ,'none');
-      rect.style('opacity' ,'0.2');
+      line.style('display', 'none');
+      rect.style('opacity', '0.2');
       circles.style('display', 'none')
     } else {
-      line.style('display' ,'block');
-      rect.style('opacity' ,'1.0');
+      line.style('display', 'block');
+      rect.style('opacity', '1.0');
       circles
       .transition()
       .delay(500)

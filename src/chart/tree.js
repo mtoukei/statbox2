@@ -53,35 +53,35 @@ export default function (val, parentDiv) {
             "name": "東北地方",
             "color": "palevioletred",
             "children": [
-              { "name": "青森県"}, { "name": "岩手県"},{ "name": "宮城県"}, { "name": "秋田県"},{ "name": "山形県"}, { "name": "福島県"}
+              { "name": "青森県"}, { "name": "岩手県"}, { "name": "宮城県"}, { "name": "秋田県"}, { "name": "山形県"}, { "name": "福島県"}
             ]
           },
           {
             "name": "関東地方",
             "color": "lightsteelblue",
             "children": [
-              { "name": "茨城県"}, { "name": "栃木県"},{ "name": "群馬県"}, { "name": "埼玉県"}, { "name": "千葉県"},{ "name": "東京都"}, { "name": "神奈川県"}
+              { "name": "茨城県"}, { "name": "栃木県"}, { "name": "群馬県"}, { "name": "埼玉県"}, { "name": "千葉県"}, { "name": "東京都"}, { "name": "神奈川県"}
             ]
           },
           {
             "name": "中部地方",
             "color": "gold",
             "children": [
-              { "name": "新潟県"}, { "name": "富山県"},{ "name": "石川県"}, { "name": "福井県"}, { "name": "山梨県"},{ "name": "長野県"}, { "name": "岐阜県"}, { "name": "静岡県"}, { "name": "愛知県"}
+              { "name": "新潟県"}, { "name": "富山県"}, { "name": "石川県"}, { "name": "福井県"}, { "name": "山梨県"}, { "name": "長野県"}, { "name": "岐阜県"}, { "name": "静岡県"}, { "name": "愛知県"}
             ]
           },
           {
             "name": "近畿地方",
             "color": "mediumseagreen",
             "children": [
-              { "name": "大阪府"}, { "name": "京都府"},{ "name": "兵庫県"}, { "name": "奈良県"}, { "name": "三重県"},{ "name": "滋賀県"}, { "name": "和歌山県"}
+              { "name": "大阪府"}, { "name": "京都府"}, { "name": "兵庫県"}, { "name": "奈良県"}, { "name": "三重県"}, { "name": "滋賀県"}, { "name": "和歌山県"}
             ]
           },
           {
             "name": "中国・四国地方",
             "color": "olive",
             "children": [
-              { "name": "鳥取県"}, { "name": "島根県"},{ "name": "岡山県"}, { "name": "広島県"}, { "name": "山口県"},{ "name": "徳島県"}, { "name": "香川県"}, { "name": "愛媛県"}, { "name": "高知県"}
+              { "name": "鳥取県"}, { "name": "島根県"}, { "name": "岡山県"}, { "name": "広島県"}, { "name": "山口県"}, { "name": "徳島県"}, { "name": "香川県"}, { "name": "愛媛県"}, { "name": "高知県"}
             ]
           },
           {
@@ -270,7 +270,7 @@ export default function (val, parentDiv) {
     const total = d.parent.parent.value;
     const ritu0 = Math.floor(keinikiTotal / total*1000)/10 + '%';
     const ritu1 = Math.floor(value / total*1000)/10 + '%';
-    return tip.show(d.parent.data.name + '計 = ' + ritu0 + '<br>' +d.data.name + ' = ' + ritu1 + '<br>' + value + unit,this)
+    return tip.show(d.parent.data.name + '計 = ' + ritu0 + '<br>' +d.data.name + ' = ' + ritu1 + '<br>' + value + unit, this)
   })
   .on('mouseout', tip.hide);
   // ブロック作成------------------------------------------------------------------------------
@@ -285,7 +285,7 @@ export default function (val, parentDiv) {
   });
   if (transitionFlg) {
     rect.transition()
-    .delay((d,i) => i * 15)
+    .delay((d, i) => i * 15)
     .attr('width', d => d.x1 - d.x0)
     .attr('height', d => d.y1 - d.y0)
   } else {
@@ -303,7 +303,7 @@ export default function (val, parentDiv) {
   .attr('opacity', 0);
   if (transitionFlg) {
     text.transition()
-    .delay((d,i) => i * 10)
+    .delay((d, i) => i * 10)
     .attr('opacity', 1);
   } else {
     text.attr('opacity', 1);
@@ -312,7 +312,7 @@ export default function (val, parentDiv) {
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text(statName);
   // -------------------------------------------------------------------------------------------

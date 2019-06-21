@@ -43,13 +43,13 @@ export default function (val, parentDiv) {
     create () {
       if (prefOrCity === 'pref') this.dataset.shift();
       // ソートして順位をつける-------------------------------------------------------------------
-      this.dataset.sort((a,b) => {
+      this.dataset.sort((a, b) => {
         if (a.data > b.data) return -1;
         if (a.data < b.data) return 1;
         return 0;
       });
-      this.dataset.forEach((v,i) => v['leftTop'] = i + 1);
-      this.dataset.sort((a,b) => {
+      this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
+      this.dataset.sort((a, b) => {
         if (a.citycode < b.citycode) return -1;
         if (a.citycode > b.citycode) return 1;
         return 0;
@@ -67,8 +67,8 @@ export default function (val, parentDiv) {
           value: value * (5 - i)
         })
       }
-      const data0 = String(this.dataset[0].citycode).substr(0,2);
-      const data1 = String(this.dataset[1].citycode).substr(0,2);
+      const data0 = String(this.dataset[0].citycode).substr(0, 2);
+      const data1 = String(this.dataset[1].citycode).substr(0, 2);
       this.prefCode = data0 !== data1? '00': data0
     }
   }
@@ -85,7 +85,7 @@ export default function (val, parentDiv) {
     .scale(2.5 * (width < height ? width : height));
   } else if ((dc.prefCode === '13')) {
     projection = d3.geoMercator()
-    .center([139.360,35.6941])
+    .center([139.360, 35.6941])
     .translate([width / 2, height / 2]) // svgの中心
     .scale(50 * (width < height ? width : height));
   } else {
@@ -146,7 +146,7 @@ export default function (val, parentDiv) {
   if (transitionFlg) {
     p
     .transition()
-    .delay((d,i) => i * 10)
+    .delay((d, i) => i * 10)
     .attr("fill", d => {
       if (d.properties.citycode) {
         const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
@@ -173,7 +173,7 @@ export default function (val, parentDiv) {
   .data(dc.legendDataSet)
   .enter();
   const rect =g2.append('rect')
-  .attr('transform',(d,i) => 'translate(0,' + (20 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(0,' + (20 * i * multi) + ')')
   .attr('width', 20 * multi)
   .attr('height', 20 * multi)
   .attr('stroke', 'black')
@@ -188,13 +188,13 @@ export default function (val, parentDiv) {
   }
   const legendText = g2.append('text')
   .attr('font-size', 10 * multi + 'px')
-  .attr('transform',(d,i) => 'translate(' + (22 * multi) + ',' + (10 * multi + 20 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(' + (22 * multi) + ',' + (10 * multi + 20 * i * multi) + ')')
   .text(d => Math.floor(d.value).toLocaleString() + ' ' + unit);
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
-  .attr('class' ,'no-print')
+  .attr('class', 'no-print')
   .append('text')
   .text(statName);
   // ズーム--------------------------------------------------------------------------------------
