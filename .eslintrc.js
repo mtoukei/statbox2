@@ -20,6 +20,8 @@ module.exports = {
     "key-spacing": ["warn", {"beforeColon": false, "afterColon": true}],
     "space-infix-ops": "warn",
     "no-unneeded-ternary": "warn",
+    "no-implicit-coercion": "warn",
+    "no-else-return": "warn",
     "no-console": "off",
   },
   "parserOptions": {
