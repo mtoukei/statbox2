@@ -14,6 +14,7 @@ module.exports = {
     "no-eval": "error",
     "arrow-parens": ["warn", "as-needed"],
     "arrow-spacing": "warn",
+    "prefer-const": "warn",
     "comma-spacing": ["warn", {"before": false, "after": true}],
     "block-spacing": "warn",
     "key-spacing": ["warn", {"beforeColon": false, "afterColon": true}],
