@@ -75,9 +75,6 @@ export default function (val, parentDiv) {
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
-  .attr('viewBox', '0 0 ' + width + ' ' + height)
-  .attr('preserveAspectRatio', 'xMidYMid')
-  .classed("svg-content-responsive", true)
   .classed("chart-svg", true);
   //--------------------------------------------------------------------------------------------
   const g = svg.append('g')
