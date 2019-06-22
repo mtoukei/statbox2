@@ -135,10 +135,9 @@ export default function (val, parentDiv) {
   // --------------------------------------------------------------------------------------------
   const colorScale = d3.scaleOrdinal(d3.schemeSet1);
   // パスをループで追加
-  for (const key in dc.timeDataset) {
+  for (const key of Object.keys(dc.timeDataset)) {
     svg.append("path")
     .datum(dc.timeDataset[key])
-    // .classed('time-path', true)
     .attr('class', d => 'time-path time-path-' + d[0].citycode)
     .attr('id', d => 'time-path-' + d[0].citycode)
     .attr('fill', 'none')
