@@ -1,7 +1,6 @@
 import storeBase from "../store/store-base";
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   if(palentDiv.style('display') === 'none') return;
   let dataset;
