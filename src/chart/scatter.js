@@ -24,11 +24,11 @@ export default function (leftVal, rightVal) {
   const dataset = [];
   const leftDataAr = [], rightDataAr = [];
   const kaikiData = [];
-  leftDataset.forEach(value => {
+  leftDataset.forEach((value, index) => {
     const obj = {
       cityname: value.cityname,
       leftData: value.data,
-      rightData: value.data
+      rightData: rightDataset[index].data
     };
     dataset.push(obj);
     // 相関係数計算用-------------------------------------------------------------------------
