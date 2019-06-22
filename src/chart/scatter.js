@@ -33,11 +33,12 @@ export default function (leftVal, rightVal) {
     dataset.push(obj);
     // 相関係数計算用-------------------------------------------------------------------------
     leftDataAr.push(value.data);
-    rightDataAr.push(value.data);
+    rightDataAr.push(rightDataset[index].data);
     // 回帰直線計算用-------------------------------------------------------------------------
     kaikiData.push([value.data, value.data])
   });
   const soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
+  console.log(soukan)
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('svg').remove();
   const svg = palentDiv.select('.resizers').append('svg')
