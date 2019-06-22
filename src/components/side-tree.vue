@@ -164,7 +164,7 @@
               :check-on-click-node="true"
               :check-strictly="true"
               :data="s_eStatMetaPreh"
-              @check="nodeClickEstat2(arguments[0], statType)"
+              @check="nodeClickEstatTime(arguments[0], 'pref')"
               :filter-node-method="filterNode"
               highlight-current
               :indent="10"
@@ -267,7 +267,7 @@
               :check-on-click-node="true"
               :check-strictly="true"
               :data="s_eStatMetaCity"
-              @check="nodeClickEstat3"
+              @check="nodeClickEstatTime(arguments[0], 'city')"
               :filter-node-method="filterNode"
               highlight-current
               :indent="10"
@@ -432,23 +432,23 @@
       c_divId () {
         if (this.side === 'leftSide') {
           return 'left-side-div'
-        } 
+        }
           return 'right-side-div'
-        
+
       },
       c_divClass () {
         if (this.side === 'leftSide') {
           return 'resizer right'
-        } 
+        }
           return 'resizer left'
-        
+
       },
       c_iClass () {
         if (this.side === 'leftSide') {
           return 'el-icon-arrow-right'
-        } 
+        }
           return 'el-icon-arrow-left'
-        
+
       },
       s_prefCode: {
         get () { return this.$store.state.base.prefCode },
@@ -498,12 +498,12 @@
       prefChange (prefCode) {
         const citys = Citycodes.filter(value => value.id.substr(0, 2) === prefCode.substr(0, 2));
         const citys2 = [];
-        for (const i in citys) {
+        citys.forEach(value => {
           citys2.push({
-            value: citys[i].id,
-            label: citys[i].name
+            value: value.id,
+            label: value.name
           })
-        }
+        });
         d3.select('#left-chart-div').selectAll('.chart-svg').remove();
         this.cityOptions = citys2;
         // axios({
@@ -595,14 +595,14 @@
           const keys = this.$refs.treeTime.getCheckedKeys();
           const statNames = [];
           const units = [];
-          for (const i in keys) {
-            if (keys[i]) {
-              statNames.push(keys[i]);
-              units.push(keys[i].split('/')[2]);
+          keys.forEach(value => {
+            if (value) {
+              statNames.push(value);
+              units.push(value.split('/')[2]);
             }
-          }
+          });
           if (units.filter((x, i, self) => self.indexOf(x) === i).length > 2) {
-            alert("単位が３つ以上あるので描画できません。選択しなおしてください。0");
+            this.$message('単位が３つ以上あるので描画できません。選択しなおしてください。0');
             const newKeys = keys.filter(val => val !== e.statName);
             this.$refs.treeTime.setCheckedKeys(newKeys);
             return;
@@ -620,60 +620,33 @@
         }
       },
       //-----------------------------------------------------------------------------------------
-      // 都道府県時系列
-      nodeClickEstat2 (e) {
+      // 都道府県。市町村時系列
+      nodeClickEstatTime (e, prefOrCity) {
         if (!e.children) {
-          const refs = this.$refs.treeTimePref;
+          const refs = prefOrCity === 'pref' ? this.$refs.treeTimePref : this.$refs.treeTimeCity;
           const keys = refs.getCheckedKeys();
           const statIds = [];
           const units = [];
-          for (const i in keys) {
-            if (keys[i]) {
-              if (keys[i].length > 10) {
-                statIds.push(keys[i]);
-                units.push(keys[i].split('/')[2]);
+          keys.forEach(value => {
+            if (value) {
+              if (value.length > 10) {
+                statIds.push(value);
+                units.push(value.split('/')[2]);
               }
             }
-          }
-          const aaa = units.filter(function (x, i, self) {
-            return self.indexOf(x) === i;
           });
-          if (aaa.length > 2) {
+          if (units.filter((x, i, self) => self.indexOf(x) === i).length > 2) {
             this.$message('単位が３つ以上あるので描画できません。選択しなおしてください。');
             const newKeys = keys.filter(val => val !== e.statId);
             this.$refs.treeTimePref.setCheckedKeys(newKeys);
             return;
           }
           this.$store.commit('statList/transitionSet', true);
-          this.$store.commit('statList/selectStatTimePref', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.s_prefCode })
-        }
-      },
-      //-----------------------------------------------------------------------------------------
-      // 市町村時系列
-      nodeClickEstat3 (e) {
-        if (!e.children) {
-          const keys = this.$refs.treeTimeCity.getCheckedKeys();
-          const statIds = [];
-          const units = [];
-          for (const i in keys) {
-            if (keys[i]) {
-              if (keys[i].length > 10) {
-                statIds.push(keys[i]);
-                units.push(keys[i].split('/')[2]);
-              }
-            }
+          if (prefOrCity === 'pref') {
+            this.$store.commit('statList/selectStatTimePref', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.s_prefCode })
+          } else {
+            this.$store.commit('statList/selectStatTimeCity', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.cityCode })
           }
-          const aaa = units.filter(function (x, i, self) {
-            return self.indexOf(x) === i;
-          });
-          if (aaa.length > 2) {
-            this.$message('単位が３つ以上あるので描画できません。選択しなおしてください。');
-            const newKeys = keys.filter(val => val !== e.statId);
-            this.$refs.treeTimeCity.setCheckedKeys(newKeys);
-            return;
-          }
-          this.$store.commit('statList/transitionSet', true);
-          this.$store.commit('statList/selectStatTimeCity', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.cityCode })
         }
       },
       //-----------------------------------------------------------------------------------------
@@ -703,11 +676,3 @@
     }
   }
 </script>
-<style scoped>
-    .v-enter-active, .v-leave-active {
-        transition: opacity 1s
-    }
-    .v-enter, .v-leave-to {
-        opacity: 0;
-    }
-</style>

@@ -71,9 +71,9 @@
       m_divShow (statType, side) {
         if (side === 'leftSide') {
           return statType === 'pref' || statType === 'scatterPref' || statType === 'city' || statType === 'scatterCity'
-        } 
+        }
           return statType === 'scatterPref' || statType === 'scatterCity'
-        
+
       },
       m_metaData (statType, side) {
         let stat;
@@ -113,8 +113,7 @@
             source2 = sourceLink
           }
         }
-        const returnObj = {syurui, dataName, statsDataId, cdCat01, source1, source2};
-        return returnObj
+        return {syurui, dataName, statsDataId, cdCat01, source1, source2};
       },
       m_tableData (statType, side) {
         let data = [];

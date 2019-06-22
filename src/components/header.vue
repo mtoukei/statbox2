@@ -94,37 +94,26 @@
         const vm = this;
         const divList = vm.s_leftDivList;
         vm.$store.commit('base/menuChange', true);// トランジションをさせない
+        vm.$store.commit('base/statTypeChange', key);
+        vm.$store.commit('base/activeIndexChange', key);
         if (key === 'home') {
           location.reload();
-        } else if (key === 'miyazakiCity' || key === 'pref') {
-          vm.$store.commit('base/statTypeChange', key);
-          vm.$store.commit('base/activeIndexChange', key);
-          for (const i in divList) {
-            divList[i].show = divList[i].statType === key;
-          }
+        } else if (key === 'miyazakiCity' || key === 'pref' || key === 'city') {
+          divList.forEach(value => {
+            value.show = value.statType === key;
+          });
           vm.$store.commit('base/rightSideDivShowChange', false);
-          this.mix_detectResize();
-        } else if (key === 'city') {
-          vm.$store.commit('base/statTypeChange', key);
-          vm.$store.commit('base/activeIndexChange', key);
-          for (const i in divList) {
-            divList[i].show = divList[i].statType === key;
-          }
-          vm.$store.commit('base/rightSideDivShowChange', false);
-          this.mix_detectResize();
         } else {
-          vm.$store.commit('base/statTypeChange', key);
-          vm.$store.commit('base/activeIndexChange', key);
-          for (const i in divList) {
-            if (divList[i].divId === key) {
-              divList[i].show = true;
-              vm.$store.commit('base/rightSideDivShowChange', divList[i].rightSide);
+          divList.forEach(value => {
+            if (value.divId === key) {
+              value.show = true;
+              vm.$store.commit('base/rightSideDivShowChange', value.rightSide);
             } else {
-              divList[i].show = false
+              value.show = false
             }
-          }
-          this.mix_detectResize();
+          });
         }
+        this.mix_detectResize();
         setTimeout(() => {
           vm.$store.commit('base/menuChange', false)// 「トランジションをさせる」にもどす。
         }, 1000);
