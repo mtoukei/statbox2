@@ -9,17 +9,17 @@ export default function (val, parentDiv) {
   if(palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
-  let unit;
+  // let unit;
   if (isEStat) {
     const target = val.statData[val.statData.length - 1];
-    const allPrefData = target.data;
+    // const allPrefData = target.data;
     dataset = target.data2;
     statName = val.statName;
-    unit = allPrefData[0]['@unit'];
+    // unit = allPrefData[0]['@unit'];
   } else {
     dataset = val.statData.data;
     statName = val.statData.title;
-    unit = val.statData.unit;
+    // unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
   const width = palentDiv.node().getBoundingClientRect().width;
@@ -79,12 +79,10 @@ export default function (val, parentDiv) {
     if (val.estat) {
       if (prefOrCity === 'pref') {
         return colorScale(Number(d.data.citycode.substr(0, 2)))
-      } 
+      }
         return colorScale(Number(d.data.citycode.substr(3, 2)))
-      
-    } 
+    }
       return colorScale(d.index)
-    
   })
   .attr('stroke', 'whitesmoke');
   if (transitionFlg) {
@@ -121,7 +119,6 @@ export default function (val, parentDiv) {
       return "black";
     }
       return "white";
-    
   })
   .attr('transform', d => 'translate(' + text.centroid(d) + ')')
   .attr('dy', '5px')
@@ -171,12 +168,10 @@ export default function (val, parentDiv) {
       if (val.estat) {
         if (prefOrCity === 'pref') {
           return colorScale(Number(d.data.citycode.substr(0, 2)))
-        } 
+        }
           return colorScale(Number(d.data.citycode.substr(3, 2)))
-        
-      } 
+      }
         return colorScale(d.index)
-      
     });
     textP
     .data(pie(dc.dataset, d => d.citycode))
@@ -202,7 +197,6 @@ export default function (val, parentDiv) {
         return "black";
       }
         return "white";
-      
     });
   };
   //--------------------------------------------------------------------------------------------
