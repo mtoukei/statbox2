@@ -1,16 +1,11 @@
-import storeBase from "../store/store-base";
-// ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
   const palentDiv = d3.select(parentDiv);
   if(palentDiv.style('display') === 'none') return;
-  let dataset;
-  let statName;
-  let unit;
-    const target = val.statData[val.statData.length - 1];
-    const allPrefData = target.data;
-    dataset = val.statData;
-    statName = val.statName;
-    unit = allPrefData[0]['@unit'];
+  const dataset = val.statData;
+  // const statName = val.statName;
+  // const target = val.statData[val.statData.length - 1];
+  // const allPrefData = target.data;
+  // const unit = allPrefData[0]['@unit'];
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
   const width = palentDiv.node().getBoundingClientRect().width;
   const height = palentDiv.node().getBoundingClientRect().height
@@ -19,7 +14,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 20 * multi, 'bottom': 30 * multi, 'right': 100 * multi, 'left': 60 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.transition;
+  // const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {

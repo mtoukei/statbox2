@@ -16,10 +16,10 @@ export default {
         const vTreeLefts = document.querySelectorAll('#left-side-div' + ' .v-tree');
         const vTreeRights = document.querySelectorAll('#right-side-div' + ' .v-tree');
         const contents = document.querySelector('#contents');
-        // 高さ設定。画面ボトムのリサイズ-------------------------------------------------------
-        for (const i in treeDivs) {
-          if (treeDivs[i].style) treeDivs[i].style.height = (bodyHeight - footerHeight - 120) + 'px';
-        }
+        // 高さ設定。画面ボトムのリサイズ---------------------------------------------------------
+        treeDivs.forEach(value => {
+          if (value.style) value.style.height = (bodyHeight - footerHeight - 120) + 'px';
+        });
         resizersLeft.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';
         resizersRight.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';
         contents.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';

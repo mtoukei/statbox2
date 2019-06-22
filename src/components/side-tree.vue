@@ -456,10 +456,9 @@
       },
       s_prefOptions () { return this.$store.state.base.prefOptions },
       prefOptions2 () {
-        const options = [];
-        for (const i in this.s_prefOptions) {
-          if (i > 0) options.push(this.s_prefOptions[i])
-        }
+        const options = this.s_prefOptions.map(value => {
+          if (value) return value
+        });
         return options
       },
       s_metaMiyazaki () { return this.$store.state.statList.metaMiyazaki },

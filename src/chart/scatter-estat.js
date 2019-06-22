@@ -24,17 +24,17 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   const margin = { 'top': 50 * multi, 'bottom': 100 * multi, 'right': 30 * multi, 'left': 70 * multi };
   // データセットの元を作成----------------------------------------------------------------------
   const mixDataset = [];
-  for (const i in leftDataset) {
-    const leftTiime = leftDataset[i].data[0]['@time'];
-    const rightData = rightDataset.find(value => value.data[0]['@time'] === leftTiime);
+  leftDataset.forEach(value => {
+    const leftTiime = value.data[0]['@time'];
+    const rightData = rightDataset.find(val => val.data[0]['@time'] === leftTiime);
     if (rightData) {
       mixDataset.push({
         time: leftTiime,
-        left: leftDataset[i],
+        left: value,
         right: rightData
       })
     }
-  }
+  });
   // --------------------------------------------------------------------------------------------
   const year = mixDataset[mixDataset.length - 1].time.substr(0, 4);
   rangeDiv.select('.year-range-text').text(year);
@@ -55,13 +55,13 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
       const rightDataAr = [];
       const kaikiData = [];
       // ４７都道府県でループ
-      for (const i in tgtLeftData) {
-        if (tgtLeftData[i].citycode !== '00000') {
-          const leftData = Number(tgtLeftData[i].data);
-          const rightData = Number(tgtRightData[i].data);
+      tgtLeftData.forEach((value, index) => {
+        if (value.citycode !== '00000') {
+          const leftData = Number(value.data);
+          const rightData = Number(tgtRightData[index].data);
           const obj = {
             time: time,
-            cityname: tgtLeftData[i].cityname,
+            cityname: value.cityname,
             leftData: leftData,
             rightData: rightData
           };
@@ -74,7 +74,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
           const arr = [rightData, leftData];
           kaikiData.push(arr)
         }
-      }
+      });
       this.soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
       const linReg = ss.linearRegression(kaikiData);
       this.linRegLine = ss.linearRegressionLine(linReg);
@@ -348,9 +348,8 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     .attr('value', () => {
       if (prefOrCity === 'pref') {
         return '宮崎県'
-      } 
+      }
         return '宮崎市'
-      
     })
     .style('width', '70px')
   }

@@ -178,38 +178,27 @@ const statList = {
     // サイドのツリーをクリックしたとき---------------------------------------------------------------
     // 宮崎県用
     selectStat (state, payload) {
-      const data = statData;//別ファイルから
       const statName = payload.value.split('/')[0];
       const target = payload.value.split('/')[1];
-      const statDataObj = data[statName];
+      const statDataObj = statData[statName];
       const column = statDataObj[target].column;
       const title = statDataObj[target].statName;
       const unit = statDataObj[target].unit;
       const data0 = statDataObj.data;
-      const data1 = [];
-      for (const i in data0) {
+      const data = [];
+      data0.forEach(value => {
         const obj = {
-          citycode: data0[i].citycode,
-          cityname: data0[i].cityname,
-          data: data0[i][column]
+          citycode: value.citycode,
+          cityname: value.cityname,
+          data: value[column]
         };
-        data1.push(obj)
-      }
-      const data2 = {
-        title: title,
-        unit: unit,
-        data: data1
-      };
-      let stat;
-      if (payload.side === 'leftSide') {
-        stat = state.leftStat;
-      } else {
-        stat = state.rightStat;
-      }
+        data.push(obj)
+      });
+      const stat = payload.side === 'leftSide' ? state.leftStat : state.rightStat;
       stat.transition = true;
       stat.count = stat.count + 1;
       stat.stat = payload.value;
-      stat.statData = data2;
+      stat.statData = {title, unit, data};
     },
     // ------------------------------------------------------------------------------------------
     // いろんなグラフで見える化。都道府県と市区町村共用
@@ -235,71 +224,63 @@ const statList = {
         }
       })
       .then(response => {
-        const times = [];
         const dataAr = response.data['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF'].VALUE;
-        for (const i in dataAr) {
-          times.push(dataAr[i]['@time'])
-        }
-        const times2 = times.filter(function (x, i, self) {
-          return self.indexOf(x) === i;
-        });
+        const times = dataAr.map(value => value['@time']).filter((x, i, self) => self.indexOf(x) === i);
         const dataSet = [];
-        for (const times2Value of times2) {
-          const data = dataAr.filter(val => val['@time'] === times2Value);
+        times.forEach(value => {
+          const data = dataAr.filter(val => val['@time'] === value);
           const data2 = [];
-          for (const dataValue of data) {
+          data.forEach(value2 => {
             if (payload.prefOrCity === 'pref') {
               const prefs = storeBase.state.base.prefOptions;
-              const prefsResult = prefs.find(val => val.value === dataValue['@area']);
+              const prefsResult = prefs.find(val => val.value === value2['@area']);
               const prefName = prefsResult.label;
               data2.push({
-                citycode: dataValue['@area'],
+                citycode: value2['@area'],
                 cityname: prefName,
-                data: Number(dataValue['$']),
-                time: dataValue['@time']
+                data: Number(value2['$']),
+                time: value2['@time']
               })
-            } else if (payload.prefOrCity === 'city'){
-              if (dataValue['@area'] .substr(0, 2) === prefCode.substr(0, 2)) {
-                const citysResult = Citycodes.find(val => val.id === dataValue['@area']);
+            } else if (payload.prefOrCity === 'city') {
+              if (value2['@area'] .substr(0, 2) === prefCode.substr(0, 2)) {
+                const citysResult = Citycodes.find(val => val.id === value2['@area']);
+                const digit3 = value2['@area'].substr(2, 2);// 3桁目から2文字
                 if (citysResult) {
-                  const kuFlg = function () {
-                    if (dataValue['@area'].substr(0, 2) === '13') { // 東京都の区は区ではない。
+                  const isKu = (() => {
+                    if (value2['@area'].substr(0, 2) === '13') { // 東京都の区は区ではない。
                       return false
-                    } else if (dataValue['@area'].substr(2, 2) === '13' || dataValue['@area'].substr(2, 2) === '14' || dataValue['@area'].substr(2, 2) === '15') { // 3桁目が1または13は政令都市
-                      if (dataValue['@area'].substr(4, 1) !== '0') {
+                    } else if (digit3 === '13' || digit3 === '14' || digit3 === '15') { // 3桁目が1または13～15は政令都市
+                      if (value2['@area'].substr(4, 1) !== '0') {
                         return true
-                      } 
-                        return false
-                      
-                    } else if (dataValue['@area'].substr(2, 1) === '1') { // 3桁目が1または13は政令都市
-                      if (Number(dataValue['@area'].substr(3, 3)) > 0) {
-                        return true
-                      } 
-                        return false
-                      
-                    } 
+                      }
                       return false
-                    
-                  }();
-                  if (!kuFlg) {
+                    } else if (value2['@area'].substr(2, 1) === '1') { // 3桁目が1または13～15は政令都市
+                      if (Number(value2['@area'].substr(3, 3)) > 0) {
+                        return true
+                      }
+                      return false
+                    }
+                    return false
+                  })();
+                  if (!isKu) {
                     const cityName = citysResult.name;
                     data2.push({
-                      citycode: dataValue['@area'],
+                      citycode: value2['@area'],
                       cityname: cityName,
-                      data: Number(dataValue['$']),
-                      time: dataValue['@time']
+                      data: Number(value2['$']),
+                      time: value2['@time']
                     })
                   }
                 }
               }
             }
-          }
+          });
           dataSet.push({
-            time: times2Value,
+            time: value,
             data: data,
             data2: data2
           })
-        }
+        });
         let stat;
         let source = '';
         if (payload.prefOrCity === 'pref') {
@@ -324,122 +305,35 @@ const statList = {
         storeBase.commit('base/chartDivLoadingShow', false)
       });
     },
-    //-------------------------------------------------------------------------------------------
-    // // 散布図。都道府県用
-    // selectStatscatterPref (state,payload) {
-    //   const statIds = payload.statIds;
-    //   const plomises = [];
-    //   for (let i in statIds) {
-    //     plomises[i] =
-    //       new Promise(function (resolve) {
-    //         const statId = statIds[i].split('/')[0];
-    //         const cat01 = statIds[i].split('/')[1];
-    //         const unit = statIds[i].split('/')[2];
-    //         const cityCode = payload.cityCode;
-    //         // console.log(statId, cat01, unit)
-    //         const limit = 100000;
-    //         axios({
-    //           method: 'get',
-    //           url: 'https://api.e-stat.go.jp/rest/2.1/app/json/getStatsData',
-    //           params: {
-    //             metaGetFlg: 'Y',
-    //             cntGetFlg: 'N',
-    //             sectionHeaderFlg: '1',
-    //             statsDataId: statId,
-    //             cdArea: cityCode,
-    //             cdCat01: cat01,
-    //             limit: limit,
-    //             appId: eStatApiId
-    //           }
-    //         })
-    //         .then(response => {
-    //           const rStatData = response.data['GET_STATS_DATA']['STATISTICAL_DATA'];
-    //           const classObjs = rStatData['CLASS_INF']['CLASS_OBJ'];
-    //           const title = classObjs.find(val => val['@id'] === 'cat01').CLASS['@name'].split('_')[1];
-    //           const data0 = rStatData['DATA_INF'].VALUE;
-    //           const data1 = [];
-    //           if (data0.length) {
-    //             for (let j in data0) {
-    //               const obj = {
-    //                 nen: '',
-    //                 year: data0[j]['@time'].substr(0, 4),
-    //                 data: Number(data0[j]['$'])
-    //               };
-    //               data1.push(obj)
-    //             }
-    //           } else {
-    //             const obj = {
-    //               nen: '',
-    //               year: data0['@time'].substr(0, 4),
-    //               data: Number(data0['$'])
-    //             };
-    //             data1.push(obj)
-    //           }
-    //           const data2 = {
-    //             // nodeId: nodeId,
-    //             stat: statIds[i],
-    //             title: title,
-    //             unit: unit,
-    //             data: data1
-    //           };
-    //           resolve(data2)
-    //         });
-    //       })
-    //   }
-    //   Promise.all(plomises).then(function (result) {
-    //     // console.log(result)
-    //     const stat = payload.side === "leftSide"? state.leftStatTimePref: state.rightStatTimePref;
-    //     stat.transition = true;
-    //     stat.count = stat.count + 1;
-    //     stat.stat = 'estat';
-    //     stat.endStat = payload.endStat;
-    //     stat.statData = result;
-    //   })
-    // },
     // ------------------------------------------------------------------------------------------
     // 時系列。宮崎県
     selectStatTime (state, payload) {
       const data = statDataTime;
       const statNames = payload.statNames;
       const statData = [];
-      for (const i in statNames) {
-        // console.log(statNames[i])
-        const statName = statNames[i].split('/')[0];
-        // console.log(statName)
-        const target = statNames[i].split('/')[1];
-        // console.log(target)
+      statNames.forEach(value => {
+        const statName = value.split('/')[0];
+        const target = value.split('/')[1];
         const statDataObj = data[statName];
-        // console.log(statDataObj)
         const column = statDataObj[target].column;
-        // console.log(column)
         const title = statDataObj[target].statName;
         const unit = statDataObj[target].unit;
         const data0 = statDataObj.data;
-        // console.log(data0)
-        const data1 = [];
-        for (const j in data0) {
-          const obj = {
-            nen: data0[j].nen,
-            year: data0[j].year,
-            data: data0[j][column]
-          };
-          data1.push(obj)
-        }
-        const data2 = {
-          stat: statNames[i],
-          title: title,
-          unit: unit,
-          data: data1
-        };
-        statData.push(data2)
-      }
-      // console.log(payload.side)
-      let stat;
-      if (payload.side === 'leftSide') {
-        stat = state.leftStatTime;
-      } else {
-        stat = state.rightStatTime;
-      }
+        const data1 = data0.map(value => {
+          return {
+            nen: value.nen,
+            year: value.year,
+            data: value[column]
+          }
+        });
+        statData.push({
+            stat: value,
+            title: title,
+            unit: unit,
+            data: data1
+        })
+      });
+      const stat = payload.side === 'leftSide' ? state.leftStatTime : state.rightStatTime;
       stat.transition = true;
       stat.count = stat.count + 1;
       stat.endStat = payload.endStat;
@@ -450,14 +344,13 @@ const statList = {
     selectStatTimePref (state, payload) {
       const statIds = payload.statIds;
       const plomises = [];
-      for (const i in statIds) {
-        plomises[i] =
+      statIds.forEach((value, index) => {
+        plomises[index] =
           new Promise(function (resolve) {
-            const statId = statIds[i].split('/')[0];
-            const cat01 = statIds[i].split('/')[1];
-            const unit = statIds[i].split('/')[2];
+            const statId = value.split('/')[0];
+            const cat01 = value.split('/')[1];
+            const unit = value.split('/')[2];
             const cityCode = payload.cityCode;
-            // console.log(statId, cat01, unit)
             const limit = 100000;
             axios({
               method: 'get',
@@ -478,35 +371,32 @@ const statList = {
               const classObjs = rStatData['CLASS_INF']['CLASS_OBJ'];
               const title = classObjs.find(val => val['@id'] === 'cat01').CLASS['@name'].split('_')[1];
               const data0 = rStatData['DATA_INF'].VALUE;
-              const data1 = [];
+              let data1 = [];
               if (data0.length) {
-                for (const j in data0) {
-                  const obj = {
+                data1 = data0.map(value => {
+                  return {
                     nen: '',
-                    year: data0[j]['@time'].substr(0, 4),
-                    data: Number(data0[j]['$'])
-                  };
-                  data1.push(obj)
-                }
+                    year: value['@time'].substr(0, 4),
+                    data: Number(value['$'])
+                  }
+                });
               } else {
-                const obj = {
+                data1.push({
                   nen: '',
                   year: data0['@time'].substr(0, 4),
                   data: Number(data0['$'])
-                };
-                data1.push(obj)
+                })
               }
-              const data2 = {
-                stat: statIds[i],
+              resolve({
+                stat: value,
                 title: title,
                 unit: unit,
                 data: data1
-              };
-              resolve(data2)
+              })
             });
           })
-      }
-      Promise.all(plomises).then(function (result) {
+      });
+      Promise.all(plomises).then(result => {
         const stat = state.leftStatTimePref;
         stat.transition = true;
         stat.count = stat.count + 1;
@@ -523,12 +413,12 @@ const statList = {
       }
       const statIds = payload.statIds;
       const plomises = [];
-      for (const i in statIds) {
-        plomises[i] =
+      statIds.forEach((value, index) => {
+        plomises[index] =
           new Promise(function (resolve) {
-            const statId = statIds[i].split('/')[0];
-            const cat01 = statIds[i].split('/')[1];
-            const unit = statIds[i].split('/')[2];
+            const statId = value.split('/')[0];
+            const cat01 = value.split('/')[1];
+            const unit = value.split('/')[2];
             const cityCode = payload.cityCode;
             const limit = 100000;
             axios({
@@ -550,35 +440,32 @@ const statList = {
               const classObjs = rStatData['CLASS_INF']['CLASS_OBJ'];
               const title = classObjs.find(val => val['@id'] === 'cat01').CLASS['@name'].split('_')[1];
               const data0 = rStatData['DATA_INF'].VALUE;
-              const data1 = [];
+              let data1 = [];
               if (data0.length) {
-                for (const j in data0) {
-                  const obj = {
+                data1 = data0.map(value => {
+                  return {
                     nen: '',
-                    year: data0[j]['@time'].substr(0, 4),
-                    data: Number(data0[j]['$'])
-                  };
-                  data1.push(obj)
-                }
+                    year: value['@time'].substr(0, 4),
+                    data: Number(value['$'])
+                  }
+                });
               } else {
-                const obj = {
+                data1.push({
                   nen: '',
                   year: data0['@time'].substr(0, 4),
                   data: Number(data0['$'])
-                };
-                data1.push(obj)
+                })
               }
-              const data2 = {
-                stat: statIds[i],
+              resolve({
+                stat: value,
                 title: title,
                 unit: unit,
                 data: data1
-              };
-              resolve(data2)
+              })
             });
           })
-      }
-      Promise.all(plomises).then(function (result) {
+      });
+      Promise.all(plomises).then(result => {
         const stat = state.leftStatTimeCity;
         stat.transition = true;
         stat.count = stat.count + 1;
