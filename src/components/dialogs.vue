@@ -115,36 +115,32 @@
           }
         };
         // ---------------------------------------------------------------------------------------
-        let statData;
         const csvData = [];
         if (this.statType === 'miyazakiCity') {
-          statData = this.$store.state.statList.leftStat.statData.data;
-          for (const i in statData) {
+          const statData = this.$store.state.statList.leftStat.statData.data;
+          statData.forEach(value => {
             csvData.push({
-              citycode: statData[i].citycode,
-              cityname: statData[i].cityname,
-              data: statData[i].data
+              citycode: value.citycode,
+              cityname: value.cityname,
+              data: value.data
             })
-          }
+          });
           csvCreate(csvData);
         } else if (this.statType === 'pref' || this.statType === 'city') {
-          if (this.statType === 'pref') {
-            statData = this.$store.state.statList.leftStatEstatPref.statData
-          } else {
-            statData = this.$store.state.statList.leftStatEstatCity.statData
-          }
-          for (const i in statData) {
-            for (const j in statData[i].data2) {
+          const statData = this.statType === 'pref' ? this.$store.state.statList.leftStatEstatPref.statData : this.$store.state.statList.leftStatEstatCity.statData;
+          statData.forEach(value => {
+            value.data2.forEach(value2 => {
               csvData.push({
-                year: statData[i].data2[j].time.substr(0, 4),
-                citycode: statData[i].data2[j].citycode,
-                cityname: statData[i].data2[j].cityname,
-                data: statData[i].data2[j].data
+                year: value2.time.substr(0, 4),
+                citycode: value2.citycode,
+                cityname: value2.cityname,
+                data: value2.data
               })
-            }
-          }
+            })
+          });
           csvCreate(csvData)
         } else if (this.statType === 'time' || this.statType === 'timePref' || this.statType === 'timeCity') {
+          let statData;
           if (this.statType === 'time') {
             statData = this.$store.state.statList.leftStatTime.statData;
           } else if (this.statType === 'timePref') {
@@ -152,18 +148,16 @@
           } else if (this.statType === 'timeCity') {
             statData = this.$store.state.statList.leftStatTimeCity.statData;
           }
-          for (const i in statData) {
-            for (const j in statData[i]) {
-              for (const k in statData[i][j]) {
-                if (statData[i][j][k].data) {
+          statData.forEach(value => {
+            value.data.forEach(value2 => {
+                if (value2.data) {
                   csvData.push({
-                    year: statData[i][j][k].year,
-                    data: statData[i][j][k].data
+                    year: value2.year,
+                    data: value2.data
                   })
                 }
-              }
-            }
-          }
+            })
+          });
           csvCreate(csvData)
         } else {
           alert('未作成です。')
