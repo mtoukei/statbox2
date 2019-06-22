@@ -30,22 +30,22 @@ export default function (val, parentDiv) {
       this.legendData = [];
     }
     create () {
-      for (const i in this.dataset) {
-        for (const j in this.dataset[i].data2) {
-          if (!this.timeDataset[this.dataset[i].data2[j].citycode]) {
-            this.timeDataset[this.dataset[i].data2[j].citycode] = []
+      this.dataset.forEach(value => {
+        value.data2.forEach(value2 => {
+          if (!this.timeDataset[value2.citycode]) {
+            this.timeDataset[value2.citycode] = []
           }
-          this.timeDataset[this.dataset[i].data2[j].citycode].push({
-            time: this.dataset[i].data2[j].time.substr(0, 4),
-            data: this.dataset[i].data2[j].data,
-            citycode: this.dataset[i].data2[j].citycode,
-            cityname: this.dataset[i].data2[j].cityname
+          this.timeDataset[value2.citycode].push({
+            time: value2.time.substr(0, 4),
+            data: value2.data,
+            citycode: value2.citycode,
+            cityname: value2.cityname
           });
-          if (this.dataset[i].data2[j].data > this.maxVal) {
-            this.maxVal = this.dataset[i].data2[j].data
+          if (value2.data > this.maxVal) {
+            this.maxVal = value2.data
           }
-        }
-      }
+        });
+      });
       this.maxVal = this.maxVal * 1.1;
       // -----------------------------------------------------------------------------------------
       this.legendData = this.dataset[this.dataset.length - 1].data2
