@@ -14,7 +14,7 @@ export const eventAddRemove = (() => {
     },
     removeListener: key => {
       if(key in events) {
-        var e = events[key];
+        const e = events[key];
         e.target.removeEventListener(e.type, e.listener, e.capture);
       }
     }

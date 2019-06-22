@@ -40,6 +40,7 @@ export default {
         Pie(val, '#left-pie-miyazaki-city');
         Tree(val, '#left-tree-miyazaki-city');
         Histogram(val, '#left-histogram-miyazaki-city');
+        Scatter(this.s_leftStat, this.s_rightStat);
       },
       deep: true,
     },

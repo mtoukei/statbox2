@@ -24,21 +24,21 @@ export default function (leftVal, rightVal) {
   const dataset = [];
   const leftDataAr = [], rightDataAr = [];
   const kaikiData = [];
-  for (const i in leftDataset) {
+  leftDataset.forEach((value, index) => {
     const obj = {
-      cityname: leftDataset[i].cityname,
-      leftData: leftDataset[i].data,
-      rightData: rightDataset[i].data
+      cityname: value.cityname,
+      leftData: value.data,
+      rightData: rightDataset[index].data
     };
     dataset.push(obj);
     // 相関係数計算用-------------------------------------------------------------------------
-    leftDataAr.push(leftDataset[i].data);
-    rightDataAr.push(rightDataset[i].data);
+    leftDataAr.push(value.data);
+    rightDataAr.push(rightDataset[index].data);
     // 回帰直線計算用-------------------------------------------------------------------------
-    const arr = [rightDataset[i].data, leftDataset[i].data];
-    kaikiData.push(arr)
-  }
+    kaikiData.push([value.data, value.data])
+  });
   const soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
+  console.log(soukan)
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('svg').remove();
   const svg = palentDiv.select('.resizers').append('svg')

@@ -1,17 +1,11 @@
-import storeBase from "../store/store-base";
-// ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
-  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   if(palentDiv.style('display') === 'none') return;
-  let dataset;
-  let statName;
-  let unit;
-    const target = val.statData[val.statData.length - 1];
-    const allPrefData = target.data;
-    dataset = val.statData;
-    statName = val.statName;
-    unit = allPrefData[0]['@unit'];
+  const dataset = val.statData;
+  // const statName = val.statName;
+  // const target = val.statData[val.statData.length - 1];
+  // const allPrefData = target.data;
+  // const unit = allPrefData[0]['@unit'];
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
   const width = palentDiv.node().getBoundingClientRect().width;
   const height = palentDiv.node().getBoundingClientRect().height
@@ -20,7 +14,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 20 * multi, 'bottom': 30 * multi, 'right': 100 * multi, 'left': 60 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.transition;
+  // const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -30,22 +24,22 @@ export default function (val, parentDiv) {
       this.legendData = [];
     }
     create () {
-      for (const i in this.dataset) {
-        for (const j in this.dataset[i].data2) {
-          if (!this.timeDataset[this.dataset[i].data2[j].citycode]) {
-            this.timeDataset[this.dataset[i].data2[j].citycode] = []
+      this.dataset.forEach(value => {
+        value.data2.forEach(value2 => {
+          if (!this.timeDataset[value2.citycode]) {
+            this.timeDataset[value2.citycode] = []
           }
-          this.timeDataset[this.dataset[i].data2[j].citycode].push({
-            time: this.dataset[i].data2[j].time.substr(0, 4),
-            data: this.dataset[i].data2[j].data,
-            citycode: this.dataset[i].data2[j].citycode,
-            cityname: this.dataset[i].data2[j].cityname
+          this.timeDataset[value2.citycode].push({
+            time: value2.time.substr(0, 4),
+            data: value2.data,
+            citycode: value2.citycode,
+            cityname: value2.cityname
           });
-          if (this.dataset[i].data2[j].data > this.maxVal) {
-            this.maxVal = this.dataset[i].data2[j].data
+          if (value2.data > this.maxVal) {
+            this.maxVal = value2.data
           }
-        }
-      }
+        });
+      });
       this.maxVal = this.maxVal * 1.1;
       // -----------------------------------------------------------------------------------------
       this.legendData = this.dataset[this.dataset.length - 1].data2
@@ -135,10 +129,9 @@ export default function (val, parentDiv) {
   // --------------------------------------------------------------------------------------------
   const colorScale = d3.scaleOrdinal(d3.schemeSet1);
   // パスをループで追加
-  for (const key in dc.timeDataset) {
+  for (const key of Object.keys(dc.timeDataset)) {
     svg.append("path")
     .datum(dc.timeDataset[key])
-    // .classed('time-path', true)
     .attr('class', d => 'time-path time-path-' + d[0].citycode)
     .attr('id', d => 'time-path-' + d[0].citycode)
     .attr('fill', 'none')
