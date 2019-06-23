@@ -14,7 +14,7 @@ export default function (leftVal, rightVal) {
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
   const width = palentDiv.node().getBoundingClientRect().width;
   const height = palentDiv.node().getBoundingClientRect().height
-    - d3.select('.chart-div-handle').node().getBoundingClientRect().height;
+    - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 980;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 30 * multi, 'bottom': 100 * multi, 'right': 30 * multi, 'left': 60 * multi };
@@ -38,7 +38,6 @@ export default function (leftVal, rightVal) {
     kaikiData.push([value.data, value.data])
   });
   const soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
-  console.log(soukan)
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('svg').remove();
   const svg = palentDiv.select('.resizers').append('svg')
