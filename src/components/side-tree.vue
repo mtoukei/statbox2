@@ -40,140 +40,112 @@
           </div>
         </div>
 
-        <!--全国都道府県-->
-        <div v-if="statType === 'pref'">
-          <div class="top-div top-div-h">
-            <el-button
-              type="info"
-              size="mini"
-              @click="clearPref"
-              style="margin-bottom: 10px;"
-            >
-              クリア
-            </el-button>
-            <el-input
-              id="search-text-pref"
-              placeholder="キーワード検索"
-              v-model="filterTextPref"
-            />
-          </div>
-          <div
-            id="pref-tree-div"
-            class="tree-div"
-          >
-            <el-tree
-              ref="treePref"
-              node-key="statId"
-              :check-on-click-node="true"
-              :check-strictly="true"
-              @node-expand="nodeClickEstat1"
-              @check="nodeClickEstat1"
-              :data="s_eStatMetaPreh"
-              :filter-node-method="filterNode"
-              highlight-current
-              :indent="10"
-            />
-            <div class="side-sourse">
-              出典:<a
-                href="https://www.stat.go.jp/data/ssds/index.html"
-                target="_blank"
-              >社会・人口統計体系</a>
+        <!--全国都道府県と全国散布図-->
+        <div
+          v-for="el in prefDiv"
+          :key="el.id"
+        >
+          <div v-show="statType ===el.statType">
+            <div class="top-div top-div-h">
+              <el-button
+                type="info"
+                size="mini"
+                @click="clearPref"
+                style="margin-bottom: 10px;"
+              >
+                クリア
+              </el-button>
+              <el-input
+                v-if="statType==='pref'"
+                placeholder="キーワード検索"
+                v-model="filterTextPref"
+              />
+              <el-input
+                v-if="statType==='scatterPref'"
+                placeholder="キーワード検索"
+                v-model="filterTextPrefScatter"
+              />
+            </div>
+            <div class="tree-div">
+              <el-tree
+                :ref="el.ref"
+                node-key="statId"
+                :check-on-click-node="true"
+                :check-strictly="true"
+                @node-expand="nodeClickEstat1"
+                @check="nodeClickEstat1"
+                :data="s_eStatMetaPreh"
+                :filter-node-method="filterNode"
+                highlight-current
+                :indent="10"
+              />
+              <div class="side-sourse">
+                出典:<a
+                  href="https://www.stat.go.jp/data/ssds/index.html"
+                  target="_blank"
+                >社会・人口統計体系</a>
+              </div>
             </div>
           </div>
         </div>
 
-        <!--全国散布図-->
+        <!-- 全国市町村と全国市町村散布図-->
         <div
-          v-if="statType === 'scatterPref'"
-          id="left-side-scatter-japan"
+          v-for="el in cityDiv"
+          :key="el.id"
         >
-          <div class="top-div top-div-h">
-            <el-button
-              type="info"
-              size="mini"
-              @click="clearscatterPref"
-              style="margin-bottom:10px;"
-            >
-              クリア
-            </el-button>
-            <el-input
-              placeholder="キーワード検索"
-              v-model="filterTextPrefScatter"
-            />
-          </div>
-          <div
-            id="scatter-japan-tree-div"
-            class="tree-div"
-          >
-            <el-tree
-              ref="tresscatterPref"
-              node-key="statId"
-              :check-on-click-node="true"
-              :check-strictly="true"
-              @node-expand="nodeClickEstat1"
-              @check="nodeClickEstat1"
-              :data="s_eStatMetaPreh"
-              :filter-node-method="filterNode"
-              highlight-current
-              :indent="10"
-            />
-            <div class="side-sourse">
-              出典:<a
-                href="https://www.stat.go.jp/data/ssds/index.html"
-                target="_blank"
-              >社会・人口統計体系</a>
-            </div>
-          </div>
-        </div>
-        <!--全国時系列-->
-        <div v-if="statType === 'timePref'">
-          <div class="top-div top-div-h">
-            <el-select
-              class="pref-select"
-              v-model="s_prefCode"
-              placeholder="Select"
-            >
-              <el-option
-                v-for="item in s_prefOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+          <div v-show="statType === el.statType">
+            <div class="top-div top-div-h">
+              <el-select
+                class="pref-select"
+                v-model="s_prefCode"
+                placeholder="Select"
+              >
+                <el-option
+                  v-for="item in prefOptions2"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+              <el-button
+                type="info"
+                size="mini"
+                @click="clearCity"
+                style="margin-bottom: 10px;"
+              >
+                クリア
+              </el-button>
+              <el-input
+                v-if="statType==='city'"
+                placeholder="キーワード検索"
+                v-model="filterTextCity"
               />
-            </el-select>
-            <el-button
-              type="info"
-              size="mini"
-              @click="clearTimePref"
-              style="margin: 0 0 10px 10px;"
-            >
-              クリア
-            </el-button>
-            <el-input
-              placeholder="キーワード検索"
-              v-model="filterTextPrefTime"
-            />
-          </div>
-          <div
-            id="time-japan-tree-div"
-            class="tree-div"
-          >
-            <el-tree
-              ref="treeTimePref"
-              node-key="statId"
-              show-checkbox
-              :check-on-click-node="true"
-              :check-strictly="true"
-              :data="s_eStatMetaPreh"
-              @check="nodeClickEstatTime(arguments[0], 'pref')"
-              :filter-node-method="filterNode"
-              highlight-current
-              :indent="10"
-            />
-            <div class="side-sourse">
-              出典:<a
-                href="https://www.stat.go.jp/data/ssds/index.html"
-                target="_blank"
-              >社会・人口統計体系</a>
+              <el-input
+                v-if="statType==='scatterCity'"
+                placeholder="キーワード検索"
+                v-model="filterTextCityScatter"
+              />
+            </div>
+            <div class="tree-div">
+              <el-tree
+                :ref="el.ref"
+                node-key="statId"
+                :check-on-click-node="true"
+                :check-strictly="true"
+                @node-expand="nodeClickEstat4"
+                @check="nodeClickEstat4"
+                :data="s_eStatMetaCity"
+                :filter-node-method="filterNode"
+                highlight-current
+                :indent="10"
+              />
+              <div class="side-sourse">
+                出典:<a
+                  href="https://www.stat.go.jp/data/ssds/index.html"
+                  target="_blank"
+                >社会・人口統計体系</a>
+              </div>
             </div>
           </div>
         </div>
@@ -214,190 +186,84 @@
           </div>
         </div>
 
-        <!--市町村時系列-->
+        <!--全国時系列と市町村時系列-->
         <div
-          v-if="statType === 'timeCity'"
-          id="left-side-time-city"
+          v-for="el in timeDiv"
+          :key="el.id"
         >
-          <div class="top-div top-div-h2">
-            <el-select
-              class="pref-select"
-              v-model="s_prefCode"
-              @change="prefChange"
-              placeholder="Select"
-            >
-              <el-option
-                v-for="item in prefOptions2"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+          <div v-show="statType === el.statType">
+            <div :class="['top-div', statType==='timePref' ? 'top-div-h' : 'top-div-h2']">
+              <el-select
+                class="pref-select"
+                v-model="s_prefCode"
+                @change="prefChange(arguments[0], el.statType)"
+                placeholder="Select"
+              >
+                <el-option
+                  v-for="item in s_prefOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+              <el-select
+                v-if="statType==='timeCity'"
+                class="city-select"
+                v-model="cityCode"
+                placeholder="Select"
+              >
+                <el-option
+                  v-for="item in cityOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+              <el-button
+                type="info"
+                size="mini"
+                @click="clearTimePref"
+                :style="statType==='timeCity' ? {'margin': '5px 0 5px 0'} : {'margin': '5px 0 5px 5px'}"
+              >
+                クリア
+              </el-button>
+              <el-input
+                v-if="statType==='timePref'"
+                placeholder="キーワード検索"
+                v-model="filterTextPrefTime"
               />
-            </el-select>
-            <el-select
-              class="city-select"
-              v-model="cityCode"
-              placeholder="Select"
-            >
-              <el-option
-                v-for="item in cityOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+              <el-input
+                v-if="statType==='timeCity'"
+                placeholder="キーワード検索"
+                v-model="filterTextCityTime"
               />
-            </el-select><br>
-            <el-button
-              type="info"
-              size="mini"
-              @click="clearCityTime"
-              style="margin: 5px 0 5px 0;"
-            >
-              クリア
-            </el-button>
-            <el-input
-              id="search-text-city-time"
-              placeholder="キーワード検索"
-              v-model="filterTextCityTime"
-            />
-          </div>
-          <div class="tree-div">
-            <el-tree
-              ref="treeTimeCity"
-              node-key="statId"
-              show-checkbox
-              :check-on-click-node="true"
-              :check-strictly="true"
-              :data="s_eStatMetaCity"
-              @check="nodeClickEstatTime(arguments[0], 'city')"
-              :filter-node-method="filterNode"
-              highlight-current
-              :indent="10"
-            />
-            <div class="side-sourse">
-              出典:<a
-                href="https://www.stat.go.jp/data/ssds/index.html"
-                target="_blank"
-              >社会・人口統計体系</a>
+            </div>
+            <div class="tree-div">
+              <el-tree
+                :ref="el.ref"
+                node-key="statId"
+                show-checkbox
+                :check-on-click-node="true"
+                :check-strictly="true"
+                :data="statType==='timePref' ? s_eStatMetaPreh : s_eStatMetaCity"
+                @check="nodeClickEstatTime(arguments[0], el.statType)"
+                :filter-node-method="filterNode"
+                highlight-current
+                :indent="10"
+              />
+              <div class="side-sourse">
+                出典:<a
+                  href="https://www.stat.go.jp/data/ssds/index.html"
+                  target="_blank"
+                >社会・人口統計体系</a>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- 全国市町村-->
-        <div
-          v-if="statType === 'city'"
-          id="left-side-city"
-        >
-          <div class="top-div top-div-h">
-            <el-select
-              class="pref-select"
-              v-model="s_prefCode"
-              @change="prefChange"
-              placeholder="Select"
-            >
-              <el-option
-                v-for="item in prefOptions2"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-            <el-button
-              type="info"
-              size="mini"
-              @click="clearCity"
-              style="margin-bottom: 10px;"
-            >
-              クリア
-            </el-button>
-            <el-input
-              id="search-text-city"
-              placeholder="キーワード検索"
-              v-model="filterTextCity"
-            />
-          </div>
-          <div class="tree-div">
-            <el-tree
-              ref="treeCity"
-              node-key="statId"
-              :check-on-click-node="true"
-              :check-strictly="true"
-              @node-expand="nodeClickEstat4"
-              @check="nodeClickEstat4"
-              :data="s_eStatMetaCity"
-              :filter-node-method="filterNode"
-              highlight-current
-              :indent="10"
-            />
-            <div class="side-sourse">
-              出典:<a
-                href="https://www.stat.go.jp/data/ssds/index.html"
-                target="_blank"
-              >社会・人口統計体系</a>
-            </div>
-          </div>
-        </div>
-
-        <!--市町村散布図-->
-        <div
-          v-if="statType === 'scatterCity'"
-          id="left-side-scatter-city"
-        >
-          <div class="top-div top-div-h">
-            <el-select
-              class="pref-select"
-              v-show="side === 'leftSide'"
-              v-model="s_prefCode"
-              @change="prefChange"
-              placeholder="Select"
-            >
-              <el-option
-                v-for="item in prefOptions2"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-            <el-button
-              type="info"
-              size="mini"
-              @click="clearscatterCity"
-              style="margin: 0 0 10px 0;"
-            >
-              クリア
-            </el-button>
-            <el-input
-              id="search-text-city-scatter"
-              placeholder="キーワード検索"
-              v-model="filterTextCityScatter"
-            />
-          </div>
-          <div
-            id="scatter-city-tree-div"
-            class="tree-div"
-          >
-            <el-tree
-              ref="tresscatterCity"
-              node-key="statId"
-              :check-on-click-node="true"
-              :check-strictly="true"
-              @node-expand="nodeClickEstat4"
-              @check="nodeClickEstat4"
-              :data="s_eStatMetaCity"
-              :filter-node-method="filterNode"
-              highlight-current
-              :indent="10"
-            />
-            <div class="side-sourse">
-              出典:<a
-                href="https://www.stat.go.jp/data/ssds/index.html"
-                target="_blank"
-              >社会・人口統計体系</a>
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- ツリーここまで-->
+      </div>
+      <resize-observer @notify="mix_detectResize" />
     </div>
-    <resize-observer @notify="mix_detectResize" />
   </div>
 </template>
 <script>
@@ -412,6 +278,18 @@
     mixins: [mixinDetectResize],
     data() {
       return {
+        prefDiv: [
+          {id: '00', statType: 'pref', ref: 'treePref'},
+          {id: '01', statType: 'scatterPref', ref: 'tresscatterPref'}
+          ],
+        cityDiv: [
+          {id: '11', statType: 'city', ref: 'treeCity'},
+          {id: '12', statType: 'scatterCity', ref: 'tresscatterCity'}
+        ],
+        timeDiv: [
+          {id: '21', statType: 'timePref', ref: 'treeTimePref'},
+          {id: '22', statType: 'timeCity', ref: 'treeTimeCity'}
+        ],
         divId: 'left-side-div',
         divClass: 'resizer right',
         metaInfo: null,
@@ -434,21 +312,18 @@
           return 'left-side-div'
         }
           return 'right-side-div'
-
       },
       c_divClass () {
         if (this.side === 'leftSide') {
           return 'resizer right'
         }
           return 'resizer left'
-
       },
       c_iClass () {
         if (this.side === 'leftSide') {
           return 'el-icon-arrow-right'
         }
           return 'el-icon-arrow-left'
-
       },
       s_prefCode: {
         get () { return this.$store.state.base.prefCode },
@@ -494,35 +369,20 @@
       prefChange2 () {
         this.$store.commit('statList/eStatReload', {side: 'left'});
       },
-      prefChange (prefCode) {
-        const citys = Citycodes.filter(value => value.id.substr(0, 2) === prefCode.substr(0, 2));
-        const citys2 = [];
-        citys.forEach(value => {
-          citys2.push({
-            value: value.id,
-            label: value.name
-          })
-        });
-        d3.select('#left-chart-div').selectAll('.chart-svg').remove();
-        this.cityOptions = citys2;
-        // axios({
-        //   method: 'get',
-        //   url: 'http://www.land.mlit.go.jp/webland/api/CitySearch',
-        //   params: {
-        //     area: prefCode.substr(0, 2)
-        //   }
-        // })
-        // .then(response => {
-        //   const citys = response.data.data;
-        //   const citys2 = []
-        //   for (let i in citys) {
-        //     citys2.push({
-        //       value: citys[i].id,
-        //       label: citys[i].name
-        //     })
-        //   }
-        //   this.cityOptions = citys2
-        // });
+      prefChange (prefCode, statType) {
+        console.log(statType)
+        if (statType !== 'timePref') {
+          const citys = Citycodes.filter(value => value.id.substr(0, 2) === prefCode.substr(0, 2));
+          const citys2 = [];
+          citys.forEach(value => {
+            citys2.push({
+              value: value.id,
+              label: value.name
+            })
+          });
+          d3.select('#left-chart-div').selectAll('.chart-svg').remove();
+          this.cityOptions = citys2;
+        }
       },
       clearMiyazaki () {
         this.$store.commit('statList/clearStat', this.side);
@@ -542,23 +402,15 @@
       clearPref () {
         this.$store.commit('statList/eStatMetaPrehReset');
         this.filterTextPref = '';
-        if (this.side === 'leftSide') {
-          d3.select('#left-chart-div').selectAll('.chart-svg').remove()
-        } else {
-          d3.select('#right-chart-div').selectAll('.chart-svg').remove()
-        }
-      },
-      clearscatterPref () {
-        this.$store.commit('statList/eStatMetaPrehReset');
         this.filterTextPrefScatter = '';
-        this.$refs.tresscatterPref.setCheckedKeys([]);
-        d3.select('#left-chart-div').selectAll('.svg').remove()
+        d3.select('#left-chart-div').selectAll('.chart-svg').remove()
       },
       clearTimePref () {
         this.$store.commit('statList/eStatMetaPrehReset');
+        this.$store.commit('statList/eStatMetaCityReset');
         this.filterTextPrefTime = '';
-        this.$refs.treeTimePref.setCheckedKeys([]);
-        this.$store.commit('statList/selectStatTimePref', {statName: '', statIds: '', endStat: '', side: this.side })
+        this.filterTextCityTime = '';
+        d3.select('#left-chart-div').selectAll('.chart-svg').remove()
       },
       clearCity () {
         this.$store.commit('statList/eStatMetaCityReset');
@@ -574,12 +426,6 @@
         this.filterTextCityScatter = '';
         d3.select('#left-scatterCity').selectAll('.chart-svg').remove();
         this.$store.commit('statList/statEstatCityCrear')
-      },
-      clearCityTime () {
-        this.$store.commit('statList/eStatMetaCityReset');
-        this.filterTextCityTime = '';
-        this.$refs.treeTimeCity.setCheckedKeys([]);
-        this.$store.commit('statList/selectStatTimeCity', {statName: '', statIds: '', endStat: '', side: this.side })
       },
       //-----------------------------------------------------------------------------------------
       nodeClickMiyazaki (e) {
@@ -620,10 +466,10 @@
       },
       //-----------------------------------------------------------------------------------------
       // 都道府県。市町村時系列
-      nodeClickEstatTime (e, prefOrCity) {
+      nodeClickEstatTime (e, scatType) {
         if (!e.children) {
-          const refs = prefOrCity === 'pref' ? this.$refs.treeTimePref : this.$refs.treeTimeCity;
-          const keys = refs.getCheckedKeys();
+          const refs = scatType === 'timePref' ? this.$refs.treeTimePref : this.$refs.treeTimeCity;
+          const keys = refs[0].getCheckedKeys(); //何故か配列になる。原因不明。
           const statIds = [];
           const units = [];
           keys.forEach(value => {
@@ -637,11 +483,11 @@
           if (units.filter((x, i, self) => self.indexOf(x) === i).length > 2) {
             this.$message('単位が３つ以上あるので描画できません。選択しなおしてください。');
             const newKeys = keys.filter(val => val !== e.statId);
-            this.$refs.treeTimePref.setCheckedKeys(newKeys);
+            refs[0].setCheckedKeys(newKeys);
             return;
           }
           this.$store.commit('statList/transitionSet', true);
-          if (prefOrCity === 'pref') {
+          if (scatType === 'timePref') {
             this.$store.commit('statList/selectStatTimePref', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.s_prefCode })
           } else {
             this.$store.commit('statList/selectStatTimeCity', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.cityCode })
@@ -660,12 +506,12 @@
     watch: {
       filterTextMiyazaki(val) { this.$refs.treeMiyazaki.filter(val) },
       filterTextMiyazakiTime(val) { this.$refs.treeTime.filter(val) },
-      filterTextPref(val) { this.$refs.treePref.filter(val) },
-      filterTextPrefScatter(val) { this.$refs.tresscatterPref.filter(val) },
-      filterTextPrefTime(val) { this.$refs.treeTimePref.filter(val) },
-      filterTextCity(val) { this.$refs.treeCity.filter(val) },
-      filterTextCityScatter(val) { this.$refs.tresscatterCity.filter(val) },
-      filterTextCityTime(val) { this.$refs.treeTimeCity.filter(val) },
+      filterTextPref(val) { this.$refs.treePref[0].filter(val) }, // 何故配列になる？
+      filterTextPrefScatter(val) { this.$refs.tresscatterPref[0].filter(val) },
+      filterTextPrefTime(val) { this.$refs.treeTimePref[0].filter(val) },
+      filterTextCity(val) { this.$refs.treeCity[0].filter(val) },
+      filterTextCityScatter(val) { this.$refs.tresscatterCity[0].filter(val) },
+      filterTextCityTime(val) { this.$refs.treeTimeCity[0].filter(val) },
     },
     mounted () {
       this.$nextTick(function () {
