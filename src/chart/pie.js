@@ -44,14 +44,14 @@ export default function (val, parentDiv) {
         return 0;
       });
       // this.dataset.forEach((value, index) => value['leftTop'] = index + 1); // 全部表示するときはこれだけ
-      // 4分の1をその他にする↓
+      // 5分の1をその他にする↓
       const sum = Common.sum(this.dataset, "data");
       let kei = 0, hoka = 0;
       this.dataset.forEach((value, index) => {
         kei += value.data;
         value['leftTop'] = index + 1;
         value.cityname = index + 1 + ' ' + value.cityname;
-        if (kei > sum * 3 / 4) {
+        if (kei > sum * 4 / 5) {
           hoka += value.data;
           value.data = 0
         }
