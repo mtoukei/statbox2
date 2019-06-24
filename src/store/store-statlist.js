@@ -95,7 +95,7 @@ const statList = {
     },
     // 左右サイドメニューのメタ情報用------------------------------------------------------------
     eStatMetaCity: JSON.parse(JSON.stringify(metaCity)),
-    eStatMetaPreh: JSON.parse(JSON.stringify(metaPref)),
+    eStatMetaPref: JSON.parse(JSON.stringify(metaPref)),
     metaMiyazakiTime: MetaMiyazakiTime,
     metaMiyazaki: metaMiyazaki
   },
@@ -103,10 +103,10 @@ const statList = {
     //-------------------------------------------------------------------------------------------
     // サイドメニューをクリアする
     clearStat (state, payload) {
-      const taihi = state.metaMiyazaki;
+      const bk = state.metaMiyazaki;
       state.metaMiyazaki = null;
       setTimeout(() => {
-        state.metaMiyazaki = taihi
+        state.metaMiyazaki = bk
       }, 0);
       if(payload === 'leftSide') {
         state.leftStat.stat = '';
@@ -117,24 +117,24 @@ const statList = {
       }
     },
     metaMiyazakiTimeReset (state) {
-      const aaa = state.metaMiyazakiTime;
+      const bk = state.metaMiyazakiTime;
       state.metaMiyazakiTime = null;
       setTimeout(() => {
-        state.metaMiyazakiTime = aaa
+        state.metaMiyazakiTime = bk
       }, 0);
     },
-    eStatMetaPrehReset (state) {
-      const aaa = state.eStatMetaPreh;
-      state.eStatMetaPreh = null;
+    eStatMetaPrefReset (state) {
+      const bk = state.eStatMetaPref;
+      state.eStatMetaPref = null;
       setTimeout(() => {
-        state.eStatMetaPreh = aaa
+        state.eStatMetaPref = bk
       }, 0);
     },
     eStatMetaCityReset (state) {
-      const aaa = state.eStatMetaCity;
+      const bk = state.eStatMetaCity;
       state.eStatMetaCity = null;
       setTimeout(() => {
-        state.eStatMetaCity = aaa
+        state.eStatMetaCity = bk
       }, 0);
     },
     statEstatCityCrear (state) {
@@ -525,7 +525,7 @@ const statList = {
     //   })
     // },
     // //-------------------------------------------------------------------------------------------
-    // eStatMetaPrehSet (state,payload) {
+    // eStatMetaPrefSet (state,payload) {
     //   const childrenArr = [];
     //   for (let i in payload.cat01s) {
     //     const tgt = payload.cat01s[i];

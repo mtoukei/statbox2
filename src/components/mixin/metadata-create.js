@@ -7,8 +7,8 @@ import metaSourceIDCity from '../../store/meta/meta-source-id-city'
 export default {
   name: 'metaDataCreate',
   beforeCreate () {
-    // const targets = [this.$store.state.statList.eStatMetaPreh, this.$store.state.statList.eStatMetaCity]
-    // const targets = [this.$store.state.statList.eStatMetaPreh];
+    // const targets = [this.$store.state.statList.eStatMetaPref, this.$store.state.statList.eStatMetaCity]
+    // const targets = [this.$store.state.statList.eStatMetaPref];
     const targets = [this.$store.state.statList.eStatMetaCity];
     const vm = this;
     for (const h in targets) {
@@ -44,10 +44,10 @@ export default {
           if (result[i].cat01s.length) {
             for (const j in result[i].cat01s) {
               const tgt = result[i].cat01s[j];
-              // const aaa = metaSourceIDPref.find(val => val.項目符号 === tgt['@code']);
-              const aaa = metaSourceIDCity.find(val => val.項目符号 === tgt['@code']);
-              if (aaa) {
-                sourceId = aaa.sourceId
+              // const sourceIdResult = metaSourceIDPref.find(val => val.項目符号 === tgt['@code']);
+              const sourceIdResult = metaSourceIDCity.find(val => val.項目符号 === tgt['@code']);
+              if (sourceIdResult) {
+                sourceId = sourceIdResult.sourceId
               }
               // console.log(sourceId)
               childrenArr.push({

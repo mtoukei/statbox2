@@ -68,7 +68,7 @@
                 :check-strictly="true"
                 @node-expand="nodeClickEstat1"
                 @check="nodeClickEstat1"
-                :data="s_eStatMetaPreh"
+                :data="s_eStatMetaPref"
                 :filter-node-method="filterNode"
                 highlight-current
                 :indent="10"
@@ -227,7 +227,7 @@
                 show-checkbox
                 :check-on-click-node="true"
                 :check-strictly="true"
-                :data="statType==='timePref' ? s_eStatMetaPreh : s_eStatMetaCity"
+                :data="statType==='timePref' ? s_eStatMetaPref : s_eStatMetaCity"
                 @check="nodeClickEstatTime(arguments[0], el.statType)"
                 :filter-node-method="filterNode"
                 highlight-current
@@ -363,7 +363,7 @@
       s_metaMiyazaki () { return this.$store.state.statList.metaMiyazaki },
       s_metaMiyazakiTime () { return this.$store.state.statList.metaMiyazakiTime },
       s_eStatMetaCity () { return this.$store.state.statList.eStatMetaCity },
-      s_eStatMetaPreh () { return this.$store.state.statList.eStatMetaPreh }
+      s_eStatMetaPref () { return this.$store.state.statList.eStatMetaPref }
     },
     methods: {
       filterNode(value, data) {
@@ -423,13 +423,13 @@
         this.$store.commit('statList/selectStatTime', {statNames: '', endStat: '', side: this.side })
       },
       clearPref () {
-        this.$store.commit('statList/eStatMetaPrehReset');
+        this.$store.commit('statList/eStatMetaPrefReset');
         this.filterTextPref = '';
         this.filterTextPrefScatter = '';
         d3.select('#left-chart-div').selectAll('.chart-svg').remove()
       },
       clearTimePref () {
-        this.$store.commit('statList/eStatMetaPrehReset');
+        this.$store.commit('statList/eStatMetaPrefReset');
         this.$store.commit('statList/eStatMetaCityReset');
         this.filterTextPrefTime = '';
         this.filterTextCityTime = '';
