@@ -12,28 +12,9 @@
         <span class="year-range-text" />
         <div class="year-range-div">
           <input
-            v-if="s_activeIndex==='pref'"
             type="range"
             class="year-range"
-            v-model="s_yearRangePref"
-          >
-          <input
-            v-if="s_activeIndex==='city'"
-            type="range"
-            class="year-range"
-            v-model="s_yearRangeCity"
-          >
-          <input
-            v-if="s_activeIndex==='scatterPref'"
-            type="range"
-            class="year-range"
-            v-model="s_yearRangeScatterPref"
-          >
-          <input
-            v-if="s_activeIndex==='scatterCity'"
-            type="range"
-            class="year-range"
-            v-model="s_yearRangeScatterCity"
+            v-model="s_yearRange"
           >
           <div class="year-range-ticks" />
         </div>
@@ -95,27 +76,51 @@
       }
     },
     computed: {
+      s_yearRange: {
+        get () {
+          const statType = this.s_activeIndex;
+          let range;
+          switch (statType) {
+            case 'pref':
+              range = this.$store.state.statList.yearRangePref;
+              break;
+            case 'scatterPref':
+              range = this.$store.state.statList.yearRangeScatterPref;
+              break;
+            case 'city':
+              range = this.$store.state.statList.yearRangeCity;
+              break;
+            case 'scatterCity':
+              range = this.$store.state.statList.yearRangeScatterCity;
+              break;
+          }
+          return range
+        },
+        set (value) {
+          const statType = this.s_activeIndex;
+          let commit;
+          switch (statType) {
+            case 'pref':
+              commit = 'statList/yearRangePrefChange';
+              break;
+            case 'city':
+              commit = 'statList/yearRangeCityChange';
+              break;
+            case 'scatterPref':
+              commit = 'statList/yearRangeScatterPrefChange'
+              break;
+            case 'scatterCity':
+              commit = 'statList/yearRangeScatterCityChange'
+              break;
+          }
+          this.$store.commit(commit, value)
+        }
+      },
       s_menuChange () { return this.$store.state.base.menuChange },
       s_activeIndex () { return this.$store.state.base.activeIndex },
       s_leftDivList: {
         get () { return this.$store.state.base.leftDivList },
         set (value) { this.$store.commit('base/leftDivListChange', value) }
-      },
-      s_yearRangeCity: {
-        get () { return this.$store.state.statList.yearRangeCity },
-        set (value) { this.$store.commit('statList/yearRangeCityChange', value) }
-      },
-      s_yearRangePref: {
-        get () { return this.$store.state.statList.yearRangePref },
-        set (value) { this.$store.commit('statList/yearRangePrefChange', value) }
-      },
-      s_yearRangeScatterCity: {
-        get () { return this.$store.state.statList.yearRangeScatterCity },
-        set (value) { this.$store.commit('statList/yearRangeScatterCityChange', value) }
-      },
-      s_yearRangeScatterPref: {
-        get () { return this.$store.state.statList.yearRangeScatterPref },
-        set (value) { this.$store.commit('statList/yearRangeScatterPrefChange', value) }
       },
       s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
     },

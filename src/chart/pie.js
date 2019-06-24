@@ -30,7 +30,6 @@ export default function (val, parentDiv) {
   const radius = Math.min(width, height) / 2 - 10;
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg = storeBase.state.statList.transition;
-  // const transitionFlg = false
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
