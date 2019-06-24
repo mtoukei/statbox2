@@ -43,7 +43,27 @@ export default function (val, parentDiv) {
         if (a.data < b.data) return 1;
         return 0;
       });
-      this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
+      this.dataset.forEach((value, index) => value['leftTop'] = index + 1);
+      // const sum = Common.sum(this.dataset, "data");
+      // console.log(sum);
+      // console.log(sum * 3 / 4);
+      // let kei = 0;
+      // // const length = this.dataset.length;
+      // let hoka = 0;
+      // this.dataset.forEach((value, index) => {
+      //   kei += value.data;
+      //   value['leftTop'] = index + 1;
+      //   if (kei > sum * 3 / 4) {
+      //     // value.data = 0
+      //     hoka += value.data
+      //     this.dataset.splice(index, 10);
+      //   }
+      // });
+      // console.log(hoka);
+      // this.dataset.push({
+      //   data: sum/4
+      // });
+      // console.log(kei)
     }
   }
   //---------------------------------------------------------------------------------------------
