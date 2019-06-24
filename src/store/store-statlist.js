@@ -184,15 +184,12 @@ const statList = {
       const column = statDataObj[target].column;
       const title = statDataObj[target].statName;
       const unit = statDataObj[target].unit;
-      const data0 = statDataObj.data;
-      const data = [];
-      data0.forEach(value => {
-        const obj = {
+      const data = statDataObj.data.map(value => {
+        return {
           citycode: value.citycode,
           cityname: value.cityname,
           data: value[column]
-        };
-        data.push(obj)
+        }
       });
       const stat = payload.side === 'leftSide' ? state.leftStat : state.rightStat;
       stat.transition = true;
@@ -310,29 +307,28 @@ const statList = {
     selectStatTime (state, payload) {
       const data = statDataTime;
       const statNames = payload.statNames;
-      const statData = [];
-      statNames.forEach(value => {
+      const statData = statNames.map(value => {
         const statName = value.split('/')[0];
         const target = value.split('/')[1];
         const statDataObj = data[statName];
         const column = statDataObj[target].column;
         const title = statDataObj[target].statName;
         const unit = statDataObj[target].unit;
-        const data0 = statDataObj.data;
-        const data1 = data0.map(value => {
+        const data1 = statDataObj.data.map(value2 => {
           return {
-            nen: value.nen,
-            year: value.year,
-            data: value[column]
+            nen: value2.nen,
+            year: value2.year,
+            data: value2[column]
           }
         });
-        statData.push({
+        return {
             stat: value,
             title: title,
             unit: unit,
             data: data1
-        })
+        }
       });
+
       const stat = payload.side === 'leftSide' ? state.leftStatTime : state.rightStatTime;
       stat.transition = true;
       stat.count = stat.count + 1;

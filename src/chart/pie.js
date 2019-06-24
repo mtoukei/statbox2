@@ -43,7 +43,27 @@ export default function (val, parentDiv) {
         if (a.data < b.data) return 1;
         return 0;
       });
-      this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
+      // this.dataset.forEach((value, index) => value['leftTop'] = index + 1); // 全部表示するときはこれだけ
+      // 4分の1をその他にする↓
+      const sum = Common.sum(this.dataset, "data");
+      let kei = 0, hoka = 0;
+      this.dataset.forEach((value, index) => {
+        kei += value.data;
+        value['leftTop'] = index + 1;
+        value.cityname = index + 1 + ' ' + value.cityname;
+        if (kei > sum * 3 / 4) {
+          hoka += value.data;
+          value.data = 0
+        }
+      });
+      const zeloIndex = this.dataset.findIndex(value => value.data === 0);
+      // this.dataset = this.dataset.filter(value => value.cityname !== 'sakuzyo');
+      // this.dataset = this.dataset.filter(value => value.data !== 0);
+      this.dataset.splice(zeloIndex, 0, {
+        citycode: '99999',
+        cityname: 'その他',
+        data: hoka
+      });
     }
   }
   //---------------------------------------------------------------------------------------------
@@ -85,7 +105,8 @@ export default function (val, parentDiv) {
   })
   .attr('stroke', 'whitesmoke');
   if (transitionFlg) {
-    path.transition()
+    path
+    .transition()
     .duration(70)
     .delay((d, i) => 60 * i)
     .attrTween('d', d => {
@@ -133,17 +154,21 @@ export default function (val, parentDiv) {
   })
   .attr('text-anchor', 'middle');
   if (transitionFlg) {
-    textP.transition()
+    textP
+    .transition()
     .duration(80)
     .delay((d, i) => 70 * i)
     .text(d => {
-      const angle = d.endAngle - d.startAngle;
-      if (angle > 0.1) return d.data.cityname
+      // const angle = d.endAngle - d.startAngle;
+      // if (angle > 0.1) return d.data.cityname
+      if (d.data.data !== 0) return d.data.cityname
     });
   } else {
-    textP.text(d => {
-      const angle = d.endAngle - d.startAngle;
-      if (angle > 0.1) return d.data.cityname
+    textP
+    .text(d => {
+      // const angle = d.endAngle - d.startAngle;
+      // if (angle > 0.1) return d.data.cityname
+      if (d.data.data !== 0) return d.data.cityname
     });
   }
   // 表名-------------------------------------------------------------------------------------
@@ -178,8 +203,9 @@ export default function (val, parentDiv) {
     .duration(500)
     .attr('transform', d => 'translate(' + text.centroid(d) + ')')
     .text(d => {
-      const angle = d.endAngle - d.startAngle;
-      if (angle > 0.1) return d.data.cityname
+      // const angle = d.endAngle - d.startAngle;
+      // if (angle > 0.1) return d.data.cityname
+        if (d.data.data !== 0) return d.data.cityname
     })
     .attr('fill', d => {
       let rgb;
@@ -196,7 +222,17 @@ export default function (val, parentDiv) {
         return "black";
       }
         return "white";
-    });
+    })
+    .attr('font-size', d => {
+      let fontSize = 10 * multi + 'px';
+      const angle = d.endAngle - d.startAngle;
+      if (angle > 0.4) {
+        fontSize = 14 * multi + 'px'
+      } else if (angle > 0.3) {
+        fontSize = 12 * multi + 'px'
+      }
+      return fontSize
+    })
   };
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
