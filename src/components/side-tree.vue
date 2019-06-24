@@ -56,14 +56,8 @@
                 クリア
               </el-button>
               <el-input
-                v-if="statType==='pref'"
                 placeholder="キーワード検索"
-                v-model="filterTextPref"
-              />
-              <el-input
-                v-if="statType==='scatterPref'"
-                placeholder="キーワード検索"
-                v-model="filterTextPrefScatter"
+                v-model="c_filterText"
               />
             </div>
             <div class="tree-div">
@@ -117,14 +111,8 @@
                 クリア
               </el-button>
               <el-input
-                v-if="statType==='city'"
                 placeholder="キーワード検索"
-                v-model="filterTextCity"
-              />
-              <el-input
-                v-if="statType==='scatterCity'"
-                placeholder="キーワード検索"
-                v-model="filterTextCityScatter"
+                v-model="c_filterText"
               />
             </div>
             <div class="tree-div">
@@ -228,14 +216,8 @@
                 クリア
               </el-button>
               <el-input
-                v-if="statType==='timePref'"
                 placeholder="キーワード検索"
-                v-model="filterTextPrefTime"
-              />
-              <el-input
-                v-if="statType==='timeCity'"
-                placeholder="キーワード検索"
-                v-model="filterTextCityTime"
+                v-model="c_filterText"
               />
             </div>
             <div class="tree-div">
@@ -307,6 +289,48 @@
       };
     },
     computed: {
+      c_filterText: {
+        get () {
+          switch (this.statType) {
+            case 'pref':
+              return this.filterTextPref;
+            case 'scatterPref':
+              return this.filterTextPrefScatter;
+            case 'city':
+              return this.filterTextCity;
+            case 'scatterCity':
+              return this.filterTextCityScatter;
+            case 'timePref':
+              return this.filterTextPrefTime;
+            case 'timeCity':
+              return this.filterTextCityTime;
+            default:
+              return 'error'
+          }
+        },
+        set (value) {
+          switch (this.statType) {
+            case 'pref':
+              this.filterTextPref = value;
+              break;
+            case 'scatterPref':
+              this.filterTextPrefScatter = value;
+              break;
+            case 'city':
+              this.filterTextCity = value;
+              break;
+            case 'scatterCity':
+              this.filterTextCityScatter = value;
+              break;
+            case 'timePref':
+              this.filterTextPrefTime = value;
+              break;
+            case 'timeCity':
+              this.filterTextCityTime = value;
+              break;
+          }
+        }
+      },
       c_divId () {
         if (this.side === 'leftSide') {
           return 'left-side-div'
@@ -370,7 +394,6 @@
         this.$store.commit('statList/eStatReload', {side: 'left'});
       },
       prefChange (prefCode, statType) {
-        console.log(statType)
         if (statType !== 'timePref') {
           const citys = Citycodes.filter(value => value.id.substr(0, 2) === prefCode.substr(0, 2));
           const citys2 = [];
