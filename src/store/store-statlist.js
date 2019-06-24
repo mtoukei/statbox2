@@ -103,10 +103,10 @@ const statList = {
     //-------------------------------------------------------------------------------------------
     // サイドメニューをクリアする
     clearStat (state, payload) {
-      const taihi = state.metaMiyazaki;
+      const bk = state.metaMiyazaki;
       state.metaMiyazaki = null;
       setTimeout(() => {
-        state.metaMiyazaki = taihi
+        state.metaMiyazaki = bk
       }, 0);
       if(payload === 'leftSide') {
         state.leftStat.stat = '';
@@ -117,24 +117,24 @@ const statList = {
       }
     },
     metaMiyazakiTimeReset (state) {
-      const aaa = state.metaMiyazakiTime;
+      const bk = state.metaMiyazakiTime;
       state.metaMiyazakiTime = null;
       setTimeout(() => {
-        state.metaMiyazakiTime = aaa
+        state.metaMiyazakiTime = bk
       }, 0);
     },
     eStatMetaPrefReset (state) {
-      const aaa = state.eStatMetaPref;
+      const bk = state.eStatMetaPref;
       state.eStatMetaPref = null;
       setTimeout(() => {
-        state.eStatMetaPref = aaa
+        state.eStatMetaPref = bk
       }, 0);
     },
     eStatMetaCityReset (state) {
-      const aaa = state.eStatMetaCity;
+      const bk = state.eStatMetaCity;
       state.eStatMetaCity = null;
       setTimeout(() => {
-        state.eStatMetaCity = aaa
+        state.eStatMetaCity = bk
       }, 0);
     },
     statEstatCityCrear (state) {
