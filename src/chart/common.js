@@ -20,3 +20,11 @@ export const eventAddRemove = (() => {
     }
   };
 })();
+
+export const sum = (arr, target) => {
+  let sum = 0;
+  arr.forEach(value => {
+    sum += value[target];
+  });
+  return sum;
+};
