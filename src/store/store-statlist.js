@@ -95,7 +95,7 @@ const statList = {
     },
     // 左右サイドメニューのメタ情報用------------------------------------------------------------
     eStatMetaCity: JSON.parse(JSON.stringify(metaCity)),
-    eStatMetaPreh: JSON.parse(JSON.stringify(metaPref)),
+    eStatMetaPref: JSON.parse(JSON.stringify(metaPref)),
     metaMiyazakiTime: MetaMiyazakiTime,
     metaMiyazaki: metaMiyazaki
   },
@@ -123,11 +123,11 @@ const statList = {
         state.metaMiyazakiTime = aaa
       }, 0);
     },
-    eStatMetaPrehReset (state) {
-      const aaa = state.eStatMetaPreh;
-      state.eStatMetaPreh = null;
+    eStatMetaPrefReset (state) {
+      const aaa = state.eStatMetaPref;
+      state.eStatMetaPref = null;
       setTimeout(() => {
-        state.eStatMetaPreh = aaa
+        state.eStatMetaPref = aaa
       }, 0);
     },
     eStatMetaCityReset (state) {
@@ -525,7 +525,7 @@ const statList = {
     //   })
     // },
     // //-------------------------------------------------------------------------------------------
-    // eStatMetaPrehSet (state,payload) {
+    // eStatMetaPrefSet (state,payload) {
     //   const childrenArr = [];
     //   for (let i in payload.cat01s) {
     //     const tgt = payload.cat01s[i];

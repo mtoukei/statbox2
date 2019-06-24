@@ -7,8 +7,8 @@ import metaSourceIDCity from '../../store/meta/meta-source-id-city'
 export default {
   name: 'metaDataCreate',
   beforeCreate () {
-    // const targets = [this.$store.state.statList.eStatMetaPreh, this.$store.state.statList.eStatMetaCity]
-    // const targets = [this.$store.state.statList.eStatMetaPreh];
+    // const targets = [this.$store.state.statList.eStatMetaPref, this.$store.state.statList.eStatMetaCity]
+    // const targets = [this.$store.state.statList.eStatMetaPref];
     const targets = [this.$store.state.statList.eStatMetaCity];
     const vm = this;
     for (const h in targets) {
