@@ -135,7 +135,7 @@ export default function (val, parentDiv) {
   svg.call(tip);
   bubbles
   .on('mouseover', function (d) {
-    return tip.show(d.data.top + '位　' + d.data.name + '<br>' + d.data.val + unit, this)
+    return tip.show(`${d.data.top}位 ${d.data.name}<br>${d.data.val}${unit}`, this)
   })
   .on('mouseout', tip.hide);
   // 表名---------------------------------------------------------------------------------------

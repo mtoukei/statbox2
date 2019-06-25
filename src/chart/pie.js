@@ -50,6 +50,7 @@ export default function (val, parentDiv) {
       this.dataset.forEach((value, index) => {
         kei += value.data;
         value['leftTop'] = index + 1;
+        value['percent'] = value.data / sum * 100;
         value.cityname = index + 1 + ' ' + value.cityname;
         if (kei > sum * 4 / 5) {
           hoka += value.data;
@@ -176,7 +177,7 @@ export default function (val, parentDiv) {
   svg.call(tip);
   textP
   .on('mouseover', function (d) {
-    return tip.show(d.data.leftTop + '位　' + d.data.cityname + '<br>' + d.data.data + unit, this)
+    if (d.data.leftTop) return tip.show(`${d.data.cityname}<br>${d.data.data}${unit}<br>${Math.floor(d.data.percent * 10) / 10}%`, this)
   })
   .on('mouseout', tip.hide);
   // 表名-------------------------------------------------------------------------------------

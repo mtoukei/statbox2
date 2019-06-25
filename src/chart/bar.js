@@ -181,7 +181,7 @@ export default function (val, parentDiv) {
   svg.call(tip);
   rect
   .on('mouseover', function (d) {
-    return tip.show(d.leftTop + '位　' + d.cityname + '<br>' + d.data.toLocaleString() + unit, this)
+    return tip.show(`${d.leftTop}位 ${d.cityname}<br>${d.data.toLocaleString()}${unit}`, this)
   })
   .on('mouseout', tip.hide);
   // 中央値------------------------------------------------------------------------------------
@@ -228,7 +228,6 @@ export default function (val, parentDiv) {
       }
         d3.select(this).attr('fill', 'coral');
         return yScale(0)
-
     });
     // 中央値-----------------------------------------------------------------------------------
     medianPolyline

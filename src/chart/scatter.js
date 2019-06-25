@@ -210,7 +210,7 @@ export default function (leftVal, rightVal) {
   svg.call(tip);
   circle
   .on('mouseover', function (d) {
-    return tip.show(d.cityname + '<br>' + d.leftData.toLocaleString() + leftUnit + '<br>' + d.rightData.toLocaleString() + rightUnit, this)
+    return tip.show(`${d.cityname}<br>${d.leftData.toLocaleString()}${leftUnit}<br>${d.rightData.toLocaleString()}${rightUnit}`, this)
   })
   .on('mouseout', tip.hide);
   // テキスト表示--------------------------------------------------------------------------------

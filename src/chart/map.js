@@ -111,13 +111,14 @@ export default function (val, parentDiv) {
   .attr('stroke', 'gray')
   .attr('stroke-width', '0.3px')
   .attr('fill', 'rgba(255,255,255,0.1)');
+  // ツールチップ--------------------------------------------------------------------------------
   p
   .on('mouseover', function(d) {
     const result = dataset.find(el => Number(el.citycode) === Number(d.properties.citycode));
     if (result) {
       tooltip
       .style('visibility', 'visible')
-      .html(result.cityname + '<br>' + result.data + unit);
+      .html(`${result.cityname}<br>${result.data}${unit}`);
       d3.select(this).attr('stroke', 'black');
     }
   })
@@ -131,17 +132,6 @@ export default function (val, parentDiv) {
     d3.select(this)
     .attr('stroke', 'gray');
   });
-  // ツールチップ--------------------------------------------------------------------------------
-  // const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
-  // svg.call(tip);
-  // p
-  // .on('mouseover', function (d) {
-  //   const result = dataset.find(el => Number(el.citycode) === Number(d.properties.citycode));
-  //   if (result) {
-  //     return tip.show(result.cityname + '<br>' + result.data + unit,this)
-  //   }
-  // })
-  // .on('mouseout', tip.hide);
   //--------------------------------------------------------------------------------------------
   if (transitionFlg) {
     p
