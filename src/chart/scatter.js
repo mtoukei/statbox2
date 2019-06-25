@@ -1,13 +1,12 @@
 import storeBase from '../store/store-base'
 import * as ss from 'simple-statistics'
 export default function (leftVal, rightVal) {
-  if (!leftVal.stat) return;
+  if (!leftVal.stat || !rightVal.stat) return;
   const leftDataset = JSON.parse(JSON.stringify(leftVal.statData.data));
   const leftStatName = leftVal.statData.title;
   const leftUnit = leftVal.statData.unit;
   const palentDiv = d3.select('#left-scatter');
   palentDiv.select('.chart-contents-div').remove();
-  if (!rightVal.stat) return;
   const rightDataset = JSON.parse(JSON.stringify(rightVal.statData.data));
   const rightStatName = rightVal.statData.title;
   const rightUnit = rightVal.statData.unit;
