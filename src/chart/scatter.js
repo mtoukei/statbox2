@@ -35,7 +35,7 @@ export default function (leftVal, rightVal) {
     leftDataAr.push(value.data);
     rightDataAr.push(rightDataset[index].data);
     // 回帰直線計算用-------------------------------------------------------------------------
-    kaikiData.push([value.data, value.data])
+    kaikiData.push([rightDataset[index].data, value.data])
   });
   const soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
   // SVG領域作成-----------------------------------------------------------------------------
@@ -210,7 +210,7 @@ export default function (leftVal, rightVal) {
   svg.call(tip);
   circle
   .on('mouseover', function (d) {
-    return tip.show(d.cityname + '<br>' + d.leftData.toLocaleString() + leftUnit + '<br>' + d.rightData.toLocaleString() + rightUnit, this)
+    return tip.show(`${d.cityname}<br>${d.leftData.toLocaleString()}${leftUnit}<br>${d.rightData.toLocaleString()}${rightUnit}`, this)
   })
   .on('mouseout', tip.hide);
   // テキスト表示--------------------------------------------------------------------------------

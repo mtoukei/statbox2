@@ -13,6 +13,9 @@ https://mtoukei.github.io/statbox2/dist/
 # 現行の宮崎統計BOX
 https://stat.pref.miyazaki.lg.jp/
 
+# 発注情報について
+本業務の発注情報はhttps://zzzzzを参照してください。
+
 # 質問について
 プロトタイプや本業務についての質問がある場合は本業務の要領10に従ってください。
 issuesは使用しないでください。

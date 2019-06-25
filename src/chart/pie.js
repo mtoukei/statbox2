@@ -9,17 +9,17 @@ export default function (val, parentDiv) {
   if(palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
-  // let unit;
+  let unit;
   if (isEStat) {
     const target = val.statData[val.statData.length - 1];
-    // const allPrefData = target.data;
+    const allPrefData = target.data;
     dataset = target.data2;
     statName = val.statName;
-    // unit = allPrefData[0]['@unit'];
+    unit = allPrefData[0]['@unit'];
   } else {
     dataset = val.statData.data;
     statName = val.statData.title;
-    // unit = val.statData.unit;
+    unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
   const width = palentDiv.node().getBoundingClientRect().width;
@@ -50,6 +50,7 @@ export default function (val, parentDiv) {
       this.dataset.forEach((value, index) => {
         kei += value.data;
         value['leftTop'] = index + 1;
+        value['percent'] = value.data / sum * 100;
         value.cityname = index + 1 + ' ' + value.cityname;
         if (kei > sum * 4 / 5) {
           hoka += value.data;
@@ -171,6 +172,14 @@ export default function (val, parentDiv) {
       if (d.data.data !== 0) return d.data.cityname
     });
   }
+  // ツールチップ---------------------------------------------------------------------------------
+  const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
+  svg.call(tip);
+  textP
+  .on('mouseover', function (d) {
+    if (d.data.leftTop) return tip.show(`${d.data.cityname}<br>${d.data.data}${unit}<br>${Math.floor(d.data.percent * 10) / 10}%`, this)
+  })
+  .on('mouseout', tip.hide);
   // 表名-------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', (12 * multi) + 'px')

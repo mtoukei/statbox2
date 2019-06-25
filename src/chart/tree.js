@@ -270,7 +270,7 @@ export default function (val, parentDiv) {
     const total = d.parent.parent.value;
     const ritu0 = Math.floor(keinikiTotal / total * 1000) / 10 + '%';
     const ritu1 = Math.floor(value / total * 1000) / 10 + '%';
-    return tip.show(d.parent.data.name + '計 = ' + ritu0 + '<br>' + d.data.name + ' = ' + ritu1 + '<br>' + value + unit, this)
+    return tip.show(`${d.parent.data.name}計 = ${ritu0}<br>${d.data.name} = ${ritu1}<br>${value}${unit}`, this)
   })
   .on('mouseout', tip.hide);
   // ブロック作成------------------------------------------------------------------------------
