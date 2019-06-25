@@ -9,17 +9,17 @@ export default function (val, parentDiv) {
   if(palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
-  // let unit;
+  let unit;
   if (isEStat) {
     const target = val.statData[val.statData.length - 1];
-    // const allPrefData = target.data;
+    const allPrefData = target.data;
     dataset = target.data2;
     statName = val.statName;
-    // unit = allPrefData[0]['@unit'];
+    unit = allPrefData[0]['@unit'];
   } else {
     dataset = val.statData.data;
     statName = val.statData.title;
-    // unit = val.statData.unit;
+    unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
   const width = palentDiv.node().getBoundingClientRect().width;
@@ -171,6 +171,14 @@ export default function (val, parentDiv) {
       if (d.data.data !== 0) return d.data.cityname
     });
   }
+  // ツールチップ---------------------------------------------------------------------------------
+  const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
+  svg.call(tip);
+  textP
+  .on('mouseover', function (d) {
+    return tip.show(d.data.leftTop + '位　' + d.data.cityname + '<br>' + d.data.data + unit, this)
+  })
+  .on('mouseout', tip.hide);
   // 表名-------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', (12 * multi) + 'px')
