@@ -345,12 +345,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     .append('input')
     .attr('type', 'text')
     .attr('id', 'scatter-pref-input-' + prefOrCity)
-    .attr('value', () => {
-      if (prefOrCity === 'pref') {
-        return '宮崎県'
-      }
-        return '宮崎市'
-    })
+    .attr('value', () => prefOrCity === 'pref' ? '宮崎県' : '宮崎市')
     .style('width', '70px')
   }
   d3.select('#scatter-pref-input-' + prefOrCity)
