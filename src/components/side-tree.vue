@@ -410,17 +410,12 @@
       clearMiyazaki () {
         this.$store.commit('statList/clearStat', this.side);
         this.filterTextMiyazaki = '';
-        if (this.side === 'leftSide') {
-          d3.select('#left-chart-div').selectAll('.chart-svg').remove()
-        } else {
-          d3.select('#right-chart-div').selectAll('.chart-svg').remove()
-        }
+        d3.select('#left-chart-div').selectAll('.chart-svg').remove()
       },
       clearMiyazakiTime () {
         this.$store.commit('statList/metaMiyazakiTimeReset');
         this.filterTextMiyazakiTime = '';
-        this.$refs.treeTime.setCheckedKeys([]);
-        this.$store.commit('statList/selectStatTime', {statNames: '', endStat: '', side: this.side })
+        d3.select('#left-chart-div').selectAll('.chart-svg').remove()
       },
       clearPref () {
         this.$store.commit('statList/eStatMetaPrefReset');

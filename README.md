@@ -14,7 +14,8 @@ https://mtoukei.github.io/statbox2/dist/
 https://stat.pref.miyazaki.lg.jp/
 
 # 発注情報について
-本業務の発注情報はhttps://zzzzzを参照してください。
+本業務の発注情報は下記ページを参照してください。
+https://www.pref.miyazaki.lg.jp/tokeichosa/kense/chotatsu/20190620193140.html
 
 # 質問について
 プロトタイプや本業務についての質問がある場合は本業務の要領10に従ってください。
