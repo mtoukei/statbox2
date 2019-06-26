@@ -148,5 +148,10 @@
         }
       },
     },
+    mounted() {
+      this.$nextTick(function () {
+        this.$store.commit('base/menuChange', false);// トランジションさせる
+      })
+    }
   }
 </script>
