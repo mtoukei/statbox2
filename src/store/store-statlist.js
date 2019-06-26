@@ -85,6 +85,10 @@ const statList = {
       count: 0,
       stat: '',
       statData: {},
+      statsDataId: '',
+      cdCat01: '',
+      statName: '',
+      source: ''
     },
     // 全国市町村時系列用--------------------------------------------------------------------
     leftStatTimeCity: {
@@ -92,6 +96,10 @@ const statList = {
       count: 0,
       stat: '',
       statData: {},
+      statsDataId: '',
+      cdCat01: '',
+      statName: '',
+      source: ''
     },
     // 左右サイドメニューのメタ情報用------------------------------------------------------------
     eStatMetaCity: JSON.parse(JSON.stringify(metaCity)),
@@ -339,6 +347,16 @@ const statList = {
     // 時系列。全国都道府県用
     selectStatTimePref (state, payload) {
       const statIds = payload.statIds;
+      console.log(payload.sourceIds);
+
+      // const statId = payload.endStat.split('/')[0];
+      // const cat01 = payload.endStat.split('/')[1];
+      // const sourceIds = payload.sourceIds;
+      // //
+      // console.log(statId)
+      // console.log(cat01)
+      // console.log(sourceIds)
+
       const plomises = [];
       statIds.forEach((value, index) => {
         plomises[index] =
@@ -393,11 +411,17 @@ const statList = {
           })
       });
       Promise.all(plomises).then(result => {
+        console.log(payload.endStat);
         const stat = state.leftStatTimePref;
         stat.transition = true;
         stat.count = stat.count + 1;
         stat.endStat = payload.endStat;
         stat.statData = result;
+        // stat.statsDataId = statId;
+        // stat.cdCat01 = cat01;
+        // stat.sourceId = sourceId;
+        // stat.source = source;
+        console.log(stat)
       })
     },
     // ------------------------------------------------------------------------------------------

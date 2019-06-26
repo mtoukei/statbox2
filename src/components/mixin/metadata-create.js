@@ -7,7 +7,7 @@ import metaSourceIDCity from '../../store/meta/meta-source-id-city'
 export default {
   name: 'metaDataCreate',
   beforeCreate () {
-    // const targets = [this.$store.state.statList.eStatMetaPref, this.$store.state.statList.eStatMetaCity]
+    // ①
     // const targets = [this.$store.state.statList.eStatMetaPref];
     const targets = [this.$store.state.statList.eStatMetaCity];
     const vm = this;
@@ -44,6 +44,7 @@ export default {
           if (result[i].cat01s.length) {
             for (const j in result[i].cat01s) {
               const tgt = result[i].cat01s[j];
+              // ②
               // const sourceIdResult = metaSourceIDPref.find(val => val.項目符号 === tgt['@code']);
               const sourceIdResult = metaSourceIDCity.find(val => val.項目符号 === tgt['@code']);
               if (sourceIdResult) {
@@ -51,7 +52,7 @@ export default {
               }
               // console.log(sourceId)
               childrenArr.push({
-                statId: result[i].statId + '/' + tgt['@code'] + '/' + tgt['@unit'],
+                statId: result[i].statId + '/' + tgt['@code'] + '/' + tgt['@unit'] + '/' + sourceId,
                 label: tgt['@name'].split('_')[1],
                 cat01: tgt['@code'],
                 unit: tgt['@unit'],
@@ -61,7 +62,7 @@ export default {
           } else {
             const tgt = result[i].cat01s;
             childrenArr.push({
-              statId: result[i].statId + '/' + tgt['@code'] + '/' + tgt['@unit'],
+              statId: result[i].statId + '/' + tgt['@code'] + '/' + tgt['@unit'] + '/' + sourceId,
               label: tgt['@name'].split('_')[1],
               cat01: tgt['@code'],
               unit: tgt['@unit'],

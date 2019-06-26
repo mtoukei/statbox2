@@ -487,14 +487,19 @@
       nodeClickEstatTime (e, scatType) {
         if (!e.children) {
           const refs = scatType === 'timePref' ? this.$refs.treeTimePref : this.$refs.treeTimeCity;
-          const keys = refs[0].getCheckedKeys(); //何故か配列になる。原因不明。
+          const keys = refs[0].getCheckedKeys(); // 何故か配列になる。原因不明。
+          console.log(keys);
           const statIds = [];
           const units = [];
+          const sourceIds = [];
           keys.forEach(value => {
             if (value) {
               if (value.length > 10) {
+                console.log(value)
+                console.log(value.split('/')[3])
                 statIds.push(value);
                 units.push(value.split('/')[2]);
+                sourceIds.push(value.split('/')[3])
               }
             }
           });
@@ -504,11 +509,10 @@
             refs[0].setCheckedKeys(newKeys);
             return;
           }
-          this.$store.commit('statList/transitionSet', true);
           if (scatType === 'timePref') {
-            this.$store.commit('statList/selectStatTimePref', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.s_prefCode })
+            this.$store.commit('statList/selectStatTimePref', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.s_prefCode, sourceIds })
           } else {
-            this.$store.commit('statList/selectStatTimeCity', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.cityCode })
+            this.$store.commit('statList/selectStatTimeCity', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.cityCode, sourceIds })
           }
         }
       },
