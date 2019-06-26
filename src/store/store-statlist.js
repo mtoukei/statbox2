@@ -336,7 +336,6 @@ const statList = {
             data: data1
         }
       });
-
       const stat = payload.side === 'leftSide' ? state.leftStatTime : state.rightStatTime;
       stat.transition = true;
       stat.count = stat.count + 1;
@@ -347,16 +346,10 @@ const statList = {
     // 時系列。全国都道府県用
     selectStatTimePref (state, payload) {
       const statIds = payload.statIds;
-      console.log(payload.sourceIds);
-
-      // const statId = payload.endStat.split('/')[0];
-      // const cat01 = payload.endStat.split('/')[1];
-      // const sourceIds = payload.sourceIds;
-      // //
-      // console.log(statId)
-      // console.log(cat01)
-      // console.log(sourceIds)
-
+      const statId = statIds[statIds.length - 1].split('/')[0];
+      const cat01 = statIds[statIds.length - 1].split('/')[1];
+      const sourceId = statIds[statIds.length - 1].split('/')[3];
+      const statName = statIds[statIds.length - 1].split('/')[4];
       const plomises = [];
       statIds.forEach((value, index) => {
         plomises[index] =
@@ -411,17 +404,19 @@ const statList = {
           })
       });
       Promise.all(plomises).then(result => {
-        console.log(payload.endStat);
         const stat = state.leftStatTimePref;
+        const sourceResult = MetaSourcePref.find(val => val.sourceId === sourceId);
+        let source = '';
+        if (sourceResult) source = sourceResult.source;
         stat.transition = true;
         stat.count = stat.count + 1;
         stat.endStat = payload.endStat;
+        stat.statName = statName;
         stat.statData = result;
-        // stat.statsDataId = statId;
-        // stat.cdCat01 = cat01;
-        // stat.sourceId = sourceId;
-        // stat.source = source;
-        console.log(stat)
+        stat.statsDataId = statId;
+        stat.cdCat01 = cat01;
+        stat.sourceId = sourceId;
+        stat.source = source;
       })
     },
     // ------------------------------------------------------------------------------------------
@@ -432,6 +427,10 @@ const statList = {
         // return;
       }
       const statIds = payload.statIds;
+      const statId = statIds[statIds.length - 1].split('/')[0];
+      const cat01 = statIds[statIds.length - 1].split('/')[1];
+      const sourceId = statIds[statIds.length - 1].split('/')[3];
+      const statName = statIds[statIds.length - 1].split('/')[4];
       const plomises = [];
       statIds.forEach((value, index) => {
         plomises[index] =
@@ -487,10 +486,18 @@ const statList = {
       });
       Promise.all(plomises).then(result => {
         const stat = state.leftStatTimeCity;
+        const sourceResult = MetaSourcePref.find(val => val.sourceId === sourceId);
+        let source = '';
+        if (sourceResult) source = sourceResult.source;
         stat.transition = true;
         stat.count = stat.count + 1;
         stat.endStat = payload.endStat;
+        stat.statName = statName;
         stat.statData = result;
+        stat.statsDataId = statId;
+        stat.cdCat01 = cat01;
+        stat.sourceId = sourceId;
+        stat.source = source;
       })
     },
     //-------------------------------------------------------------------------------------------
