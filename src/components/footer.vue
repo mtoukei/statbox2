@@ -7,8 +7,8 @@
       <div style="padding-top: 40px">
         <!--メタ情報とテーブル作成-->
         <div
-          :id="el.id"
           v-for="el in footerInner"
+          :id="el.id"
           :key="el.id"
         >
           <div v-show="m_divShow (statType, el.side)">
@@ -24,7 +24,10 @@
               ※基礎データの時は「項目符号」。社会生活統計指標の時は「指標コード」
             </div>
             <div class="bottom-table-div">
-              <el-table :data="m_tableData (statType, el.side)">
+              <el-table
+                :data="m_tableData (statType, el.side)"
+                v-show="['pref', 'scatterPref', 'city', 'scatterCity'].includes(statType)"
+              >
                 <el-table-column
                   prop="citycode"
                   label="citycode"
@@ -70,30 +73,27 @@
     methods: {
       m_divShow (statType, side) {
         if (side === 'leftSide') {
-          return ['pref', 'scatterPref', 'city', 'scatterCity'].includes(statType)
+          return ['pref', 'scatterPref', 'city', 'scatterCity', 'timePref', 'timeCity'].includes(statType)
         }
           return ['scatterPref', 'scatterCity'] .includes(statType)
       },
       m_metaData (statType, side) {
-        let stat;
-        let syurui, dataName, statsDataId, cdCat01, source1, source2;
+        let stat, syurui, dataName, statsDataId, cdCat01, source1, source2;
         const sourceLink = '<a href="https://www.stat.go.jp/data/ssds/2.html" target="_blank">整備している項目</a>';
         switch (statType) {
           case 'pref':
           case 'scatterPref':
-            if (side === 'leftSide') {
-              stat = this.$store.state.statList.leftStatEstatPref
-            } else {
-              stat = this.$store.state.statList.rightStatEstatPref
-            }
+            stat = side === 'leftSide' ? this.$store.state.statList.leftStatEstatPref : this.$store.state.statList.rightStatEstatPref;
             break;
           case 'city':
           case 'scatterCity':
-            if (side === 'leftSide') {
-              stat = this.$store.state.statList.leftStatEstatCity
-            } else {
-              stat = this.$store.state.statList.rightStatEstatCity
-            }
+            stat = side === 'leftSide' ? this.$store.state.statList.leftStatEstatCity : this.$store.state.statList.rightStatEstatCity;
+            break;
+          case 'timePref':
+            stat = this.$store.state.statList.leftStatTimePref;
+            break;
+          case 'timeCity':
+            stat = this.$store.state.statList.leftStatTimeCity;
             break;
         }
         if (stat) {
@@ -134,7 +134,15 @@
             target = side === 'leftSide' ? this.$store.state.statList.leftStatEstatCity : this.$store.state.statList.rightStatEstatCity;
             target = target.statData[this.$store.state.statList.yearRangeScatterCity];
             break;
+          case 'timePref':
+            target = this.$store.state.statList.leftStatTimePref.statData;
+            target = target[target.length - 1];
+            break;
+          case 'timeCity':
+
+            break;
         }
+        console.log(target)
         if (target) data = target.data2;
         return data
       }
