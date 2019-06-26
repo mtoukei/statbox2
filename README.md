@@ -22,7 +22,7 @@ https://www.pref.miyazaki.lg.jp/tokeichosa/kense/chotatsu/20190620193140.html
 issuesは使用しないでください。
 
 # Pull requestsについて
-本業務のプロトタイプ（試作品）として公開しているもののためPull requestsには応じていません。
+プロトタイプとして公開しているためPull requestsには応じていません。
 
 # 組織
 宮崎県総合政策部統計調査課
