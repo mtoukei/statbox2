@@ -42,11 +42,11 @@ export default {
         }
         if (statType === 'timePref') {
           document.querySelector('#left-timePref').style.width = (bodyWidth - leftSideDivWidth - 20) + 'px';
-          document.querySelector('#left-timePref').style.height = (bodyHeight - footerHeight - 120) + 'px';
+          document.querySelector('#left-timePref').style.height = (bodyHeight - footerHeight - 90) + 'px';
         }
         if (statType === 'timeCity') {
           document.querySelector('#left-timeCity').style.width = (bodyWidth - leftSideDivWidth - 20) + 'px';
-          document.querySelector('#left-timeCity').style.height = (bodyHeight - footerHeight - 120) + 'px';
+          document.querySelector('#left-timeCity').style.height = (bodyHeight - footerHeight - 90) + 'px';
         }
         if (statType === 'scatterPref') {
           document.querySelector('#left-scatterPref').style.width = (bodyWidth - leftSideDivWidth - rightSideDivWidth - 20) + 'px';
