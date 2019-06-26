@@ -77,7 +77,7 @@
     },
     computed: {
       s_yearRange: {
-        get () {
+        get() {
           const statType = this.s_activeIndex;
           let range;
           switch (statType) {
@@ -96,7 +96,7 @@
           }
           return range
         },
-        set (value) {
+        set(value) {
           const statType = this.s_activeIndex;
           let commit;
           switch (statType) {
@@ -116,20 +116,30 @@
           this.$store.commit(commit, value)
         }
       },
-      s_menuChange () { return this.$store.state.base.menuChange },
-      s_activeIndex () { return this.$store.state.base.activeIndex },
-      s_leftDivList: {
-        get () { return this.$store.state.base.leftDivList },
-        set (value) { this.$store.commit('base/leftDivListChange', value) }
+      s_menuChange() {
+        return this.$store.state.base.menuChange
       },
-      s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
+      s_activeIndex() {
+        return this.$store.state.base.activeIndex
+      },
+      s_leftDivList: {
+        get() {
+          return this.$store.state.base.leftDivList
+        },
+        set(value) {
+          this.$store.commit('base/leftDivListChange', value)
+        }
+      },
+      s_chartDivLoading() {
+        return this.$store.state.base.chartDivLoading
+      },
     },
     methods: {
-      dialogOpen (e, el) {
+      dialogOpen(e, el) {
         this.$store.commit('base/dialogVisibleChange', {visible: true, target: el.divId})
       },
       // グラフダイアログのリサイズ検知-------------------------------------------------------------
-      chartDivDetectResize () {
+      chartDivDetectResize() {
         const vm = this;
         if (!vm.s_menuChange) {
           // 連続でのリサイズを抑制する。
