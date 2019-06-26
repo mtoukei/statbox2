@@ -70,10 +70,9 @@
     methods: {
       m_divShow (statType, side) {
         if (side === 'leftSide') {
-          return statType === 'pref' || statType === 'scatterPref' || statType === 'city' || statType === 'scatterCity'
+          return ['pref', 'scatterPref', 'city', 'scatterCity'].includes(statType)
         }
-          return statType === 'scatterPref' || statType === 'scatterCity'
-
+          return ['scatterPref', 'scatterCity'] .includes(statType)
       },
       m_metaData (statType, side) {
         let stat;
@@ -120,32 +119,20 @@
         let target;
         switch (statType) {
           case 'pref':
-            if (side === 'leftSide') {
-              target = this.$store.state.statList.leftStatEstatPref.statData[this.$store.state.statList.yearRangePref]
-            } else {
-              target = this.$store.state.statList.rightStatEstatPref.statData[this.$store.state.statList.yearRangePref]
-            }
+            target = side === 'leftSide' ? this.$store.state.statList.leftStatEstatPref : this.$store.state.statList.rightStatEstatPref;
+            target = target.statData[this.$store.state.statList.yearRangePref];
             break;
           case 'scatterPref':
-            if (side === 'leftSide') {
-              target = this.$store.state.statList.leftStatEstatPref.statData[this.$store.state.statList.yearRangeScatterPref]
-            } else {
-              target = this.$store.state.statList.rightStatEstatPref.statData[this.$store.state.statList.yearRangeScatterPref]
-            }
+            target = side === 'leftSide' ? this.$store.state.statList.leftStatEstatPref : this.$store.state.statList.rightStatEstatPref;
+            target = target.statData[this.$store.state.statList.yearRangeScatterPref];
             break;
           case 'city':
-            if (side === 'leftSide') {
-              target = this.$store.state.statList.leftStatEstatCity.statData[this.$store.state.statList.yearRangeCity]
-            } else {
-              target = this.$store.state.statList.rightStatEstatCity.statData[this.$store.state.statList.yearRangeCity]
-            }
+            target = side === 'leftSide' ? this.$store.state.statList.leftStatEstatCity : this.$store.state.statList.rightStatEstatCity;
+            target = target.statData[this.$store.state.statList.yearRangeCity];
             break;
           case 'scatterCity':
-            if (side === 'leftSide') {
-              target = this.$store.state.statList.leftStatEstatCity.statData[this.$store.state.statList.yearRangeScatterCity]
-            } else {
-              target = this.$store.state.statList.rightStatEstatCity.statData[this.$store.state.statList.yearRangeScatterCity];
-            }
+            target = side === 'leftSide' ? this.$store.state.statList.leftStatEstatCity : this.$store.state.statList.rightStatEstatCity;
+            target = target.statData[this.$store.state.statList.yearRangeScatterCity];
             break;
         }
         if (target) data = target.data2;
