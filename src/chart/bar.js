@@ -34,8 +34,9 @@ export default function (val, parentDiv) {
   // const transitionFlg = false
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
-    constructor (dataset) {
+    constructor (dataset, orderType) {
       this.dataset = dataset;
+      this.orderType = orderType;
       this.maxVal = null;
       this.minVal = null;
       this.median = null
@@ -49,11 +50,19 @@ export default function (val, parentDiv) {
         return 0;
       });
       this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
-      this.dataset.sort((a, b) => {
-        if (a.citycode < b.citycode) return -1;
-        if (a.citycode > b.citycode) return 1;
-        return 0;
-      });
+      if(!this.orderType || this.orderType === 'original') {
+        this.dataset.sort((a, b) => {
+          if (a.citycode < b.citycode) return -1;
+          if (a.citycode > b.citycode) return 1;
+          return 0;
+        });
+      } else if (this.orderType === 'asc') {
+        this.dataset.sort((a, b) => {
+          if (a.data < b.data) return -1;
+          if (a.data > b.data) return 1;
+          return 0;
+        });
+      }
       if (val.estat) {
         this.maxVal = 0;
         this.minVal = 99999999;
@@ -82,7 +91,8 @@ export default function (val, parentDiv) {
     }
   }
   //---------------------------------------------------------------------------------------------
-  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
+  const orderType = storeBase.state.base.barSort;
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)), orderType);
   dc.create();
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
@@ -108,20 +118,20 @@ export default function (val, parentDiv) {
     fontSize = 10 * multi + 'px'
   }
   margin.left = margin.left * multi;
-  // バー横軸--------------------------------------------------------------------------------
+  // バー横軸-----------------------------------------------------------------------------------
   const xScale = d3.scaleBand()
   .range([margin.left, width - margin.right])
   .padding(0.2)
   .domain(dc.dataset.map(d => d.cityname));
-  // バー縦軸--------------------------------------------------------------------------------
+  // バー縦軸-----------------------------------------------------------------------------------
   const yScale = d3.scaleLinear()
   .domain([dc.minVal, dc.maxVal])
   .range([height - margin.bottom, margin.top]);
-  // 軸の表示--------------------------------------------------------------------------------
+  // 軸の表示----------------------------------------------------------------------------------
   // x軸
   const axisx = d3.axisBottom(xScale)
   .ticks(20);
-  svg.append('g')
+  const cityNameText = svg.append('g')
   .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
   .call(axisx)
   .selectAll('text')
@@ -135,13 +145,13 @@ export default function (val, parentDiv) {
   .attr('font-size', 10 * multi + 'px')
   .attr('fill', 'black')
   .attr('text-anchor', 'start');
-  // y軸バー-------------------------------------------------------------------------------
+  // y軸バー------------------------------------------------------------------------------------
   svg.append('g')
   .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
   .call(d3.axisLeft(yScale))
   .selectAll('text')
   .attr('font-size', fontSize);
-  // バーの表示------------------------------------------------------------------------------
+  // バーの表示---------------------------------------------------------------------------------
   const g = svg.append('g')
   .selectAll('rect')
   .data(dc.dataset)
@@ -161,7 +171,6 @@ export default function (val, parentDiv) {
       }
         d3.select(this).attr('fill', 'coral');
         return yScale(0)
-
     })
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
   } else {
@@ -172,11 +181,10 @@ export default function (val, parentDiv) {
       }
         d3.select(this).attr('fill', 'coral');
         return yScale(0)
-
     })
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
   }
-  // ツールチップ-----------------------------------------------------------------------
+  // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
   rect
@@ -184,7 +192,7 @@ export default function (val, parentDiv) {
     return tip.show(`${d.leftTop}位 ${d.cityname}<br>${d.data.toLocaleString()}${unit}`, this)
   })
   .on('mouseout', tip.hide);
-  // 中央値------------------------------------------------------------------------------------
+  // 中央値-------------------------------------------------------------------------------------
   const medianPolyline = svg.append('polyline')
   .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median))
   .attr('stroke', 'red')
@@ -197,27 +205,90 @@ export default function (val, parentDiv) {
   .append('text')
   .text('赤線＝中央値')
   .attr('text-anchor', 'end');
-  // 単位------------------------------------------------------------------------------------
+  // 単位---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 10 * multi + 'px')
   .attr('transform', 'translate(10,15)')
   .append('text')
   .text('単位:' + unit);
-  // 表名------------------------------------------------------------------------------------
+  // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(' + 60 * multi + ',15)')
   .attr('class', 'no-print')
   .append('text')
-  .text('棒 = ' + statName)
+  .text(statName)
   .attr('text-anchor', 'start');
-  // -------------------------------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
-    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+  // 降順---------------------------------------------------------------------------------------
+  svg.append('g')
+  .attr('font-size', 12 * multi + 'px')
+  .attr('transform', 'translate(' + 200 * multi + ',30)')
+  .attr('class', 'no-print')
+  .append('text')
+  .text('降順')
+  .attr('text-anchor', 'start')
+  .attr('cursor', 'pointer')
+  .on('mouseenter', function() { d3.select(this).attr('fill', 'red') })
+  .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
+  .on('click', () => order('desc'));
+  // 昇順---------------------------------------------------------------------------------------
+  svg.append('g')
+  .attr('font-size', 12 * multi + 'px')
+  .attr('transform', 'translate(' + 240 * multi + ',30)')
+  .attr('class', 'no-print')
+  .append('text')
+  .text('昇順')
+  .attr('text-anchor', 'start')
+  .on('mouseenter', function() { d3.select(this).attr('fill', 'red') })
+  .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
+  .on('click', () => order('asc'));
+  // 元の並び（シティコード順）-----------------------------------------------------------------
+  svg.append('g')
+  .attr('font-size', 12 * multi + 'px')
+  .attr('transform', 'translate(' + 280 * multi + ',30)')
+  .attr('class', 'no-print')
+  .append('text')
+  .text('元の並び')
+  .attr('text-anchor', 'start')
+  .on('mouseenter', function() { d3.select(this).attr('fill', 'red') })
+  .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
+  .on('click', () => order('original'));
+  // 昇順、降順の関数-------------------------------------------------------------------------
+  const order = orderType => {
+    storeBase.commit('base/barSortChange', orderType);
+    let dc;
+    if (isEStat) {
+      const rangeValue = d3.select('#year-range-' + prefOrCity + ' .year-range').property('value');
+      dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[rangeValue].data2)), orderType);
+    } else {
+      dc = new DataCreate(JSON.parse(JSON.stringify(dataset)), orderType);
+    }
     dc.create();
     rect
-    .data(dc.dataset, d => d.citycode )
+    .data(dc.dataset)
+    .transition()
+    .duration(200)
+    .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
+    .attr('y', function (d) {
+      if (d.data >= 0) {
+        d3.select(this).attr('fill', 'slategray');
+        return yScale(d.data)
+      }
+      d3.select(this).attr('fill', 'coral');
+      return yScale(0)
+    });
+    cityNameText
+    .data(dc.dataset)
+    .text(d => d.cityname)
+  };
+  // --------------------------------------------------------------------------------------------
+  const rangeInput = e => {
+    const value = Number(e.target.value);
+    const orderType = storeBase.state.base.barSort;
+    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)), orderType);
+    dc.create();
+    rect
+    .data(dc.dataset)
     .transition()
     .duration(200)
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
@@ -229,6 +300,9 @@ export default function (val, parentDiv) {
         d3.select(this).attr('fill', 'coral');
         return yScale(0)
     });
+    cityNameText
+    .data(dc.dataset)
+    .text(d => d.cityname)
     // 中央値-----------------------------------------------------------------------------------
     medianPolyline
     .transition()
