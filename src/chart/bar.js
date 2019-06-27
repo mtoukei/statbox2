@@ -50,7 +50,7 @@ export default function (val, parentDiv) {
         return 0;
       });
       this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
-      if(!this.orderType || this.orderType === 'original') {
+      if(this.orderType === 'original') {
         this.dataset.sort((a, b) => {
           if (a.citycode < b.citycode) return -1;
           if (a.citycode > b.citycode) return 1;
@@ -66,17 +66,17 @@ export default function (val, parentDiv) {
       if (val.estat) {
         this.maxVal = 0;
         this.minVal = 99999999;
-        for (const value of val.statData) {
+        val.statData.forEach(value => {
           const data = value.data2;
-          for (const value of data) {
-            if (!isNaN(value.data)) {
-              if (value.citycode !== '00000') {
-                this.maxVal = this.maxVal < value.data ? value.data : this.maxVal;
-                this.minVal = this.minVal > value.data ? value.data : this.minVal
+          data.forEach(value2 => {
+            if (!isNaN(value2.data)) {
+              if (value2.citycode !== '00000') {
+                this.maxVal = this.maxVal < value2.data ? value2.data : this.maxVal;
+                this.minVal = this.minVal > value2.data ? value2.data : this.minVal
               }
             }
-          }
-        }
+          });
+        })
       } else {
         this.maxVal = d3.max(this.dataset, d => d.data);
         this.minVal = d3.min(this.dataset, d => d.data);
@@ -157,6 +157,7 @@ export default function (val, parentDiv) {
   .data(dc.dataset)
   .enter();
   const rect = g.append('rect')
+  .attr('class', 'bar-rect')
   .attr('x', d => xScale(d.cityname))
   .attr('width', xScale.bandwidth())
   .attr('y', yScale(0))
@@ -192,6 +193,26 @@ export default function (val, parentDiv) {
     return tip.show(`${d.leftTop}位 ${d.cityname}<br>${d.data.toLocaleString()}${unit}`, this)
   })
   .on('mouseout', tip.hide);
+  // クリック--------------------------------------------------------------------------------------
+  rect
+  .on('click', function (d) {
+    if (d3.select(this).attr('fill') === 'red') {
+      if (d.data >= 0) {
+        svg.selectAll('.bar-rect').attr('fill', 'slategray');
+      } else {
+        svg.selectAll('.bar-rect').attr('fill', 'coral');
+      }
+      storeBase.commit('base/targetCitycodeChange', '');
+    } else {
+      if (d.data >= 0) {
+        svg.selectAll('.bar-rect').attr('fill', 'slategray');
+      } else {
+        svg.selectAll('.bar-rect').attr('fill', 'coral');
+      }
+      storeBase.commit('base/targetCitycodeChange', d.citycode);
+      d3.select(this).attr('fill', 'red');
+    }
+  });
   // 中央値-------------------------------------------------------------------------------------
   const medianPolyline = svg.append('polyline')
   .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median))
@@ -270,11 +291,12 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
     .attr('y', function (d) {
+      const isTarget = String(d.citycode) === storeBase.state.base.targetCitycode;
       if (d.data >= 0) {
-        d3.select(this).attr('fill', 'slategray');
+        d3.select(this).attr('fill', isTarget ? 'red' : 'slategray');
         return yScale(d.data)
       }
-      d3.select(this).attr('fill', 'coral');
+      d3.select(this).attr('fill', isTarget ? 'red' : 'coral');
       return yScale(0)
     });
     cityNameText
@@ -293,16 +315,17 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
     .attr('y', function (d) {
+      const isTarget = String(d.citycode) === storeBase.state.base.targetCitycode;
       if (d.data >= 0) {
-        d3.select(this).attr('fill', 'slategray');
+        d3.select(this).attr('fill', isTarget ? 'red' : 'slategray');
         return yScale(d.data)
       }
-        d3.select(this).attr('fill', 'coral');
+        d3.select(this).attr('fill', isTarget ? 'red' : 'coral');
         return yScale(0)
     });
     cityNameText
     .data(dc.dataset)
-    .text(d => d.cityname)
+    .text(d => d.cityname);
     // 中央値-----------------------------------------------------------------------------------
     medianPolyline
     .transition()
