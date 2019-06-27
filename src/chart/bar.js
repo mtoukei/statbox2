@@ -166,12 +166,13 @@ export default function (val, parentDiv) {
     rect.transition()
     .duration(1000)
     .attr('y', function (d) {
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
       if (d.data >= 0) {
-        d3.select(this).attr('fill', 'slategray');
+        d3.select(this).attr('fill', isTarget ? 'red' : 'slategray');
         return yScale(d.data)
       }
-        d3.select(this).attr('fill', 'coral');
-        return yScale(0)
+      d3.select(this).attr('fill', isTarget ? 'red' : 'coral');
+      return yScale(0)
     })
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
   } else {
@@ -291,7 +292,7 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
     .attr('y', function (d) {
-      const isTarget = String(d.citycode) === storeBase.state.base.targetCitycode;
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
       if (d.data >= 0) {
         d3.select(this).attr('fill', isTarget ? 'red' : 'slategray');
         return yScale(d.data)
@@ -315,7 +316,7 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
     .attr('y', function (d) {
-      const isTarget = String(d.citycode) === storeBase.state.base.targetCitycode;
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
       if (d.data >= 0) {
         d3.select(this).attr('fill', isTarget ? 'red' : 'slategray');
         return yScale(d.data)
