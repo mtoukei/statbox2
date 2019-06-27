@@ -51,6 +51,7 @@ const base = {
     },
     chartDivLoading: false,
     prefCode: '45000',
+    barSort: 'original',
     prefOptions: [{
       value: '00000',
       label: '全国',
@@ -246,6 +247,9 @@ const base = {
     }, ],
   },
   mutations: {
+    barSortChange (state, payload) {
+      state.barSort = payload
+    },
     rightSideDivShowChange (state, payload) {
       state.rightSideDivShow = payload
     },
