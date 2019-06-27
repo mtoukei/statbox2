@@ -495,8 +495,6 @@
           keys.forEach(value => {
             if (value) {
               if (value.length > 10) {
-                console.log(value)
-                console.log(value.split('/')[3])
                 statIds.push(value);
                 units.push(value.split('/')[2]);
                 sourceIds.push(value.split('/')[3])

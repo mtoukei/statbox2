@@ -39,6 +39,7 @@ const Div = [
 const base = {
   namespaced: true,
   state: {
+    targetCitycode: '',
     rightSideDivShow: false,
     menuChange: true,
     leftDivList: Div,
@@ -247,6 +248,9 @@ const base = {
     }, ],
   },
   mutations: {
+    targetCitycodeChange (state, payload) {
+      state.targetCitycode = payload
+    },
     barSortChange (state, payload) {
       state.barSort = payload
     },
