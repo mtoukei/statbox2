@@ -90,7 +90,8 @@ export default function (val, parentDiv) {
     return isTarget ? 'orange' : d.rgb
   })
   .attr('stroke', 'black')
-  .attr('stroke-width', 0.2);
+  .attr('stroke-width', 0.2)
+  .style('cursor', 'pointer');
   // テキスト------------------------------------------------------------------------------------
   const text1_1 = g.append('g')
   .append('text')
@@ -134,7 +135,8 @@ export default function (val, parentDiv) {
     return isTarget ? 'orange' : d.rgb
   })
   .attr('stroke', 'black')
-  .attr('stroke-width', 0.2);
+  .attr('stroke-width', 0.2)
+  .style('cursor', 'pointer');
   // テキスト------------------------------------------------------------------------------------
   const text2_1 = g2.append('g')
   .append('text')
