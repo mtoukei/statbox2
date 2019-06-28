@@ -162,7 +162,8 @@ export default function (val, parentDiv) {
   .attr('x', d => xScale(d.cityname))
   .attr('width', xScale.bandwidth())
   .attr('y', yScale(0))
-  .attr('height', 0); //棒の長さ0
+  .attr('height', 0) //棒の長さ0
+  .style('cursor', 'pointer');
   if (transitionFlg) {
     rect.transition()
     .duration(1000)
