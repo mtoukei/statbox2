@@ -195,7 +195,7 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('fill', d => {
       const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
-      return isTarget ? 'orange' : dc.colorScale(d.data)
+      return isTarget ? 'orange' : d.rgb
     })
     .attr('transform', (d, i) => {
       return 'translate(0,' + (12 * multi + 15 * (i - 1) * multi) + ')'
@@ -207,7 +207,7 @@ export default function (val, parentDiv) {
     .attr('transform', (d, i) => 'translate(0,' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
     .attr('fill', d => {
-      const rgb = d3.rgb(dc.colorScale(d.data));
+      const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });
@@ -218,7 +218,7 @@ export default function (val, parentDiv) {
     .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
     .attr('fill', d => {
-      const rgb = d3.rgb(dc.colorScale(d.data));
+      const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });
@@ -229,7 +229,7 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('fill', d => {
       const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
-      return isTarget ? 'orange' : dc.colorScale(d.data)
+      return isTarget ? 'orange' : d.rgb
     })
     .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * (i - 1) * multi) + ')');
     text2_1
@@ -239,7 +239,7 @@ export default function (val, parentDiv) {
     .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
     .attr('fill', d => {
-      const rgb = d3.rgb(dc.colorScale(d.data));
+      const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });
@@ -250,7 +250,7 @@ export default function (val, parentDiv) {
     .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
     .attr('fill', d => {
-      const rgb = d3.rgb(dc.colorScale(d.data));
+      const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });
