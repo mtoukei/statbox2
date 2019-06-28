@@ -102,7 +102,8 @@ export default function (val, parentDiv) {
     const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150 ? 'black' : 'white';
-  });
+  })
+  .style('pointer-events', 'none');
   const text1_2 = g.append('g')
   .append('text')
   .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
@@ -113,7 +114,8 @@ export default function (val, parentDiv) {
     const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150 ? 'black' : 'white';
-  });
+  })
+  .style('pointer-events', 'none');
   //--------------------------------------------------------------------------------------------
   const g2 = svg.append('g')
   .attr('transform', 'translate(' + (10 * multi + 135 * multi) + ',' + (10 * multi + 15) + ')')
@@ -144,7 +146,8 @@ export default function (val, parentDiv) {
     const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150 ? 'black' : 'white';
-  });
+  })
+  .style('pointer-events', 'none');
   const text2_2 = g2.append('g')
   .append('text')
   .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
@@ -155,7 +158,8 @@ export default function (val, parentDiv) {
     const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150 ? 'black' : 'white';
-  });
+  })
+  .style('pointer-events', 'none');
   // クリックでカレントに色を塗る------------------------------------------------------------------
   const rectClick = (d, rect) => {
     // 実際の色塗りはwatch.jsで塗っている。
