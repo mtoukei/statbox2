@@ -157,6 +157,7 @@ export default function (val, parentDiv) {
   .data(dc.dataset)
   .enter();
   const rect = g.append('rect')
+  .attr('id', d => `bar-rect-${d.citycode}`)
   .attr('class', 'bar-rect')
   .attr('x', d => xScale(d.cityname))
   .attr('width', xScale.bandwidth())
@@ -168,10 +169,10 @@ export default function (val, parentDiv) {
     .attr('y', function (d) {
       const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
       if (d.data >= 0) {
-        d3.select(this).attr('fill', isTarget ? 'red' : 'slategray');
+        d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
         return yScale(d.data)
       }
-      d3.select(this).attr('fill', isTarget ? 'red' : 'coral');
+      d3.select(this).attr('fill', isTarget ? 'orange' : 'coral');
       return yScale(0)
     })
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
@@ -194,24 +195,14 @@ export default function (val, parentDiv) {
     return tip.show(`${d.leftTop}位 ${d.cityname}<br>${d.data.toLocaleString()}${unit}`, this)
   })
   .on('mouseout', tip.hide);
-  // クリック--------------------------------------------------------------------------------------
+  // クリックでカレントに色を塗る-------------------------------------------------------------------
   rect
   .on('click', function (d) {
-    if (d3.select(this).attr('fill') === 'red') {
-      if (d.data >= 0) {
-        svg.selectAll('.bar-rect').attr('fill', 'slategray');
-      } else {
-        svg.selectAll('.bar-rect').attr('fill', 'coral');
-      }
+    // 実際の色塗りはwatch.jsで塗っている。
+    if (d3.select(this).attr('fill') === 'orange') {
       storeBase.commit('base/targetCitycodeChange', '');
     } else {
-      if (d.data >= 0) {
-        svg.selectAll('.bar-rect').attr('fill', 'slategray');
-      } else {
-        svg.selectAll('.bar-rect').attr('fill', 'coral');
-      }
       storeBase.commit('base/targetCitycodeChange', d.citycode);
-      d3.select(this).attr('fill', 'red');
     }
   });
   // 中央値-------------------------------------------------------------------------------------
@@ -250,7 +241,7 @@ export default function (val, parentDiv) {
   .text('降順')
   .attr('text-anchor', 'start')
   .attr('cursor', 'pointer')
-  .on('mouseenter', function() { d3.select(this).attr('fill', 'red') })
+  .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
   .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
   .on('click', () => order('desc'));
   // 昇順---------------------------------------------------------------------------------------
@@ -261,7 +252,7 @@ export default function (val, parentDiv) {
   .append('text')
   .text('昇順')
   .attr('text-anchor', 'start')
-  .on('mouseenter', function() { d3.select(this).attr('fill', 'red') })
+  .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
   .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
   .on('click', () => order('asc'));
   // 元の並び（シティコード順）-----------------------------------------------------------------
@@ -272,7 +263,7 @@ export default function (val, parentDiv) {
   .append('text')
   .text('元の並び')
   .attr('text-anchor', 'start')
-  .on('mouseenter', function() { d3.select(this).attr('fill', 'red') })
+  .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
   .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
   .on('click', () => order('original'));
   // 昇順、降順の関数-------------------------------------------------------------------------
@@ -294,10 +285,10 @@ export default function (val, parentDiv) {
     .attr('y', function (d) {
       const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
       if (d.data >= 0) {
-        d3.select(this).attr('fill', isTarget ? 'red' : 'slategray');
+        d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
         return yScale(d.data)
       }
-      d3.select(this).attr('fill', isTarget ? 'red' : 'coral');
+      d3.select(this).attr('fill', isTarget ? 'orange' : 'coral');
       return yScale(0)
     });
     cityNameText
@@ -318,10 +309,10 @@ export default function (val, parentDiv) {
     .attr('y', function (d) {
       const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
       if (d.data >= 0) {
-        d3.select(this).attr('fill', isTarget ? 'red' : 'slategray');
+        d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
         return yScale(d.data)
       }
-        d3.select(this).attr('fill', isTarget ? 'red' : 'coral');
+        d3.select(this).attr('fill', isTarget ? 'orange' : 'coral');
         return yScale(0)
     });
     cityNameText

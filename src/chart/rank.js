@@ -1,4 +1,5 @@
 import * as Common from './common'
+import storeBase from "../store/store-base";
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
 export default function (val, parentDiv) {
@@ -30,8 +31,6 @@ export default function (val, parentDiv) {
     constructor(dataset) {
       this.dataset = dataset;
       this.dataset2 = null;
-      this.colorScale = null;
-      this.maxLeft = null;
     }
     create() {
       // ソートして順位をつける-------------------------------------------------------------------
@@ -41,18 +40,21 @@ export default function (val, parentDiv) {
         if (a.data < b.data) return 1;
         return 0;
       });
-      this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
+      const maxLeft = d3.max(this.dataset, d => d.data);
+      const minLeft = d3.min(this.dataset, d => d.data);
+      const colorScale = d3.scaleLinear()
+      .domain([minLeft, maxLeft])
+      .range(['white', 'red']);
+      this.dataset.forEach((value, index) => {
+        value['rgb'] = colorScale(value.data);
+        value['leftTop'] = index + 1
+      });
       this.dataset2 = JSON.parse(JSON.stringify(this.dataset));
       this.dataset2.sort((a, b) => {
         if (a.data < b.data) return -1;
         if (a.data > b.data) return 1;
         return 0;
       });
-      this.maxLeft = d3.max(this.dataset, d => d.data);
-      const minLeft = d3.min(this.dataset, d => d.data);
-      this.colorScale = d3.scaleLinear()
-      .domain([minLeft, this.maxLeft])
-      .range(['white', 'red']);
     }
   }
   //--------------------------------------------------------------------------------------------
@@ -79,10 +81,14 @@ export default function (val, parentDiv) {
   // 横棒(上位)--------------------------------------------------------------------------------
   const rectG1 = g.append('g')
   .append('rect')
+  .attr('class', 'rank-rect')
   .attr('width', 130 * multi)
   .attr('height', 15 * multi)
   .attr('transform', (d, i) => 'translate(' + (0) + ',' + (15 * i * multi) + ')')
-  .attr('fill', d => dc.colorScale(d.data))
+  .attr('fill', d => {
+    const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
+    return isTarget ? 'orange' : d.rgb
+  })
   .attr('stroke', 'black')
   .attr('stroke-width', 0.2);
   // テキスト------------------------------------------------------------------------------------
@@ -93,10 +99,11 @@ export default function (val, parentDiv) {
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname )
   .attr('fill', d => {
-    const rgb = d3.rgb(dc.colorScale(d.data));
+    const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150 ? 'black' : 'white';
-  });
+  })
+  .style('pointer-events', 'none');
   const text1_2 = g.append('g')
   .append('text')
   .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
@@ -104,10 +111,11 @@ export default function (val, parentDiv) {
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.data.toLocaleString())
   .attr('fill', d => {
-    const rgb = d3.rgb(dc.colorScale(d.data));
+    const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150 ? 'black' : 'white';
-  });
+  })
+  .style('pointer-events', 'none');
   //--------------------------------------------------------------------------------------------
   const g2 = svg.append('g')
   .attr('transform', 'translate(' + (10 * multi + 135 * multi) + ',' + (10 * multi + 15) + ')')
@@ -117,10 +125,14 @@ export default function (val, parentDiv) {
   // 横棒(下位)--------------------------------------------------------------------------------
   const rectG2 = g2.append('g')
   .append('rect')
+  .attr('class', 'rank-rect')
   .attr('width', 130 * multi)
   .attr('height', 15 * multi)
   .attr('transform', (d, i) => 'translate(0,' + (15 * i * multi) + ')')
-  .attr('fill', d => dc.colorScale(d.data))
+  .attr('fill', d => {
+    const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
+    return isTarget ? 'orange' : d.rgb
+  })
   .attr('stroke', 'black')
   .attr('stroke-width', 0.2);
   // テキスト------------------------------------------------------------------------------------
@@ -131,10 +143,11 @@ export default function (val, parentDiv) {
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname)
   .attr('fill', d => {
-    const rgb = d3.rgb(dc.colorScale(d.data));
+    const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150 ? 'black' : 'white';
-  });
+  })
+  .style('pointer-events', 'none');
   const text2_2 = g2.append('g')
   .append('text')
   .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
@@ -142,9 +155,27 @@ export default function (val, parentDiv) {
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.data.toLocaleString())
   .attr('fill', d => {
-    const rgb = d3.rgb(dc.colorScale(d.data));
+    const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 150 ? 'black' : 'white';
+  })
+  .style('pointer-events', 'none');
+  // クリックでカレントに色を塗る------------------------------------------------------------------
+  const rectClick = (d, rect) => {
+    // 実際の色塗りはwatch.jsで塗っている。
+    if (rect.attr('fill') === 'orange') {
+      storeBase.commit('base/targetCitycodeChange', '');
+    } else {
+      storeBase.commit('base/targetCitycodeChange', d.citycode);
+    }
+  };
+  rectG1
+  .on('click', function (d) {
+    rectClick(d, d3.select(this))
+  });
+  rectG2
+  .on('click', function (d) {
+    rectClick(d, d3.select(this))
   });
   // 表名-------------------------------------------------------------------------------------
   svg.append('g')
@@ -162,7 +193,10 @@ export default function (val, parentDiv) {
     .data(dc.dataset, d => d.citycode)
     .transition()
     .duration(200)
-    .attr('fill', d => dc.colorScale(d.data))
+    .attr('fill', d => {
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
+      return isTarget ? 'orange' : d.rgb
+    })
     .attr('transform', (d, i) => {
       return 'translate(0,' + (12 * multi + 15 * (i - 1) * multi) + ')'
     });
@@ -173,7 +207,7 @@ export default function (val, parentDiv) {
     .attr('transform', (d, i) => 'translate(0,' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
     .attr('fill', d => {
-      const rgb = d3.rgb(dc.colorScale(d.data));
+      const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });
@@ -184,7 +218,7 @@ export default function (val, parentDiv) {
     .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
     .attr('fill', d => {
-      const rgb = d3.rgb(dc.colorScale(d.data));
+      const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });
@@ -193,7 +227,10 @@ export default function (val, parentDiv) {
     .data(dc.dataset2, d => d.citycode)
     .transition()
     .duration(200)
-    .attr('fill', d => dc.colorScale(d.data))
+    .attr('fill', d => {
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
+      return isTarget ? 'orange' : d.rgb
+    })
     .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * (i - 1) * multi) + ')');
     text2_1
     .data(dc.dataset2, d => d.citycode)
@@ -202,7 +239,7 @@ export default function (val, parentDiv) {
     .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
     .attr('fill', d => {
-      const rgb = d3.rgb(dc.colorScale(d.data));
+      const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });
@@ -213,7 +250,7 @@ export default function (val, parentDiv) {
     .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
     .attr('fill', d => {
-      const rgb = d3.rgb(dc.colorScale(d.data));
+      const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });

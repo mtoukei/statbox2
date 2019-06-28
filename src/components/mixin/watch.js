@@ -14,6 +14,7 @@ import Time2 from '../../chart/time2'
 export default {
   name: 'watch',
   computed: {
+    s_targetCitycode () { return this.$store.state.base.targetCitycode },
     s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
     c_centerDivStyle () { return this.centerDivStyle },
     s_leftStat () { return this.$store.state.statList.leftStat },
@@ -28,11 +29,29 @@ export default {
     s_rightStatEstatCity () { return this.$store.state.statList.rightStatEstatCity },
   },
   watch: {
+    s_targetCitycode: {
+      handler: val => {
+        // 棒グラフのカレント行色塗り
+        d3.selectAll('.bar-rect').attr('fill', d => {
+          const isTarget = String(d.citycode) === String(val);
+          if (d.data >= 0) {
+            return isTarget ? 'orange' : 'slategray';
+          }
+            return isTarget ? 'orange' : 'coral';
+        });
+        // ランキングのカレント行色塗り
+        d3.selectAll('.rank-rect').attr('fill', d => {
+          const isTarget = String(d.citycode) === String(val);
+          return isTarget ? 'orange' : d.rgb;
+        });
+      },
+      deep: true,
+    },
     // 宮崎県市町村用-------------------------------------------------------------------------
     s_leftStat: {
       handler: function(val) {
-        // bubble.jsだけにスライダーの詳細を設定するコードが書かれている。
-        // 並びはなんでもいい。
+        // bubble.jsだけにはスライダーの詳細を設定するコードが書かれているので先頭に配置する必要がある。。
+        // あとの並びはなんでもいい。
         Bubble(val, '#left-bubble-miyazaki-city');
         Bar(val, '#left-bar-miyazaki-city');
         Rank(val, '#left-rank-miyazaki-city');
