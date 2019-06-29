@@ -14,9 +14,9 @@
     <contents />
     <!--右サイド-->
     <sideTree
+      v-show="s_rightSideDivShow"
       side="rightSide"
       :stat-type="s_statType"
-      v-show="s_rightSideDivShow"
     />
     <!--フッター-->
     <footer-info :stat-type="s_statType" />
@@ -55,8 +55,7 @@
     },
     mounted () {
       this.$nextTick(function () {
-        const vm = this;
-        window.onresize = () => vm.mix_detectResize();
+        window.onresize = () => this.mix_detectResize();
         // divにリサイズ機能を付与---------------------------------------------------------------
         resizableDiv('#left-side-div');
         resizableDiv('#right-side-div');

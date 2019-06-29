@@ -5,7 +5,7 @@ const eventkey = {};
 export default function (val, parentDiv) {
   const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
-  const isEStat = val.estat === true;
+  const isEStat = val.estat;
   if(palentDiv.style('display') === 'none') return;
   let dataset;
   let statName;
