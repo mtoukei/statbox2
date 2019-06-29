@@ -4,10 +4,10 @@
     <div id="left-chart-div">
       <!--スライダー。細かな設定はbubble.jsでデータを読み込んだときにしている。-->
       <div
-        :id="el.id"
         v-for="el in rangeDiv"
-        :key="el.id"
         v-show="s_activeIndex===el.statType"
+        :id="el.id"
+        :key="el.id"
       >
         <span class="year-range-text" />
         <div class="year-range-div">
@@ -26,11 +26,11 @@
       >
         <transition-group>
           <div
+            v-for="el in s_leftDivList"
+            v-show="el.show"
             :id="'left-' + el.divId"
             :class="'laft-chart ' + el.class"
-            v-for="el in s_leftDivList"
             :key="el.order"
-            v-show="el.show"
             v-loading="s_chartDivLoading"
             element-loading-background="rgba(0, 0, 0, 0)"
           >
@@ -107,32 +107,22 @@
               commit = 'statList/yearRangeCityChange';
               break;
             case 'scatterPref':
-              commit = 'statList/yearRangeScatterPrefChange'
+              commit = 'statList/yearRangeScatterPrefChange';
               break;
             case 'scatterCity':
-              commit = 'statList/yearRangeScatterCityChange'
+              commit = 'statList/yearRangeScatterCityChange';
               break;
           }
           this.$store.commit(commit, value)
         }
       },
-      s_menuChange() {
-        return this.$store.state.base.menuChange
-      },
-      s_activeIndex() {
-        return this.$store.state.base.activeIndex
-      },
+      s_menuChange() { return this.$store.state.base.menuChange },
+      s_activeIndex() { return this.$store.state.base.activeIndex },
       s_leftDivList: {
-        get() {
-          return this.$store.state.base.leftDivList
-        },
-        set(value) {
-          this.$store.commit('base/leftDivListChange', value)
-        }
+        get() { return this.$store.state.base.leftDivList },
+        set(value) { this.$store.commit('base/leftDivListChange', value) }
       },
-      s_chartDivLoading() {
-        return this.$store.state.base.chartDivLoading
-      },
+      s_chartDivLoading() { return this.$store.state.base.chartDivLoading },
     },
     methods: {
       dialogOpen(e, el) {
