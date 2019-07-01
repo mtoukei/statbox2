@@ -28,7 +28,7 @@ export default function (val, parentDiv) {
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 600;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
-  const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 50 * multi, 'left': 50 * multi };
+  const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 10 * multi, 'left': 50 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg = storeBase.state.statList.transition;
   // const transitionFlg = false
