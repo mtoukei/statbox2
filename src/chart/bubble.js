@@ -105,7 +105,7 @@ export default function (val, parentDiv) {
   .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
   const circle = bubbles.append('circle')
   .attr('class', 'bubble-circle')
-  .attr('fill', d => d.rgb)
+  .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : d.rgb)
   .style('cursor', 'pointer');
   if (transitionFlg) {
     circle.attr('r', 0)

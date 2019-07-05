@@ -57,8 +57,16 @@ export default {
           const isTarget = String(d.properties.citycode) === String(val);
           return isTarget ? '3px' : '0.2px';
         });
-      },
-      deep: true,
+        // 円グラフのカレント行色塗り
+        d3.selectAll('.pie-path').attr('stroke', d => {
+          const isTarget = String(d.data.citycode) === String(val);
+          return isTarget ? 'orange' : 'whitesmoke';
+        });
+        d3.selectAll('.pie-path').attr('stroke-width', d => {
+          const isTarget = String(d.data.citycode) === String(val);
+          return isTarget ? '8px' : 0;
+        });
+      }
     },
     // 宮崎県市町村用-------------------------------------------------------------------------
     s_leftStat: {

@@ -144,7 +144,7 @@
             vm.$store.commit('statList/timeReload');
             vm.$store.commit('statList/timePrefReload');
             vm.$store.commit('statList/timeCityReload');
-          }, 50);
+          }, 20);
         }
       },
     },

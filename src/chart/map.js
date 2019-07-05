@@ -109,9 +109,10 @@ export default function (val, parentDiv) {
   const pathG = g.append('path')
   .attr('class', 'map-path')
   .attr('d', path)
-  .attr('stroke', 'gray')
-  .attr('stroke-width', '0.3px')
-  .attr('fill', 'rgba(255,255,255,0.1)');
+  .attr('stroke', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : 'gray')
+  .attr('stroke-width', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode) ? '3px' : '0.2px')
+  .attr('fill', 'rgba(255,255,255,0.1)')
+  .style('cursor', 'pointer');
   // ツールチップ--------------------------------------------------------------------------------
   pathG
   .on('mouseover', function(d) {
@@ -120,7 +121,6 @@ export default function (val, parentDiv) {
       tooltip
       .style('visibility', 'visible')
       .html(`${result.cityname}<br>${result.data}${unit}`);
-      // d3.select(this).attr('stroke', 'black');
     }
   })
   .on('mousemove', () => {
@@ -131,7 +131,6 @@ export default function (val, parentDiv) {
   .on('mouseout', function () {
     tooltip.style('visibility', 'hidden');
     d3.select(this)
-    // .attr('stroke', 'gray');
   });
   //--------------------------------------------------------------------------------------------
   // クリックでカレントに色を塗る------------------------------------------------------------------
@@ -167,11 +166,6 @@ export default function (val, parentDiv) {
         return 'rgba(0,0,0,0)'
     });
   }
-
-
-
-
-
   // 凡例---------------------------------------------------------------------------------------
   const g2 = svg.append('g')
   .attr('transform', 'translate(' + (5) + ',' + (30 * multi) + ')')

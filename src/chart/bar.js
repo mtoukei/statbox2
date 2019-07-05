@@ -38,7 +38,8 @@ export default function (val, parentDiv) {
       this.orderType = orderType;
       this.maxVal = null;
       this.minVal = null;
-      this.median = null
+      this.median = null;
+      this.sum = null;
     }
     create () {
       if (prefOrCity === 'pref') this.dataset.shift();
@@ -48,7 +49,7 @@ export default function (val, parentDiv) {
         if (a.data < b.data) return 1;
         return 0;
       });
-      this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
+      this.dataset.forEach((v, i) => v['top'] = i + 1);
       if(this.orderType === 'original') {
         this.dataset.sort((a, b) => {
           if (a.citycode < b.citycode) return -1;
@@ -85,8 +86,10 @@ export default function (val, parentDiv) {
       } else {
         this.minVal = this.minVal * 1.1
       }
-      //-----------------------------------------------------------------------------------------
-      this.median = ss.median(this.dataset.map(value => value.data))
+      // 平均値---------------------------------------------------------------------------------
+      this.sum = ss.sum(this.dataset.map(value => value.data)) / this.dataset.length;
+      // 中央値---------------------------------------------------------------------------------
+      this.median = ss.median(this.dataset.map(value => value.data));
     }
   }
   //---------------------------------------------------------------------------------------------
@@ -187,10 +190,11 @@ export default function (val, parentDiv) {
     })
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
   }
-  // 中央値-------------------------------------------------------------------------------------
-  const medianPolyline = svg.append('polyline')
-  .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median))
-  .attr('stroke', 'red')
+  // 平均値-------------------------------------------------------------------------------------
+  const sumPolyline = svg.append('polyline')
+  .attr('id', 'sum-polyline')
+  .attr('points', margin.left + ',' + yScale(dc.sum) + ' ' + (width - margin.right) + ',' + yScale(dc.sum))
+  .attr('stroke', 'blue')
   .attr('fill', 'none')
   .attr('stroke-width', 1);
   svg.append('g')
@@ -198,14 +202,46 @@ export default function (val, parentDiv) {
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',15)')
   .attr('class', 'no-print')
   .append('text')
+  .text(`青線：平均値＝${(Math.floor(dc.sum * 10) / 10).toLocaleString()}${unit}`)
+  .attr('text-anchor', 'end')
+  .style('cursor', 'pointer')
+  .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
+  .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
+  .on('click', () => {
+    const target = svg.select('#sum-polyline');
+    target.style('display', () => {
+      return target.style('display') !== 'none' ? 'none' : 'block'
+    })
+  });
+  // 中央値-------------------------------------------------------------------------------------
+  const medianPolyline = svg.append('polyline')
+  .attr('id', 'median-polyline')
+  .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median))
+  .attr('stroke', 'red')
+  .attr('fill', 'none')
+  .attr('stroke-width', 1);
+  svg.append('g')
+  .attr('font-size', 12 * multi + 'px')
+  .attr('transform', 'translate(' + (width - margin.right * multi) + ',35)')
+  .attr('class', 'no-print')
+  .append('text')
   .text(`赤線：中央値＝${(Math.floor(dc.median * 10) / 10).toLocaleString()}${unit}`)
-  .attr('text-anchor', 'end');
+  .attr('text-anchor', 'end')
+  .style('cursor', 'pointer')
+  .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
+  .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
+  .on('click', () => {
+    const target = svg.select('#median-polyline');
+    target.style('display', () => {
+      return target.style('display') !== 'none' ? 'none' : 'block'
+    })
+  });
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
   rect
   .on('mouseover', function (d) {
-    return tip.show(`${d.leftTop}位 ${d.cityname}<br>${d.data.toLocaleString()}${unit}`, this)
+    return tip.show(`${d.top}位 ${d.cityname}<br>${d.data.toLocaleString()}${unit}`, this)
   })
   .on('mouseout', tip.hide);
   medianPolyline
@@ -323,6 +359,11 @@ export default function (val, parentDiv) {
     cityNameText
     .data(dc.dataset)
     .text(d => d.cityname);
+    // 平均値-----------------------------------------------------------------------------------
+    sumPolyline
+    .transition()
+    .duration(200)
+    .attr('points', margin.left + ',' + yScale(dc.sum) + ' ' + (width - margin.right) + ',' + yScale(dc.sum));
     // 中央値-----------------------------------------------------------------------------------
     medianPolyline
     .transition()
