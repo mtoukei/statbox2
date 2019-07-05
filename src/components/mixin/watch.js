@@ -44,6 +44,11 @@ export default {
           const isTarget = String(d.citycode) === String(val);
           return isTarget ? 'orange' : d.rgb;
         });
+        // バブルのカレント行色塗り
+        d3.selectAll('.bubble-circle').attr('fill', d => {
+          const isTarget = String(d.data.citycode) === String(val);
+          return isTarget ? 'orange' : d.rgb;
+        });
       },
       deep: true,
     },

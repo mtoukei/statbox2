@@ -72,9 +72,13 @@ export default function (val, parentDiv) {
       const maxVal = d3.max(no_root_bubble, d => d.r);
       const minVal = d3.min(no_root_bubble, d => d.r);
       // 色のスケール作成------------------------------------------------------------------------
-      this.colorScale = d3.scaleLinear()
+      const colorScale = d3.scaleLinear()
       .domain([minVal, maxVal])
       .range(['white', 'red']);
+      this.data.forEach((value, index) => {
+        value['rgb'] = colorScale(value.r);
+        value['leftTop'] = index + 1
+      });
       const maxFontSize = maxVal < 20 ? 10 : 20;
       this.fontScale = d3.scaleLinear()
       .domain([minVal, maxVal])
@@ -100,7 +104,9 @@ export default function (val, parentDiv) {
   .attr('class', 'bubble')
   .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
   const circle = bubbles.append('circle')
-  .attr('fill', d => dc.colorScale(d.r));
+  .attr('class', 'bubble-circle')
+  .attr('fill', d => d.rgb)
+  .style('cursor', 'pointer');
   if (transitionFlg) {
     circle.attr('r', 0)
     .transition()
@@ -118,11 +124,12 @@ export default function (val, parentDiv) {
   .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
   .attr('text-anchor', 'middle')
   .attr('fill', function (d) {
-    const rgb = d3.rgb(dc.colorScale(d.r));
+    const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 200 ? 'black' : 'white';
   })
-  .attr('opacity', 0);
+  .attr('opacity', 0)
+  .style('cursor', 'pointer');
   if (transitionFlg) {
     text.transition()
     .delay((d, i) => i * 70)
@@ -130,6 +137,16 @@ export default function (val, parentDiv) {
   } else {
     text.attr('opacity', 1);
   }
+  // クリックでカレントに色を塗る------------------------------------------------------------------
+  bubbles
+  .on('click', function (d) {
+    // 実際の色塗りはwatch.jsで塗っている。
+    if (d3.select(this).select('circle').attr('fill') === 'orange') {
+      storeBase.commit('base/targetCitycodeChange', '');
+    } else {
+      storeBase.commit('base/targetCitycodeChange', d.data.citycode);
+    }
+  });
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
