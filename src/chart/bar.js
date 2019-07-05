@@ -187,12 +187,30 @@ export default function (val, parentDiv) {
     })
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
   }
+  // 中央値-------------------------------------------------------------------------------------
+  const medianPolyline = svg.append('polyline')
+  .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median))
+  .attr('stroke', 'red')
+  .attr('fill', 'none')
+  .attr('stroke-width', 1);
+  svg.append('g')
+  .attr('font-size', 12 * multi + 'px')
+  .attr('transform', 'translate(' + (width - margin.right * multi) + ',15)')
+  .attr('class', 'no-print')
+  .append('text')
+  .text(`赤線：中央値＝${(Math.floor(dc.median * 10) / 10).toLocaleString()}${unit}`)
+  .attr('text-anchor', 'end');
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
   rect
   .on('mouseover', function (d) {
     return tip.show(`${d.leftTop}位 ${d.cityname}<br>${d.data.toLocaleString()}${unit}`, this)
+  })
+  .on('mouseout', tip.hide);
+  medianPolyline
+  .on('mouseover', function (d) {
+    return tip.show(`中央値${(Math.floor(dc.median * 10) / 10).toLocaleString()}${unit}`, this)
   })
   .on('mouseout', tip.hide);
   // クリックでカレントに色を塗る-------------------------------------------------------------------
@@ -205,19 +223,6 @@ export default function (val, parentDiv) {
       storeBase.commit('base/targetCitycodeChange', d.citycode);
     }
   });
-  // 中央値-------------------------------------------------------------------------------------
-  const medianPolyline = svg.append('polyline')
-  .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median))
-  .attr('stroke', 'red')
-  .attr('fill', 'none')
-  .attr('stroke-width', 1);
-  svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
-  .attr('transform', 'translate(' + (width - margin.right * multi) + ',15)')
-  .attr('class', 'no-print')
-  .append('text')
-  .text('赤線＝中央値')
-  .attr('text-anchor', 'end');
   // 単位---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 10 * multi + 'px')
