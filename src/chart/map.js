@@ -109,8 +109,8 @@ export default function (val, parentDiv) {
   const pathG = g.append('path')
   .attr('class', 'map-path')
   .attr('d', path)
-  .attr('stroke', 'gray')
-  .attr('stroke-width', '0.3px')
+  .attr('stroke', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : 'gray')
+  .attr('stroke-width', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode) ? '3px' : '0.2px')
   .attr('fill', 'rgba(255,255,255,0.1)')
   .style('cursor', 'pointer');
   // ツールチップ--------------------------------------------------------------------------------
