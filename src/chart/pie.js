@@ -106,8 +106,8 @@ export default function (val, parentDiv) {
     }
       return colorScale(d.index)
   })
-  .attr('stroke', 'whitesmoke')
-  .attr('stroke-width', 0);
+  .attr('stroke', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : 'whitesmoke')
+  .attr('stroke-width', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? '8px' : 0);
   if (transitionFlg) {
     path
     .transition()
@@ -222,18 +222,8 @@ export default function (val, parentDiv) {
       }
         return colorScale(d.index)
     })
-    .attr('stroke', d => {
-      if (storeBase.state.base.targetCitycode === d.data.citycode) {
-        return 'orange'
-      }
-        return 'whitesmoke'
-    })
-    .attr('stroke-width', d => {
-      if (storeBase.state.base.targetCitycode === d.data.citycode) {
-        return '8px'
-      }
-        return 0
-    });
+    .attr('stroke', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : 'whitesmoke')
+    .attr('stroke-width', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? '8px' : 0);
     textP
     .data(pie(dc.dataset, d => d.citycode))
     .transition()
