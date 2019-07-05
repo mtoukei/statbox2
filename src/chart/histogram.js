@@ -49,10 +49,7 @@ export default function (val, parentDiv) {
     const svg = palentDiv.select('.resizers').append('svg')
     .attr('width', width)
     .attr('height', height)
-    .attr('viewBox', '0 0 ' + width + ' ' + height)
-    .attr('preserveAspectRatio', 'xMidYMid')
-    .classed("svg-content-responsive", true)
-    .classed("chart-svg", true);
+    .attr('class', 'chart-svg');
     // -------------------------------------------------------------------------------------------
     const map = dataset.map( d => d.data);
     // xスケール----------------------------------------------------------------------------------
@@ -63,7 +60,7 @@ export default function (val, parentDiv) {
     const histoData = d3.histogram()
     .domain(xScale.domain())
     .thresholds(xScale.ticks(6))(map);
-    // console.log(histoData)
+    console.log(histoData)
     // yスケール----------------------------------------------------------------------------------
     const yScale = d3.scaleLinear()
     .domain([0, d3.max(histoData, d => d.length)])
@@ -78,12 +75,6 @@ export default function (val, parentDiv) {
       return "translate(" + (xScale(d.x0) + margin.left ) + "," + margin.top + ")";
     });
 // バー-----------------------------------------------------------------------------------------
-//     var tip = d3Tip()
-//     .attr('class', 'd3-tip')
-//     .offset([-10, 0])
-//     .html(function(d) {
-//       return "Frequency: <span>888888"  + "</span>";
-//     })
     const rect = bar.append("rect")
     .attr("x", 1)
     .attr("width", xScale(histoData[0].x1) - xScale(histoData[0].x0) - 3)
@@ -99,15 +90,18 @@ export default function (val, parentDiv) {
       rect.attr('y', d => yScale(d.length))
       .attr("height", d => height - yScale(d.length) - margin.bottom - margin.top);
     }
-    // const tip = d3Tip().attr('class', 'd3-tip').html(function(d) { return d; });
-    // svg.call(tip)
-    // rect
-    // .on('mouseover', function (d) {
-    //   return tip.show(11,this)
-    // }) /* tooltipを表示 */
-    // .on('mouseout', tip.hide)  /* tooltipを非表示 */
-
-
+    // ツールチップ---------------------------------------------------------------------------------
+    const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
+    svg.call(tip);
+    rect
+    .on('mouseover', function (d) {
+      const result = dc.dataset.filter(value => {
+        if (value.data > d.x0 && value.data <= d.x1) return true;
+      });
+      const citynames = result.map(value => value.cityname);
+      return tip.show(citynames.join(), this)
+    })
+    .on('mouseout', tip.hide);
     // バーのテキスト-----------------------------------------------------------------------------
     const text = bar.append("text")
     .attr('fill', 'black')
