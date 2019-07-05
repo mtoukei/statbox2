@@ -21,7 +21,6 @@ export default {
     s_rightStat () { return this.$store.state.statList.rightStat },
     s_leftStatTime () { return this.$store.state.statList.leftStatTime },
     s_leftStatTimePref () { return this.$store.state.statList.leftStatTimePref },
-    // s_rightStatTimePref () { return this.$store.state.statList.rightStatTimePref },
     s_leftStatTimeCity () { return this.$store.state.statList.leftStatTimeCity },
     s_leftStatEstatPref () { return this.$store.state.statList.leftStatEstatPref },
     s_rightStatEstatPref () { return this.$store.state.statList.rightStatEstatPref },
@@ -49,14 +48,22 @@ export default {
           const isTarget = String(d.data.citycode) === String(val);
           return isTarget ? 'orange' : d.rgb;
         });
+        // マップのカレント行色塗り
+        d3.selectAll('.map-path').attr('stroke', d => {
+          const isTarget = String(d.properties.citycode) === String(val);
+          return isTarget ? 'orange' : 'gray';
+        });
+        d3.selectAll('.map-path').attr('stroke-width', d => {
+          const isTarget = String(d.properties.citycode) === String(val);
+          return isTarget ? '3px' : '0.2px';
+        });
       },
       deep: true,
     },
     // 宮崎県市町村用-------------------------------------------------------------------------
     s_leftStat: {
       handler: function(val) {
-        // bubble.jsだけにはスライダーの詳細を設定するコードが書かれているので先頭に配置する必要がある。。
-        // あとの並びはなんでもいい。
+        // bubble.jsだけにはスライダーの詳細を設定するコードが書かれている。
         Bubble(val, '#left-bubble-miyazaki-city');
         Bar(val, '#left-bar-miyazaki-city');
         Rank(val, '#left-rank-miyazaki-city');
