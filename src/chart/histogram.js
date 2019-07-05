@@ -60,7 +60,6 @@ export default function (val, parentDiv) {
     const histoData = d3.histogram()
     .domain(xScale.domain())
     .thresholds(xScale.ticks(6))(map);
-    console.log(histoData)
     // yスケール----------------------------------------------------------------------------------
     const yScale = d3.scaleLinear()
     .domain([0, d3.max(histoData, d => d.length)])
@@ -95,9 +94,7 @@ export default function (val, parentDiv) {
     svg.call(tip);
     rect
     .on('mouseover', function (d) {
-      const result = dc.dataset.filter(value => {
-        if (value.data > d.x0 && value.data <= d.x1) return true;
-      });
+      const result = dc.dataset.filter(value => value.data >= d.x0 && value.data <= d.x1);
       const citynames = result.map(value => value.cityname);
       return tip.show(citynames.join(), this)
     })
