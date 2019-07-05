@@ -238,6 +238,7 @@ input[type=range]::-ms-tooltip {
     color: #fff;
     border-radius: 2px;
     pointer-events: none;
+    max-width: 200px;
     z-index: 1;
 }
 /* Creates a small triangle extender for the tooltip */

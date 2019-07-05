@@ -106,20 +106,21 @@ export default function (val, parentDiv) {
   .selectAll('path')
   .data(json.features)
   .enter();
-  const p = g.append('path')
+  const pathG = g.append('path')
+  .attr('class', 'map-path')
   .attr('d', path)
   .attr('stroke', 'gray')
   .attr('stroke-width', '0.3px')
   .attr('fill', 'rgba(255,255,255,0.1)');
   // ツールチップ--------------------------------------------------------------------------------
-  p
+  pathG
   .on('mouseover', function(d) {
     const result = dataset.find(el => Number(el.citycode) === Number(d.properties.citycode));
     if (result) {
       tooltip
       .style('visibility', 'visible')
       .html(`${result.cityname}<br>${result.data}${unit}`);
-      d3.select(this).attr('stroke', 'black');
+      // d3.select(this).attr('stroke', 'black');
     }
   })
   .on('mousemove', () => {
@@ -130,11 +131,23 @@ export default function (val, parentDiv) {
   .on('mouseout', function () {
     tooltip.style('visibility', 'hidden');
     d3.select(this)
-    .attr('stroke', 'gray');
+    // .attr('stroke', 'gray');
   });
   //--------------------------------------------------------------------------------------------
+  // クリックでカレントに色を塗る------------------------------------------------------------------
+  pathG
+  .on('click', function (d) {
+    console.log(d);
+    // 実際の色塗りはwatch.jsで塗っている。
+    if (d3.select(this).attr('stroke') === 'orange') {
+      storeBase.commit('base/targetCitycodeChange', '');
+    } else {
+      storeBase.commit('base/targetCitycodeChange', d.properties.citycode);
+    }
+  });
+  // --------------------------------------------------------------------------------------------
   if (transitionFlg) {
-    p
+    pathG
     .transition()
     .delay((d, i) => i * 10)
     .attr("fill", d => {
@@ -143,19 +156,22 @@ export default function (val, parentDiv) {
         return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
       }
         return 'rgba(0,0,0,0)'
-
     });
   } else {
-    p
+    pathG
     .attr("fill", d => {
       if (d.properties.citycode) {
         const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
         return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
       }
         return 'rgba(0,0,0,0)'
-
     });
   }
+
+
+
+
+
   // 凡例---------------------------------------------------------------------------------------
   const g2 = svg.append('g')
   .attr('transform', 'translate(' + (5) + ',' + (30 * multi) + ')')
@@ -197,14 +213,13 @@ export default function (val, parentDiv) {
     const value = Number(e.target.value);
     const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
-    p
+    pathG
     .attr("fill", d => {
       if (d.properties.citycode) {
         const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
         return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
       }
         return 'rgba(0,0,0,0)'
-
     });
     rect
     .data(dc.legendDataSet)
