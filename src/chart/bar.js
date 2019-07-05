@@ -31,7 +31,6 @@ export default function (val, parentDiv) {
   const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 10 * multi, 'left': 50 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
   const transitionFlg = storeBase.state.statList.transition;
-  // const transitionFlg = false
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset, orderType) {
@@ -333,5 +332,4 @@ export default function (val, parentDiv) {
       return e => rangeInput(e)
     })(1), false);
   }
-
 }
