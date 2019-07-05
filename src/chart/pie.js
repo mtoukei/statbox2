@@ -58,8 +58,6 @@ export default function (val, parentDiv) {
         }
       });
       const zeloIndex = this.dataset.findIndex(value => value.data === 0);
-      // this.dataset = this.dataset.filter(value => value.cityname !== 'sakuzyo');
-      // this.dataset = this.dataset.filter(value => value.data !== 0);
       this.dataset.splice(zeloIndex, 0, {
         citycode: '99999',
         cityname: 'その他',
@@ -90,11 +88,13 @@ export default function (val, parentDiv) {
   .enter()
   .append('g')
   .attr('class', 'pie');
-  //--------------------------------------------------------------------------------------------
+  // 扇形---------------------------------------------------------------------------------------
   const arc = d3.arc()
   .outerRadius(radius)
   .innerRadius(40 * multi);
   const path = pieGroup.append('path')
+  .attr('id', d => `pie-path-${d.data.citycode}`)
+  .attr('class', 'pie-path')
   .attr('fill', d => {
     if (d.data.citycode === '99999') {
       return 'slategrey'
@@ -106,7 +106,8 @@ export default function (val, parentDiv) {
     }
       return colorScale(d.index)
   })
-  .attr('stroke', 'whitesmoke');
+  .attr('stroke', 'whitesmoke')
+  .attr('stroke-width', 0);
   if (transitionFlg) {
     path
     .transition()
@@ -168,6 +169,23 @@ export default function (val, parentDiv) {
       if (d.data.data !== 0) return d.data.cityname
     });
   }
+  // クリックでカレントに色を塗る-------------------------------------------------------------------
+  const elClick = (d, path) => {
+    // 実際の色塗りはwatch.jsで塗っている。
+    if (path.attr('stroke') === 'orange') {
+      storeBase.commit('base/targetCitycodeChange', '');
+    } else {
+      storeBase.commit('base/targetCitycodeChange', d.data.citycode);
+    }
+  };
+  path
+  .on('click', function (d) {
+    elClick(d, d3.select(this))
+  });
+  textP
+  .on('click', function (d) {
+    elClick(d, d3.select(`#pie-path-${d.data.citycode}`))
+  });
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
@@ -195,12 +213,26 @@ export default function (val, parentDiv) {
     .attr('d', arc)
     .attr('fill', d => {
       if (val.estat) {
-        if (prefOrCity === 'pref') {
+        if (d.data.citycode === '99999') {
+          return 'slategrey'
+        } else if (prefOrCity === 'pref') {
           return colorScale(Number(d.data.citycode.substr(0, 2)))
         }
           return colorScale(Number(d.data.citycode.substr(3, 2)))
       }
         return colorScale(d.index)
+    })
+    .attr('stroke', d => {
+      if (storeBase.state.base.targetCitycode === d.data.citycode) {
+        return 'orange'
+      }
+        return 'whitesmoke'
+    })
+    .attr('stroke-width', d => {
+      if (storeBase.state.base.targetCitycode === d.data.citycode) {
+        return '8px'
+      }
+        return 0
     });
     textP
     .data(pie(dc.dataset, d => d.citycode))
