@@ -209,7 +209,7 @@ export default function (val, parentDiv) {
   })
   .on('mouseout', tip.hide);
   medianPolyline
-  .on('mouseover', function (d) {
+  .on('mouseover', function () {
     return tip.show(`中央値${(Math.floor(dc.median * 10) / 10).toLocaleString()}${unit}`, this)
   })
   .on('mouseout', tip.hide);
