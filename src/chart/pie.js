@@ -96,9 +96,11 @@ export default function (val, parentDiv) {
   .innerRadius(40 * multi);
   const path = pieGroup.append('path')
   .attr('fill', d => {
-    if (val.estat) {
+    if (d.data.citycode === '99999') {
+      return 'slategrey'
+    } else if (isEStat) {
       if (prefOrCity === 'pref') {
-        return colorScale(Number(d.data.citycode.substr(0, 2)))
+       return colorScale(Number(d.data.citycode.substr(0, 2)))
       }
         return colorScale(Number(d.data.citycode.substr(3, 2)))
     }
@@ -136,10 +138,8 @@ export default function (val, parentDiv) {
     } else {
       rgb = d3.rgb(colorScale(d.index));
     }
-    if (0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b > 200) {
-      return "black";
-    }
-      return "white";
+    const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
+    return cY > 200 ? 'black' : 'white';
   })
   .attr('transform', d => 'translate(' + text.centroid(d) + ')')
   .attr('dy', '5px')
@@ -160,15 +160,11 @@ export default function (val, parentDiv) {
     .duration(80)
     .delay((d, i) => 70 * i)
     .text(d => {
-      // const angle = d.endAngle - d.startAngle;
-      // if (angle > 0.1) return d.data.cityname
       if (d.data.data !== 0) return d.data.cityname
     });
   } else {
     textP
     .text(d => {
-      // const angle = d.endAngle - d.startAngle;
-      // if (angle > 0.1) return d.data.cityname
       if (d.data.data !== 0) return d.data.cityname
     });
   }
@@ -212,8 +208,6 @@ export default function (val, parentDiv) {
     .duration(500)
     .attr('transform', d => 'translate(' + text.centroid(d) + ')')
     .text(d => {
-      // const angle = d.endAngle - d.startAngle;
-      // if (angle > 0.1) return d.data.cityname
         if (d.data.data !== 0) return d.data.cityname
     })
     .attr('fill', d => {
