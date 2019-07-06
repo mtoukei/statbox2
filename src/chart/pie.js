@@ -172,11 +172,8 @@ export default function (val, parentDiv) {
   // クリックでカレントに色を塗る-------------------------------------------------------------------
   const elClick = (d, path) => {
     // 実際の色塗りはwatch.jsで塗っている。
-    if (path.attr('stroke') === 'orange') {
-      storeBase.commit('base/targetCitycodeChange', '');
-    } else {
-      storeBase.commit('base/targetCitycodeChange', d.data.citycode);
-    }
+    const payload = path.attr('stroke') === 'orange' ? '' : d.data.citycode;
+    storeBase.commit('base/targetCitycodeChange', payload);
   };
   path
   .on('click', function (d) {
@@ -222,8 +219,18 @@ export default function (val, parentDiv) {
       }
         return colorScale(d.index)
     })
-    .attr('stroke', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : 'whitesmoke')
-    .attr('stroke-width', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? '8px' : 0);
+    .attr('stroke', d => {
+      if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) {
+        if ((d.data.data !== 0)) return 'orange'
+      }
+        return 'whitesmoke'
+    })
+    .attr('stroke-width', d => {
+      if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) {
+        if ((d.data.data !== 0)) return '8px'
+      }
+        return 0
+    });
     textP
     .data(pie(dc.dataset, d => d.citycode))
     .transition()

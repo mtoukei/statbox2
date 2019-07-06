@@ -141,11 +141,8 @@ export default function (val, parentDiv) {
   bubbles
   .on('click', function (d) {
     // 実際の色塗りはwatch.jsで塗っている。
-    if (d3.select(this).select('circle').attr('fill') === 'orange') {
-      storeBase.commit('base/targetCitycodeChange', '');
-    } else {
-      storeBase.commit('base/targetCitycodeChange', d.data.citycode);
-    }
+    const payload = d3.select(this).select('circle').attr('fill') === 'orange' ? '' : d.data.citycode;
+    storeBase.commit('base/targetCitycodeChange', payload);
   });
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
@@ -175,7 +172,7 @@ export default function (val, parentDiv) {
     circle
     .data(dc.data, d => d.data.citycode)
     .attr('r', d => d.r)
-    .attr('fill', d => dc.colorScale(d.r));
+    .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : d.rgb);
     text
     .data(dc.data, d => d.data.citycode)
     .text(d => {
@@ -185,7 +182,7 @@ export default function (val, parentDiv) {
     .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
     .attr('text-anchor', 'middle')
     .attr('fill', function (d) {
-      const rgb = d3.rgb(dc.colorScale(d.r));
+      const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 200 ? 'black' : 'white';
     });

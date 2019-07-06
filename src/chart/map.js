@@ -132,17 +132,13 @@ export default function (val, parentDiv) {
     tooltip.style('visibility', 'hidden');
     d3.select(this)
   });
-  //--------------------------------------------------------------------------------------------
   // クリックでカレントに色を塗る------------------------------------------------------------------
   pathG
   .on('click', function (d) {
     console.log(d);
     // 実際の色塗りはwatch.jsで塗っている。
-    if (d3.select(this).attr('stroke') === 'orange') {
-      storeBase.commit('base/targetCitycodeChange', '');
-    } else {
-      storeBase.commit('base/targetCitycodeChange', d.properties.citycode);
-    }
+    const payload = d3.select(this).attr('stroke') === 'orange' ? '' : d.properties.citycode;
+    storeBase.commit('base/targetCitycodeChange', payload);
   });
   // --------------------------------------------------------------------------------------------
   if (transitionFlg) {

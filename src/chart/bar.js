@@ -253,11 +253,8 @@ export default function (val, parentDiv) {
   rect
   .on('click', function (d) {
     // 実際の色塗りはwatch.jsで塗っている。
-    if (d3.select(this).attr('fill') === 'orange') {
-      storeBase.commit('base/targetCitycodeChange', '');
-    } else {
-      storeBase.commit('base/targetCitycodeChange', d.citycode);
-    }
+    const payload = d3.select(this).attr('fill') === 'orange' ? '' : d.citycode;
+    storeBase.commit('base/targetCitycodeChange', payload);
   });
   // 単位---------------------------------------------------------------------------------------
   svg.append('g')
