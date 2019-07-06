@@ -219,8 +219,18 @@ export default function (val, parentDiv) {
       }
         return colorScale(d.index)
     })
-    .attr('stroke', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : 'whitesmoke')
-    .attr('stroke-width', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? '8px' : 0);
+    .attr('stroke', d => {
+      if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) {
+        if ((d.data.data !== 0)) return 'orange'
+      }
+        return 'whitesmoke'
+    })
+    .attr('stroke-width', d => {
+      if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) {
+        if ((d.data.data !== 0)) return '8px'
+      }
+        return 0
+    });
     textP
     .data(pie(dc.dataset, d => d.citycode))
     .transition()
