@@ -150,7 +150,8 @@ export default function (val, parentDiv) {
   })
   .attr('font-size', 10 * multi + 'px')
   .attr('fill', 'black')
-  .attr('text-anchor', 'start');
+  .attr('text-anchor', 'start')
+  .style('cursor', 'pointer');
   // y軸バー------------------------------------------------------------------------------------
   svg.append('g')
   .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
@@ -263,6 +264,13 @@ export default function (val, parentDiv) {
   .on('click', function (d) {
     // 実際の色塗りはwatch.jsで塗っている。
     const payload = d3.select(this).attr('fill') === 'orange' ? '' : d.citycode;
+    storeBase.commit('base/targetCitycodeChange', payload);
+  });
+  cityNameText
+  .on('click', function (d) {
+    // 実際の色塗りはwatch.jsで塗っている。
+    const cityCode = dc.dataset.find(value => value.cityname === d).citycode;
+    const payload = d3.select('#bar-rect-' + cityCode).attr('fill') === 'orange' ? '' : cityCode;
     storeBase.commit('base/targetCitycodeChange', payload);
   });
   // 単位---------------------------------------------------------------------------------------
