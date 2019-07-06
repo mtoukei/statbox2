@@ -46,50 +46,50 @@ export default function (val, parentDiv) {
             "name": "北海道地方",
             "color": "orangered",
             "children": [
-              { "name": "北海道"}
+              { "name": "北海道", "citycode": "01000"}
             ]
           },
           {
             "name": "東北地方",
             "color": "palevioletred",
             "children": [
-              { "name": "青森県"}, { "name": "岩手県"}, { "name": "宮城県"}, { "name": "秋田県"}, { "name": "山形県"}, { "name": "福島県"}
+              { "name": "青森県", "citycode": "02000"}, { "name": "岩手県", "citycode": "03000"}, { "name": "宮城県", "citycode": "04000"}, { "name": "秋田県", "citycode": "05000"}, { "name": "山形県", "citycode": "6000"}, { "name": "福島県", "citycode": "07000"}
             ]
           },
           {
             "name": "関東地方",
             "color": "lightsteelblue",
             "children": [
-              { "name": "茨城県"}, { "name": "栃木県"}, { "name": "群馬県"}, { "name": "埼玉県"}, { "name": "千葉県"}, { "name": "東京都"}, { "name": "神奈川県"}
+              { "name": "茨城県", "citycode": "08000"}, { "name": "栃木県", "citycode": "09000"}, { "name": "群馬県", "citycode": "10000"}, { "name": "埼玉県", "citycode": "11000"}, { "name": "千葉県", "citycode": "12000"}, { "name": "東京都", "citycode": "13000"}, { "name": "神奈川県", "citycode": "14000"}
             ]
           },
           {
             "name": "中部地方",
             "color": "gold",
             "children": [
-              { "name": "新潟県"}, { "name": "富山県"}, { "name": "石川県"}, { "name": "福井県"}, { "name": "山梨県"}, { "name": "長野県"}, { "name": "岐阜県"}, { "name": "静岡県"}, { "name": "愛知県"}
+              { "name": "新潟県", "citycode": "15000"}, { "name": "富山県", "citycode": "16000"}, { "name": "石川県", "citycode": "17000"}, { "name": "福井県", "citycode": "18000"}, { "name": "山梨県", "citycode": "19000"}, { "name": "長野県", "citycode": "20000"}, { "name": "岐阜県", "citycode": "21000"}, { "name": "静岡県", "citycode": "22000"}, { "name": "愛知県", "citycode": "23000"}
             ]
           },
           {
             "name": "近畿地方",
             "color": "mediumseagreen",
             "children": [
-              { "name": "大阪府"}, { "name": "京都府"}, { "name": "兵庫県"}, { "name": "奈良県"}, { "name": "三重県"}, { "name": "滋賀県"}, { "name": "和歌山県"}
+              { "name": "大阪府", "citycode": "27000"}, { "name": "京都府", "citycode": "26000"}, { "name": "兵庫県", "citycode": "28000"}, { "name": "奈良県", "citycode": "29000"}, { "name": "三重県", "citycode": "24000"}, { "name": "滋賀県", "citycode": "25000"}, { "name": "和歌山県", "citycode": "30000"}
             ]
           },
           {
             "name": "中国・四国地方",
             "color": "olive",
             "children": [
-              { "name": "鳥取県"}, { "name": "島根県"}, { "name": "岡山県"}, { "name": "広島県"}, { "name": "山口県"}, { "name": "徳島県"}, { "name": "香川県"}, { "name": "愛媛県"}, { "name": "高知県"}
+              { "name": "鳥取県", "citycode": "31000"}, { "name": "島根県", "citycode": "32000"}, { "name": "岡山県", "citycode": "33000"}, { "name": "広島県", "citycode": "34000"}, { "name": "山口県", "citycode": "35000"}, { "name": "徳島県", "citycode": "36000"}, { "name": "香川県", "citycode": "37000"}, { "name": "愛媛県", "citycode": "38000"}, { "name": "高知県", "citycode": "39000"}
             ]
           },
           {
             "name": "九州・沖縄地方",
             "color": "royalblue",
             "children": [
-              { "name": "福岡県"}, { "name": "佐賀県"}, { "name": "長崎県"}, { "name": "熊本県"}, { "name": "大分県"},
-              { "name": "宮崎県"}, { "name": "鹿児島県"}, { "name": "沖縄県"}
+              { "name": "福岡県", "citycode": "40000"}, { "name": "佐賀県", "citycode": "41000"}, { "name": "長崎県", "citycode": "42000"}, { "name": "熊本県", "citycode": "43000"}, { "name": "大分県", "citycode": "44000"},
+              { "name": "宮崎県", "citycode": "45000"}, { "name": "鹿児島県", "citycode": "46000"}, { "name": "沖縄県", "citycode": "47000"}
             ]
           }
         ]
@@ -100,44 +100,44 @@ export default function (val, parentDiv) {
             "name": "宮崎東諸県圏域",
             "color": "orangered",
             "children": [
-              { "name": "宮崎市"}, { "name": "国富町"}, { "name": "綾町"}
+              { "name": "宮崎市", "citycode": "45201"}, { "name": "国富町", "citycode": "45382"}, { "name": "綾町", "citycode": "45383"}
             ]
           },
           {
             "name": "日南・串間圏域",
             "color": "palevioletred",
             "children": [
-              { "name": "日南市"}, { "name": "串間市"}
+              { "name": "日南市", "citycode": "45204"}, { "name": "串間市", "citycode": "45207"}
             ]
           },
           {
             "name": "都城北諸県圏域",
             "color": "gold",
             "children": [
-              { "name": "都城市"}, { "name": "三股町"}
+              { "name": "都城市", "citycode": "45202"}, { "name": "三股町", "citycode": "45341"}
             ]
           },
           {
             "name": "西諸県圏域",
             "color": "mediumseagreen",
             "children": [
-              { "name": "小林市"}, { "name": "えびの市"}, { "name": "高原町"}
+              { "name": "小林市", "citycode": "45205"}, { "name": "えびの市", "citycode": "45209"}, { "name": "高原町", "citycode": "45361"}
             ]
           },
           {
             "name": "西都児湯圏域",
             "color": "olive",
             "children": [
-              { "name": "西都市"}, { "name": "高鍋町"}, { "name": "新富町"}, { "name": "西米良村"},
-              { "name": "木城町"}, { "name": "川南町"}, { "name": "都農町"}
+              { "name": "西都市", "citycode": "45208"}, { "name": "高鍋町", "citycode": "45401"}, { "name": "新富町", "citycode": "45402"}, { "name": "西米良村", "citycode": "45403"},
+              { "name": "木城町", "citycode": "45404"}, { "name": "川南町", "citycode": "45405"}, { "name": "都農町", "citycode": "45406"}
             ]
           },
           {
             "name": "宮崎県北部圏域",
             "color": "royalblue",
             "children": [
-              { "name": "延岡市"}, { "name": "日向市"}, { "name": "門川町"}, { "name": "諸塚村"}, { "name": "椎葉村"},
-              { "name": "美郷町"}, { "name": "高千穂町"}, { "name": "日之影町"}, { "name": "五ヶ瀬町"}
+              { "name": "延岡市", "citycode": "45203"}, { "name": "日向市", "citycode": "45206"}, { "name": "門川町", "citycode": "45421"}, { "name": "諸塚村", "citycode": "45429"}, { "name": "椎葉村", "citycode": "45430"},
+              { "name": "美郷町", "citycode": "45431"}, { "name": "高千穂町", "citycode": "45441"}, { "name": "日之影町", "citycode": "45442"}, { "name": "五ヶ瀬町", "citycode": "45443"}
             ]
           }
         ]
@@ -226,8 +226,8 @@ export default function (val, parentDiv) {
       // 描画用のデータ変換---------------------------------------------------------------------
       this.root = d3.hierarchy(dataKeniki);
       this.root
-      .sum(function(d) { return d.value; })
-      .sort(function(a, b) { return b.height - a.height || b.value - a.value; });
+      .sum(d => d.value)
+      .sort((a, b) => b.height - a.height || b.value - a.value);
       // フォントスケール--------------------------------------------------------------------------
       const maxVal = d3.max(this.dataset, d => d.data);
       const minVal = d3.min(this.dataset, d => d.data);
@@ -275,11 +275,13 @@ export default function (val, parentDiv) {
   .on('mouseout', tip.hide);
   // ブロック作成------------------------------------------------------------------------------
   const rect = treeSvg.append('rect')
+  .attr('class', 'tree-rect')
   .attr('width', 0)
   .attr('height', 0)
   .attr('stroke', 'black')
   .attr('stroke-width', '0.3px')
   .attr('fill', d => {
+    if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) return 'orange';
     while(d.depth > 1) d = d.parent;
     return d.data.color;
   });
@@ -308,6 +310,13 @@ export default function (val, parentDiv) {
   } else {
     text.attr('opacity', 1);
   }
+  // クリックでカレントに色を塗る-------------------------------------------------------------------
+  rect
+  .on('click', function (d) {
+    // 実際の色塗りはwatch.jsで塗っている。
+    const payload = d3.select(this).attr('fill') === 'orange' ? '' : d.data.citycode;
+    storeBase.commit('base/targetCitycodeChange', payload);
+  });
   // 表名-------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
@@ -333,6 +342,7 @@ export default function (val, parentDiv) {
     .attr('width', d => d.x1 - d.x0)
     .attr('height', d => d.y1 - d.y0)
     .attr('fill', d => {
+      if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) return 'orange';
       while(d.depth > 1) d = d.parent;
       return d.data.color;
     });

@@ -66,6 +66,11 @@ export default {
           const isTarget = String(d.data.citycode) === String(val);
           if ((d.data.data !== 0)) return isTarget ? '8px' : 0;
         });
+        // ツリーマップのカレント行色塗り
+        d3.selectAll('.tree-rect').attr('fill', d => {
+          const isTarget = String(d.data.citycode) === String(val);
+          return isTarget ? 'orange' : d.parent.data.color;
+        });
       }
     },
     // 宮崎県市町村用-------------------------------------------------------------------------
