@@ -40,6 +40,7 @@ export default function (val, parentDiv) {
       this.minVal = null;
       this.median = null;
       this.sum = null;
+      this.standardDeviation = null;
     }
     create () {
       if (prefOrCity === 'pref') this.dataset.shift();
@@ -86,10 +87,13 @@ export default function (val, parentDiv) {
       } else {
         this.minVal = this.minVal * 1.1
       }
+      const map = this.dataset.map(value => value.data)
       // 平均値---------------------------------------------------------------------------------
-      this.sum = ss.sum(this.dataset.map(value => value.data)) / this.dataset.length;
+      this.sum = ss.sum(map) / this.dataset.length;
       // 中央値---------------------------------------------------------------------------------
-      this.median = ss.median(this.dataset.map(value => value.data));
+      this.median = ss.median(map);
+      // 標準偏差-------------------------------------------------------------------------------
+      this.standardDeviation = ss.standardDeviation(map);
     }
   }
   //---------------------------------------------------------------------------------------------
@@ -197,7 +201,7 @@ export default function (val, parentDiv) {
   .attr('stroke', 'blue')
   .attr('fill', 'none')
   .attr('stroke-width', 1);
-  svg.append('g')
+  const sumText = svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',15)')
   .attr('class', 'no-print')
@@ -209,9 +213,7 @@ export default function (val, parentDiv) {
   .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
   .on('click', () => {
     const target = svg.select('#sum-polyline');
-    target.style('display', () => {
-      return target.style('display') !== 'none' ? 'none' : 'block'
-    })
+    target.style('display', () => target.style('display') !== 'none' ? 'none' : 'block')
   });
   // 中央値-------------------------------------------------------------------------------------
   const medianPolyline = svg.append('polyline')
@@ -220,22 +222,29 @@ export default function (val, parentDiv) {
   .attr('stroke', 'red')
   .attr('fill', 'none')
   .attr('stroke-width', 1);
-  svg.append('g')
+  const medianText = svg.append('g')
   .attr('font-size', 12 * multi + 'px')
-  .attr('transform', 'translate(' + (width - margin.right * multi) + ',35)')
+  .attr('transform', 'translate(' + (width - margin.right * multi) + ',32)')
   .attr('class', 'no-print')
   .append('text')
-  .text(`赤線：中央値＝${(Math.floor(dc.median * 10) / 10).toLocaleString()}${unit}`)
+  .text(`赤線：中央値＝${(Math.floor(dc.median * 100) / 100).toLocaleString()}${unit}`)
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
   .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
   .on('click', () => {
     const target = svg.select('#median-polyline');
-    target.style('display', () => {
-      return target.style('display') !== 'none' ? 'none' : 'block'
-    })
+    target.style('display', () => target.style('display') !== 'none' ? 'none' : 'block')
   });
+  // 標準偏差----------------------------------------------------------------------------------
+  const sdText = svg.append('g')
+  .attr('font-size', 12 * multi + 'px')
+  .attr('transform', 'translate(' + (width - margin.right * multi) + ',49)')
+  .attr('class', 'no-print')
+  .append('text')
+  .text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`)
+  .attr('text-anchor', 'end')
+  .style('cursor', 'pointer');
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
@@ -361,11 +370,15 @@ export default function (val, parentDiv) {
     .transition()
     .duration(200)
     .attr('points', margin.left + ',' + yScale(dc.sum) + ' ' + (width - margin.right) + ',' + yScale(dc.sum));
+    sumText.text(`青線：平均値＝${(Math.floor(dc.sum * 10) / 10).toLocaleString()}${unit}`);
     // 中央値-----------------------------------------------------------------------------------
     medianPolyline
     .transition()
     .duration(200)
     .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median));
+    medianText.text(`赤線：中央値＝${(Math.floor(dc.median * 100) / 100).toLocaleString()}${unit}`)
+    // 標準偏差--------------------------------------------------------------------------------
+    sdText.text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`)
   };
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
