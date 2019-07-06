@@ -175,7 +175,7 @@ export default function (val, parentDiv) {
     circle
     .data(dc.data, d => d.data.citycode)
     .attr('r', d => d.r)
-    .attr('fill', d => dc.colorScale(d.r));
+    .attr('fill', d => d.rgb);
     text
     .data(dc.data, d => d.data.citycode)
     .text(d => {
@@ -185,7 +185,7 @@ export default function (val, parentDiv) {
     .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
     .attr('text-anchor', 'middle')
     .attr('fill', function (d) {
-      const rgb = d3.rgb(dc.colorScale(d.r));
+      const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 200 ? 'black' : 'white';
     });
