@@ -172,11 +172,8 @@ export default function (val, parentDiv) {
   // クリックでカレントに色を塗る-------------------------------------------------------------------
   const elClick = (d, path) => {
     // 実際の色塗りはwatch.jsで塗っている。
-    if (path.attr('stroke') === 'orange') {
-      storeBase.commit('base/targetCitycodeChange', '');
-    } else {
-      storeBase.commit('base/targetCitycodeChange', d.data.citycode);
-    }
+    const payload = path.attr('stroke') === 'orange' ? '' : d.data.citycode;
+    storeBase.commit('base/targetCitycodeChange', payload);
   };
   path
   .on('click', function (d) {

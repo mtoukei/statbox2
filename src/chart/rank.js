@@ -165,11 +165,8 @@ export default function (val, parentDiv) {
   // クリックでカレントに色を塗る------------------------------------------------------------------
   const rectClick = (d, rect) => {
     // 実際の色塗りはwatch.jsで塗っている。
-    if (rect.attr('fill') === 'orange') {
-      storeBase.commit('base/targetCitycodeChange', '');
-    } else {
-      storeBase.commit('base/targetCitycodeChange', d.citycode);
-    }
+    const payload = rect.attr('fill') === 'orange' ? '' : d.citycode;
+    storeBase.commit('base/targetCitycodeChange', payload);
   };
   rectG1
   .on('click', function (d) {

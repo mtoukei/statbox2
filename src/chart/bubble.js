@@ -141,11 +141,8 @@ export default function (val, parentDiv) {
   bubbles
   .on('click', function (d) {
     // 実際の色塗りはwatch.jsで塗っている。
-    if (d3.select(this).select('circle').attr('fill') === 'orange') {
-      storeBase.commit('base/targetCitycodeChange', '');
-    } else {
-      storeBase.commit('base/targetCitycodeChange', d.data.citycode);
-    }
+    const payload = d3.select(this).select('circle').attr('fill') === 'orange' ? '' : d.data.citycode;
+    storeBase.commit('base/targetCitycodeChange', payload);
   });
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
@@ -175,7 +172,7 @@ export default function (val, parentDiv) {
     circle
     .data(dc.data, d => d.data.citycode)
     .attr('r', d => d.r)
-    .attr('fill', d => d.rgb);
+    .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : d.rgb);
     text
     .data(dc.data, d => d.data.citycode)
     .text(d => {
