@@ -11,6 +11,7 @@ import Time from '../../chart/time'
 import Maps77 from '../../chart/maps77'
 import Rank from '../../chart/rank'
 import Time2 from '../../chart/time2'
+import BoxProt from '../../chart/boxprot'
 export default {
   name: 'watch',
   computed: {
@@ -84,6 +85,7 @@ export default {
         Pie(val, '#left-pie-miyazaki-city');
         Tree(val, '#left-tree-miyazaki-city');
         Histogram(val, '#left-histogram-miyazaki-city');
+        BoxProt(val, '#left-box-miyazaki-city');
         Scatter(this.s_leftStat, this.s_rightStat);
       },
       deep: true,
@@ -107,6 +109,7 @@ export default {
         Tree(val, '#left-tree-pref');
         Histogram(val, '#left-histogram-pref');
         Time2(val, '#left-time-pref');
+        BoxProt(val, '#left-box-pref');
         ScatterEstat(this.s_leftStatEstatPref, this.s_rightStatEstatPref, 'pref', '#left-scatterPref');
       },
       deep: true,
@@ -128,6 +131,7 @@ export default {
         Pie(val, '#left-pie-city');
         Histogram(val, '#left-histogram-city');
         Time2(val, '#left-time-city');
+        BoxProt(val, '#left-box-city');
         ScatterEstat(this.s_leftStatEstatCity, this.s_rightStatEstatCity, 'city', '#left-scatterCity');
       },
       deep: true,
