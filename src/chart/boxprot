@@ -37,6 +37,7 @@ export default function (val, parentDiv) {
     constructor (dataset) {
       this.dataset = dataset;
       this.data = null;
+      this.circleData = null;
       this.q1 = null;
       this.median = null;
       this.q3 = null;
@@ -50,6 +51,9 @@ export default function (val, parentDiv) {
     create () {
       if (prefOrCity === 'pref') this.dataset.shift();
       this.data = this.dataset.map(value => value.data);
+      this.circleData = this.dataset.map(value => {
+        return {data: value.data, cityname: value.cityname}
+      });
       const dataSorted = this.data.sort(d3.ascending);
       this.q1 = d3.quantile(dataSorted, .25);
       this.median = d3.quantile(dataSorted, .5);
@@ -185,11 +189,11 @@ export default function (val, parentDiv) {
   // 散布イメージ-------------------------------------------------------------------------------
   const jitterWidth = 60;
   const circle = svg.selectAll("circle")
-  .data(dc.data)
+  .data(dc.circleData)
   .enter()
   .append('circle')
   .attr('cx', () => center - jitterWidth / 2 + Math.random() * jitterWidth )
-  .attr('cy', d => yScale(d))
+  .attr('cy', d => yScale(d.data))
   .attr('r', 0)
   .style('fill', 'white')
   .attr('stroke', 'black');
@@ -199,9 +203,17 @@ export default function (val, parentDiv) {
     .delay((d, i) => i * 30)
     .attr('r', 2)
   } else {
-    hLineText
+    circle
     .attr('r', 2)
   }
+  // ツールチップ---------------------------------------------------------------------------------
+  const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
+  svg.call(tip);
+  circle
+  .on('mouseover', function (d) {
+    return tip.show(`${d.cityname}<br>${d.data.toLocaleString()}${unit}`, this)
+  })
+  .on('mouseout', tip.hide);
   // 単位---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
@@ -271,8 +283,8 @@ export default function (val, parentDiv) {
     .attr('y', d => yScale(d.data))
     // 散布イメージ-------------------------------------------------------------------------------
     circle
-    .data(dc.data)
-    .attr('cy', d => yScale(d))
+    .data(dc.circleData)
+    .attr('cy', d => yScale(d.data))
   };
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
