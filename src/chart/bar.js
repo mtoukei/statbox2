@@ -275,14 +275,14 @@ export default function (val, parentDiv) {
   });
   // 単位---------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size', 10 * multi + 'px')
+  .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(10,15)')
   .append('text')
   .text('単位:' + unit);
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
-  .attr('transform', 'translate(' + 60 * multi + ',15)')
+  .attr('transform', 'translate(' + 70 * multi + ',15)')
   .attr('class', 'no-print')
   .append('text')
   .text(statName)

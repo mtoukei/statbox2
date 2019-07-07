@@ -171,7 +171,7 @@ export default function (val, parentDiv) {
   .text(d => {
     const citys = d.citys ? d.citys.join() : '';
     const data = (Math.floor(d.data * 10) / 10).toLocaleString() + unit;
-    return `${d.text}${data} ${citys}`
+    return `${d.text}=${data} ${citys}`
   });
   if (transitionFlg) {
     hLineText
@@ -191,7 +191,7 @@ export default function (val, parentDiv) {
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
-  .attr('transform', 'translate(' + 60 * multi + ',15)')
+  .attr('transform', 'translate(' + 70 * multi + ',15)')
   .attr('class', 'no-print')
   .append('text')
   .text(statName)
@@ -226,13 +226,11 @@ export default function (val, parentDiv) {
     .text(d => {
       const citys = d.citys ? d.citys.join() : '';
       const data = (Math.floor(d.data * 10) / 10).toLocaleString() + unit;
-      return `${d.text}${data} ${citys}`
+      return `${d.text}=${data} ${citys}`
     })
     .transition()
     .duration(200)
     .attr('y', d => yScale(d.data))
-
-
   };
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
