@@ -87,14 +87,15 @@ export default function (val, parentDiv) {
       } else {
         this.minVal = this.minVal * 1.1
       }
-      const map = this.dataset.map(value => value.data)
+      const map = this.dataset.map(value => value.data);
       // 平均値---------------------------------------------------------------------------------
       this.mean = ss.mean(map);
       // 中央値---------------------------------------------------------------------------------
       this.median = ss.median(map);
       // 標準偏差-------------------------------------------------------------------------------
       this.standardDeviation = ss.standardDeviation(map);
-      // 偏差値---------------------------------------------------------------------------------
+      // 標準偏差、平均値をstoreに保存--------------------------------------------------------
+      storeBase.commit('base/ssDataChange', {city: prefOrCity, standardDeviation: this.standardDeviation, mean: this.mean})
     }
   }
   //---------------------------------------------------------------------------------------------
@@ -165,7 +166,7 @@ export default function (val, parentDiv) {
   .data(dc.dataset)
   .enter();
   const rect = g.append('rect')
-  .attr('class', 'bar-rect')
+  .attr('class', 'bar-rect-' + prefOrCity)
   .attr('x', d => xScale(d.cityname))
   .attr('width', xScale.bandwidth())
   .attr('y', yScale(0))
@@ -247,10 +248,11 @@ export default function (val, parentDiv) {
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer');
   // 偏差値------------------------------------------------------------------------------------
-  const standardScoreCompute = () => {
-    const result = dc.dataset.find(value => String(value.citycode) === String(storeBase.state.base.targetCitycode));
+  const standardScoreCompute = (dataset, mean, standardDeviation) => {
+    if (!storeBase.state.base.targetCitycode) return 'X'
+    const result = dataset.find(value => String(value.citycode) === String(storeBase.state.base.targetCitycode));
     if (result) {
-      const zScore = ss.zScore(result.data, dc.mean, dc.standardDeviation);
+      const zScore = ss.zScore(result.data, mean, standardDeviation);
       return (zScore * 10 + 50).toLocaleString();
     }
       return 'XX'
@@ -258,9 +260,10 @@ export default function (val, parentDiv) {
   const ssText = svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',66)')
-  .attr('class', 'no-print')
-  .append('text')
-  .text(`偏差値＝${standardScoreCompute()}`)
+  .attr('class', 'no-print').append('text')
+  .attr('class', 'standard-score-text-' + prefOrCity)
+  .text(`偏差値＝${standardScoreCompute(dc.dataset, dc.mean, dc.standardDeviation)}`)
+  // .text(`偏差値＝XXX`)
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer');
   // ツールチップ---------------------------------------------------------------------------------
@@ -278,7 +281,7 @@ export default function (val, parentDiv) {
     const payload = d3.select(this).attr('fill') === 'orange' ? '' : d.citycode;
     storeBase.commit('base/targetCitycodeChange', payload);
     // ------------------------------------------------------------------------------------------
-    ssText.text(`偏差値＝${standardScoreCompute()}`)
+    ssText.text(`偏差値＝${standardScoreCompute(dc.dataset, dc.mean, dc.standardDeviation)}`)
   });
   cityNameText
   .on('click', function (d) {
@@ -288,7 +291,7 @@ export default function (val, parentDiv) {
     const payload = storeBase.state.base.targetCitycode === cityCode ? '' : cityCode;
     storeBase.commit('base/targetCitycodeChange', payload);
     // ------------------------------------------------------------------------------------------
-    ssText.text(`偏差値＝${standardScoreCompute()}`)
+    ssText.text(`偏差値＝${standardScoreCompute(dc.dataset, dc.mean, dc.standardDeviation)}`)
   });
   // 単位---------------------------------------------------------------------------------------
   svg.append('g')
@@ -403,7 +406,9 @@ export default function (val, parentDiv) {
     .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median));
     medianText.text(`赤線：中央値＝${(Math.floor(dc.median * 100) / 100).toLocaleString()}${unit}`)
     // 標準偏差--------------------------------------------------------------------------------
-    sdText.text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`)
+    sdText.text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`);
+    // 偏差値-----------------------------------------------------------------------------------
+    ssText.text(`偏差値＝${standardScoreCompute(dc.dataset, dc.mean, dc.standardDeviation)}`)
   };
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
