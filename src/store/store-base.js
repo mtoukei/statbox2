@@ -4,14 +4,14 @@ import Vuex from 'vuex'
 import statList from './store-statlist'
 Vue.use(Vuex);
 const Div = [
-  {order: 100, statType: 'miyazakiCity', divId: 'bar-miyazaki-city', class: 'large1-chart-div', name: '棒グラフ', show: true, rightSide: false},
-  {order: 101, statType: 'miyazakiCity', divId: 'box-miyazaki-city', class: 'normal-chart-div', name: '箱ひげ図', show: true, rightSide: false},
-  {order: 102, statType: 'miyazakiCity', divId: 'rank-miyazaki-city', class: 'normal-chart-div', name: 'ランキング', show: true, rightSide: false},
-  {order: 103, statType: 'miyazakiCity', divId: 'bubble-miyazaki-city', class: 'normal-chart-div', name: 'バブル', show: true, rightSide: false},
-  {order: 104, statType: 'miyazakiCity', divId: 'map-miyazaki-city', class: 'normal-chart-div', name: '地図', show: true, rightSide: false},
-  {order: 105, statType: 'miyazakiCity', divId: 'pie-miyazaki-city', class: 'normal-chart-div', name: '円グラフ', show: true, rightSide: false},
-  {order: 106, statType: 'miyazakiCity', divId: 'tree-miyazaki-city', class: 'normal-chart-div', name: 'ツリーマップ', show: true, rightSide: false},
-  {order: 107, statType: 'miyazakiCity', divId: 'histogram-miyazaki-city', class: 'normal-chart-div', name: 'ヒストグラム', show: true, rightSide: false},
+  {order: 100, statType: 'miyazakiCity', divId: 'bar-city-miyazaki', class: 'large1-chart-div', name: '棒グラフ', show: true, rightSide: false},
+  {order: 101, statType: 'miyazakiCity', divId: 'box-city-miyazaki', class: 'normal-chart-div', name: '箱ひげ図', show: true, rightSide: false},
+  {order: 102, statType: 'miyazakiCity', divId: 'rank-city-miyazaki', class: 'normal-chart-div', name: 'ランキング', show: true, rightSide: false},
+  {order: 103, statType: 'miyazakiCity', divId: 'bubble-city-miyazaki', class: 'normal-chart-div', name: 'バブル', show: true, rightSide: false},
+  {order: 104, statType: 'miyazakiCity', divId: 'map-city-miyazaki', class: 'normal-chart-div', name: '地図', show: true, rightSide: false},
+  {order: 105, statType: 'miyazakiCity', divId: 'pie-city-miyazaki', class: 'normal-chart-div', name: '円グラフ', show: true, rightSide: false},
+  {order: 106, statType: 'miyazakiCity', divId: 'tree-city-miyazaki', class: 'normal-chart-div', name: 'ツリーマップ', show: true, rightSide: false},
+  {order: 107, statType: 'miyazakiCity', divId: 'histogram-city-miyazaki', class: 'normal-chart-div', name: 'ヒストグラム', show: true, rightSide: false},
 
   {order: 200, statType: 'city', divId: 'bar-city', class: 'large1-chart-div', name: '棒グラフ', show: false, rightSide: false},
   {order: 201, statType: 'city', divId: 'box-city', class: 'normal-chart-div', name: '箱ひげ図', show: false, rightSide: false},
@@ -43,7 +43,26 @@ const Div = [
 const base = {
   namespaced: true,
   state: {
+    ssData: {
+      miyazaki: {
+        standardDeviation: null,
+        mean: null,
+      },
+      pref: {
+        standardDeviation: null,
+        mean: null,
+      },
+      city: {
+        standardDeviation: null,
+        mean: null,
+      }
+    },
     targetCitycode: '',
+    // targetCitycode: {
+    //   miyazaki: null,
+    //   pref: null,
+    //   city: null
+    // },
     rightSideDivShow: false,
     menuChange: true,
     leftDivList: Div,
@@ -252,7 +271,12 @@ const base = {
     }, ],
   },
   mutations: {
+    ssDataChange (state, payload) {
+      state.ssData[payload.city].standardDeviation = payload.standardDeviation;
+      state.ssData[payload.city].mean = payload.mean
+    },
     targetCitycodeChange (state, payload) {
+      // state.targetCitycode[payload.city] = payload.citycode
       state.targetCitycode = payload
     },
     barSortChange (state, payload) {

@@ -12,9 +12,11 @@ import Maps77 from '../../chart/maps77'
 import Rank from '../../chart/rank'
 import Time2 from '../../chart/time2'
 import BoxProt from '../../chart/boxprot'
+import * as ss from 'simple-statistics'
 export default {
   name: 'watch',
   computed: {
+    s_ssData () { return this.$store.state.base.ssData },
     s_targetCitycode () { return this.$store.state.base.targetCitycode },
     s_chartDivLoading () { return this.$store.state.base.chartDivLoading },
     c_centerDivStyle () { return this.centerDivStyle },
@@ -30,26 +32,37 @@ export default {
   },
   watch: {
     s_targetCitycode: {
-      handler: val => {
-        // 棒グラフのカレント行色塗り
-        d3.selectAll('.bar-rect').attr('fill', d => {
-          const isTarget = String(d.citycode) === String(val);
-          if (d.data >= 0) {
-            return isTarget ? 'orange' : 'slategray';
-          }
-            return isTarget ? 'orange' : 'coral';
+      handler: function (val) {
+        // 棒グラフのカレント行色塗りと同時に偏差値計算------------------------------------------
+        ['pref', 'city', 'miyazaki'].forEach(value => {
+          d3.selectAll('.bar-rect-' + value).attr('fill', d => {
+            // シティコードも3つ必要
+            const isTarget = String(d.citycode) === String(val);
+            // 偏差値計算-------------------------------------------------------------------------
+            if (isTarget) {
+              const zScore = ss.zScore(d.data, this.s_ssData[value].mean, this.s_ssData[value].standardDeviation);
+              const standardScore = (zScore * 10 + 50).toLocaleString();
+              const el = d3.select('.standard-score-text-' + value);
+              el.text(`偏差値＝${standardScore}`)
+            }
+            // -------------------------------------------------------------------------------------
+            if (d.data >= 0) {
+              return isTarget ? 'orange' : 'slategray';
+            }
+              return isTarget ? 'orange' : 'coral';
+          });
         });
-        // ランキングのカレント行色塗り
+        // ランキングのカレント行色塗り------------------------------------------------------------
         d3.selectAll('.rank-rect').attr('fill', d => {
           const isTarget = String(d.citycode) === String(val);
           return isTarget ? 'orange' : d.rgb;
         });
-        // バブルのカレント行色塗り
+        // バブルのカレント行色塗り---------------------------------------------------------------
         d3.selectAll('.bubble-circle').attr('fill', d => {
           const isTarget = String(d.data.citycode) === String(val);
           return isTarget ? 'orange' : d.rgb;
         });
-        // マップのカレント行色塗り
+        // マップのカレント行色塗り----------------------------------------------------------------
         d3.selectAll('.map-path').attr('stroke', d => {
           const isTarget = String(d.properties.citycode) === String(val);
           return isTarget ? 'orange' : 'gray';
@@ -58,7 +71,7 @@ export default {
           const isTarget = String(d.properties.citycode) === String(val);
           return isTarget ? '3px' : '0.2px';
         });
-        // 円グラフのカレント行色塗り
+        // 円グラフのカレント行色塗り--------------------------------------------------------------
         d3.selectAll('.pie-path').attr('stroke', d => {
           const isTarget = String(d.data.citycode) === String(val);
           if ((d.data.data !== 0)) return isTarget ? 'orange' : 'whitesmoke';
@@ -67,25 +80,28 @@ export default {
           const isTarget = String(d.data.citycode) === String(val);
           if ((d.data.data !== 0)) return isTarget ? '8px' : 0;
         });
-        // ツリーマップのカレント行色塗り
+        // ツリーマップのカレント行色塗り-----------------------------------------------------------
         d3.selectAll('.tree-rect').attr('fill', d => {
           const isTarget = String(d.data.citycode) === String(val);
           return isTarget ? 'orange' : d.parent.data.color;
         });
-      }
+      },
+      deep: true,
     },
     // 宮崎県市町村用-------------------------------------------------------------------------
     s_leftStat: {
       handler: function(val) {
         // bubble.jsだけにはスライダーの詳細を設定するコードが書かれている。
-        Bubble(val, '#left-bubble-miyazaki-city');
-        Bar(val, '#left-bar-miyazaki-city');
-        Rank(val, '#left-rank-miyazaki-city');
-        Map(val, '#left-map-miyazaki-city');
-        Pie(val, '#left-pie-miyazaki-city');
-        Tree(val, '#left-tree-miyazaki-city');
-        Histogram(val, '#left-histogram-miyazaki-city');
-        BoxProt(val, '#left-box-miyazaki-city');
+        Bubble(val, '#left-bubble-city-miyazaki');
+        // Bar(val, '#left-bar-miyazaki-city');
+        Bar(val, '#left-bar-city-miyazaki');
+        BoxProt(val, '#left-box-city-miyazaki');
+        Rank(val, '#left-rank-city-miyazaki');
+        Map(val, '#left-map-city-miyazaki');
+        Pie(val, '#left-pie-city-miyazaki');
+        Tree(val, '#left-tree-city-miyazaki');
+        Histogram(val, '#left-histogram-city-miyazaki');
+
         Scatter(this.s_leftStat, this.s_rightStat);
       },
       deep: true,
