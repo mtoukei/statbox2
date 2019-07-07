@@ -93,7 +93,9 @@
       headerMenuSelect(key) {
         const vm = this;
         const divList = vm.s_leftDivList;
-        vm.$store.commit('base/menuChange', true);// トランジションをさせない
+        // トランジションをさせない。contents.vueのメソッドchartDivDetectResizeでmenuChange
+        // を見て、トランジションするかしないかを判断している。
+        vm.$store.commit('base/menuChange', true);
         vm.$store.commit('base/statTypeChange', key);
         vm.$store.commit('base/activeIndexChange', key);
         if (key === 'home') {
