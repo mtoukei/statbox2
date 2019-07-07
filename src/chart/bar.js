@@ -39,7 +39,7 @@ export default function (val, parentDiv) {
       this.maxVal = null;
       this.minVal = null;
       this.median = null;
-      this.sum = null;
+      this.mean = null;
       this.standardDeviation = null;
     }
     create () {
@@ -89,11 +89,12 @@ export default function (val, parentDiv) {
       }
       const map = this.dataset.map(value => value.data)
       // 平均値---------------------------------------------------------------------------------
-      this.sum = ss.sum(map) / this.dataset.length;
+      this.mean = ss.mean(map);
       // 中央値---------------------------------------------------------------------------------
       this.median = ss.median(map);
       // 標準偏差-------------------------------------------------------------------------------
       this.standardDeviation = ss.standardDeviation(map);
+      // 偏差値---------------------------------------------------------------------------------
     }
   }
   //---------------------------------------------------------------------------------------------
@@ -164,12 +165,11 @@ export default function (val, parentDiv) {
   .data(dc.dataset)
   .enter();
   const rect = g.append('rect')
-  .attr('id', d => `bar-rect-${d.citycode}`)
   .attr('class', 'bar-rect')
   .attr('x', d => xScale(d.cityname))
   .attr('width', xScale.bandwidth())
   .attr('y', yScale(0))
-  .attr('height', 0) //棒の長さ0
+  .attr('height', 0)
   .style('cursor', 'pointer');
   if (transitionFlg) {
     rect.transition()
@@ -198,7 +198,7 @@ export default function (val, parentDiv) {
   // 平均値-------------------------------------------------------------------------------------
   const sumPolyline = svg.append('polyline')
   .attr('id', 'sum-polyline')
-  .attr('points', margin.left + ',' + yScale(dc.sum) + ' ' + (width - margin.right) + ',' + yScale(dc.sum))
+  .attr('points', margin.left + ',' + yScale(dc.mean) + ' ' + (width - margin.right) + ',' + yScale(dc.mean))
   .attr('stroke', 'blue')
   .attr('fill', 'none')
   .attr('stroke-width', 1);
@@ -207,7 +207,7 @@ export default function (val, parentDiv) {
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',15)')
   .attr('class', 'no-print')
   .append('text')
-  .text(`青線：平均値＝${(Math.floor(dc.sum * 10) / 10).toLocaleString()}${unit}`)
+  .text(`青線：平均値＝${(Math.floor(dc.mean * 10) / 10).toLocaleString()}${unit}`)
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
@@ -246,6 +246,23 @@ export default function (val, parentDiv) {
   .text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`)
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer');
+  // 偏差値------------------------------------------------------------------------------------
+  const standardScoreCompute = () => {
+    const result = dc.dataset.find(value => String(value.citycode) === String(storeBase.state.base.targetCitycode));
+    if (result) {
+      const zScore = ss.zScore(result.data, dc.mean, dc.standardDeviation);
+      return (zScore * 10 + 50).toLocaleString();
+    }
+      return 'XX'
+  };
+  const ssText = svg.append('g')
+  .attr('font-size', 12 * multi + 'px')
+  .attr('transform', 'translate(' + (width - margin.right * multi) + ',66)')
+  .attr('class', 'no-print')
+  .append('text')
+  .text(`偏差値＝${standardScoreCompute()}`)
+  .attr('text-anchor', 'end')
+  .style('cursor', 'pointer');
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
@@ -254,24 +271,24 @@ export default function (val, parentDiv) {
     return tip.show(`${d.top}位 ${d.cityname}<br>${d.data.toLocaleString()}${unit}`, this)
   })
   .on('mouseout', tip.hide);
-  // medianPolyline
-  // .on('mouseover', function () {
-  //   return tip.show(`中央値${(Math.floor(dc.median * 10) / 10).toLocaleString()}${unit}`, this)
-  // })
-  // .on('mouseout', tip.hide);
-  // クリックでカレントに色を塗る-------------------------------------------------------------------
+  // クリックでカレントに色を塗る+偏差値を計算する-----------------------------------------------
   rect
   .on('click', function (d) {
     // 実際の色塗りはwatch.jsで塗っている。
     const payload = d3.select(this).attr('fill') === 'orange' ? '' : d.citycode;
     storeBase.commit('base/targetCitycodeChange', payload);
+    // ------------------------------------------------------------------------------------------
+    ssText.text(`偏差値＝${standardScoreCompute()}`)
   });
   cityNameText
   .on('click', function (d) {
     // 実際の色塗りはwatch.jsで塗っている。
-    const cityCode = dc.dataset.find(value => value.cityname === d).citycode;
-    const payload = d3.select('#bar-rect-' + cityCode).attr('fill') === 'orange' ? '' : cityCode;
+    const target = d.cityname ? d.cityname : d;// 逃げのコード
+    const cityCode = dc.dataset.find(value => value.cityname === target).citycode;
+    const payload = storeBase.state.base.targetCitycode === cityCode ? '' : cityCode;
     storeBase.commit('base/targetCitycodeChange', payload);
+    // ------------------------------------------------------------------------------------------
+    ssText.text(`偏差値＝${standardScoreCompute()}`)
   });
   // 単位---------------------------------------------------------------------------------------
   svg.append('g')
@@ -348,7 +365,7 @@ export default function (val, parentDiv) {
     });
     cityNameText
     .data(dc.dataset)
-    .text(d => d.cityname)
+    .text(d => d.cityname);
   };
   // --------------------------------------------------------------------------------------------
   const rangeInput = e => {
@@ -377,8 +394,8 @@ export default function (val, parentDiv) {
     sumPolyline
     .transition()
     .duration(200)
-    .attr('points', margin.left + ',' + yScale(dc.sum) + ' ' + (width - margin.right) + ',' + yScale(dc.sum));
-    sumText.text(`青線：平均値＝${(Math.floor(dc.sum * 10) / 10).toLocaleString()}${unit}`);
+    .attr('points', margin.left + ',' + yScale(dc.mean) + ' ' + (width - margin.right) + ',' + yScale(dc.mean));
+    sumText.text(`青線：平均値＝${(Math.floor(dc.mean * 10) / 10).toLocaleString()}${unit}`);
     // 中央値-----------------------------------------------------------------------------------
     medianPolyline
     .transition()
