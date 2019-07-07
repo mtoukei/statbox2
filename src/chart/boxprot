@@ -164,9 +164,9 @@ export default function (val, parentDiv) {
   ])
   .enter()
   .append("text")
-  .attr('x', center + boxWidth / 2 + 10)
+  .attr('x', center + boxWidth / 2 + 5)
   .attr('y', 0)
-  .attr('font-size', 12 * multi + 'px')
+  .attr('font-size', 10 * multi + 'px')
   .attr("fill", "black")
   .text(d => {
     const citys = d.citys ? d.citys.join() : '';
@@ -182,6 +182,17 @@ export default function (val, parentDiv) {
     hLineText
     .attr('y', d => yScale(d.data))
   }
+  // const jitterWidth = 50;
+  // svg
+  // .selectAll("indPoints")
+  // .data(dc.data)
+  // .enter()
+  // .append("circle")
+  // .attr("cx", () => center - jitterWidth / 2 + Math.random() * jitterWidth )
+  // .attr("cy", d => yScale(d))
+  // .attr("r", 2)
+  // .style("fill", "white")
+  // .attr("stroke", "black");
   // 単位---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
@@ -216,7 +227,7 @@ export default function (val, parentDiv) {
     .transition()
     .duration(200)
     .attr("y1", function(d) { return(yScale(d)) } )
-    .attr("y2", function(d) { return(yScale(d)) } )
+    .attr("y2", function(d) { return(yScale(d)) } );
     hLineText
     .data([
       {data: dc.min, text: '最小値', citys: dc.minCitys},
