@@ -370,26 +370,6 @@
         if (!value) return true;
         return data.label.indexOf(value) !== -1;
       },
-      getMetaInfo (e) {
-        const vm = this;
-        vm.$store.commit('base/chartDivLoadingShow', true);
-        vm.metaInfo = new Promise(function(resolve) {
-          axios({
-            method: 'get',
-            url: 'https://api.e-stat.go.jp/rest/2.1/app/json/getMetaInfo',
-            params: {
-              statsDataId: e.statId,
-              appId: eStatApiId
-            }
-          })
-          .then(response => {
-            vm.$store.commit('base/chartDivLoadingShow', false);
-            const classObjs = response.data['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'];
-            const cat01s = classObjs.find(val => val['@id'] === 'cat01').CLASS;
-            resolve(cat01s)
-          });
-        })
-      },
       prefChange2 () {
         this.$store.commit('statList/eStatReload', {side: 'left'});
       },
