@@ -64,7 +64,7 @@ export default function (val, parentDiv) {
           return 0;
         });
       }
-      if (val.estat) {
+      if (isEStat) {
         this.maxVal = 0;
         this.minVal = 99999999;
         val.statData.forEach(value => {
@@ -254,11 +254,11 @@ export default function (val, parentDiv) {
     return tip.show(`${d.top}位 ${d.cityname}<br>${d.data.toLocaleString()}${unit}`, this)
   })
   .on('mouseout', tip.hide);
-  medianPolyline
-  .on('mouseover', function () {
-    return tip.show(`中央値${(Math.floor(dc.median * 10) / 10).toLocaleString()}${unit}`, this)
-  })
-  .on('mouseout', tip.hide);
+  // medianPolyline
+  // .on('mouseover', function () {
+  //   return tip.show(`中央値${(Math.floor(dc.median * 10) / 10).toLocaleString()}${unit}`, this)
+  // })
+  // .on('mouseout', tip.hide);
   // クリックでカレントに色を塗る-------------------------------------------------------------------
   rect
   .on('click', function (d) {
