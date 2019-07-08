@@ -34,56 +34,63 @@ export default {
     s_targetCitycode: {
       handler: function (val) {
         // 棒グラフのカレント行色塗りと同時に偏差値計算------------------------------------------
-        ['pref', 'city', 'miyazaki'].forEach(value => {
-          d3.selectAll('.bar-rect-' + value).attr('fill', d => {
+        ['pref', 'city', 'miyazaki'].forEach(prefOrCity => {
+          d3.selectAll('.bar-rect-' + prefOrCity).attr('fill', d => {
             // シティコードも3つ必要
-            const isTarget = String(d.citycode) === String(val);
-            // 偏差値計算-------------------------------------------------------------------------
+            const isTarget = String(d.citycode) === String(val[prefOrCity]);
+            // 偏差値計算------------------------------------------------------------------------
             if (isTarget) {
-              const zScore = ss.zScore(d.data, this.s_ssData[value].mean, this.s_ssData[value].standardDeviation);
+              const zScore = ss.zScore(d.data, this.s_ssData[prefOrCity].mean, this.s_ssData[prefOrCity].standardDeviation);
               const standardScore = (zScore * 10 + 50).toLocaleString();
-              const el = d3.select('.standard-score-text-' + value);
+              const el = d3.select('.standard-score-text-' + prefOrCity);
               el.text(`偏差値＝${standardScore}`)
             }
-            // -------------------------------------------------------------------------------------
-            if (d.data >= 0) {
-              return isTarget ? 'orange' : 'slategray';
-            }
-              return isTarget ? 'orange' : 'coral';
+            // ------------------------------------------------------------------------------------
+            if (d.data >= 0) return isTarget ? 'orange' : 'slategray';
+            return isTarget ? 'orange' : 'coral';
           });
-        });
-        // ランキングのカレント行色塗り------------------------------------------------------------
-        d3.selectAll('.rank-rect').attr('fill', d => {
-          const isTarget = String(d.citycode) === String(val);
-          return isTarget ? 'orange' : d.rgb;
-        });
-        // バブルのカレント行色塗り---------------------------------------------------------------
-        d3.selectAll('.bubble-circle').attr('fill', d => {
-          const isTarget = String(d.data.citycode) === String(val);
-          return isTarget ? 'orange' : d.rgb;
-        });
-        // マップのカレント行色塗り----------------------------------------------------------------
-        d3.selectAll('.map-path').attr('stroke', d => {
-          const isTarget = String(d.properties.citycode) === String(val);
-          return isTarget ? 'orange' : 'gray';
-        });
-        d3.selectAll('.map-path').attr('stroke-width', d => {
-          const isTarget = String(d.properties.citycode) === String(val);
-          return isTarget ? '3px' : '0.2px';
-        });
-        // 円グラフのカレント行色塗り--------------------------------------------------------------
-        d3.selectAll('.pie-path').attr('stroke', d => {
-          const isTarget = String(d.data.citycode) === String(val);
-          if ((d.data.data !== 0)) return isTarget ? 'orange' : 'whitesmoke';
-        });
-        d3.selectAll('.pie-path').attr('stroke-width', d => {
-          const isTarget = String(d.data.citycode) === String(val);
-          if ((d.data.data !== 0)) return isTarget ? '8px' : 0;
-        });
-        // ツリーマップのカレント行色塗り-----------------------------------------------------------
-        d3.selectAll('.tree-rect').attr('fill', d => {
-          const isTarget = String(d.data.citycode) === String(val);
-          return isTarget ? 'orange' : d.parent.data.color;
+          // ランキングのカレント行色塗り-----------------------------------------------------------
+          d3.selectAll('.rank-rect-' + prefOrCity).attr('fill', d => {
+            const isTarget = String(d.citycode) === String(val[prefOrCity]);
+            return isTarget ? 'orange' : d.rgb;
+          });
+          // バブルのカレント行色塗り--------------------------------------------------------------
+          d3.selectAll('.bubble-circle-' + prefOrCity).attr('fill', d => {
+            const isTarget = String(d.data.citycode) === String(val[prefOrCity]);
+            return isTarget ? 'orange' : d.rgb;
+          });
+          // マップのカレント行色塗り--------------------------------------------------------------
+          d3.selectAll('.map-path-' + prefOrCity).attr('stroke', d => {
+            const isTarget = String(d.properties.citycode) === String(val[prefOrCity]);
+            return isTarget ? 'orange' : 'gray';
+          });
+          d3.selectAll('.map-path-' + prefOrCity).attr('stroke-width', d => {
+            const isTarget = String(d.properties.citycode) === String(val[prefOrCity]);
+            return isTarget ? '3px' : '0.2px';
+          });
+          // 円グラフのカレント行色塗り------------------------------------------------------------
+          d3.selectAll('.pie-path-' + prefOrCity).attr('stroke', d => {
+            const isTarget = String(d.data.citycode) === String(val[prefOrCity]);
+            if ((d.data.data !== 0)) return isTarget ? 'orange' : 'whitesmoke';
+          });
+          d3.selectAll('.pie-path-' + prefOrCity).attr('stroke-width', d => {
+            const isTarget = String(d.data.citycode) === String(val[prefOrCity]);
+            if ((d.data.data !== 0)) return isTarget ? '8px' : 0;
+          });
+          // ツリーマップのカレント行色塗り-----------------------------------------------------------
+          d3.selectAll('.tree-rect-' + prefOrCity).attr('fill', d => {
+            const isTarget = String(d.data.citycode) === String(val[prefOrCity]);
+            return isTarget ? 'orange' : d.parent.data.color;
+          });
+          // 箱ひげ図のカレント行色塗り-----------------------------------------------------------
+          d3.selectAll('.box-circle-' + prefOrCity).attr('fill', d => {
+            const isTarget = String(d.citycode) === String(val[prefOrCity]);
+            return isTarget ? 'orange' : 'white';
+          });
+          d3.selectAll('.box-circle-' + prefOrCity).attr('stroke', d => {
+            const isTarget = String(d.citycode) === String(val[prefOrCity]);
+            return isTarget ? 'orange' : 'black';
+          });
         });
       },
       deep: true,
@@ -93,7 +100,6 @@ export default {
       handler: function(val) {
         // bubble.jsだけにはスライダーの詳細を設定するコードが書かれている。
         Bubble(val, '#left-bubble-city-miyazaki');
-        // Bar(val, '#left-bar-miyazaki-city');
         Bar(val, '#left-bar-city-miyazaki');
         BoxProt(val, '#left-box-city-miyazaki');
         Rank(val, '#left-rank-city-miyazaki');
@@ -101,7 +107,6 @@ export default {
         Pie(val, '#left-pie-city-miyazaki');
         Tree(val, '#left-tree-city-miyazaki');
         Histogram(val, '#left-histogram-city-miyazaki');
-
         Scatter(this.s_leftStat, this.s_rightStat);
       },
       deep: true,

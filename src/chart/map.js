@@ -107,10 +107,10 @@ export default function (val, parentDiv) {
   .data(json.features)
   .enter();
   const pathG = g.append('path')
-  .attr('class', 'map-path')
+  .attr('class', 'map-path-' + prefOrCity)
   .attr('d', path)
-  .attr('stroke', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : 'gray')
-  .attr('stroke-width', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode) ? '3px' : '0.2px')
+  .attr('stroke', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? 'orange' : 'gray')
+  .attr('stroke-width', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? '3px' : '0.2px')
   .attr('fill', 'rgba(255,255,255,0.1)')
   .style('cursor', 'pointer');
   // ツールチップ--------------------------------------------------------------------------------
@@ -137,7 +137,11 @@ export default function (val, parentDiv) {
   .on('click', function (d) {
     console.log(d);
     // 実際の色塗りはwatch.jsで塗っている。
-    const payload = d3.select(this).attr('stroke') === 'orange' ? '' : d.properties.citycode;
+    // const payload = d3.select(this).attr('stroke') === 'orange' ? '' : d.properties.citycode;
+    const payload = {
+      citycode: d3.select(this).attr('stroke') === 'orange' ? '' : d.properties.citycode,
+      prefOrCity: prefOrCity
+    };
     storeBase.commit('base/targetCitycodeChange', payload);
   });
   // --------------------------------------------------------------------------------------------

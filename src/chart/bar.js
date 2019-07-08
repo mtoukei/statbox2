@@ -176,7 +176,7 @@ export default function (val, parentDiv) {
     rect.transition()
     .duration(1000)
     .attr('y', function (d) {
-      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
       if (d.data >= 0) {
         d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
         return yScale(d.data)
@@ -249,8 +249,8 @@ export default function (val, parentDiv) {
   .style('cursor', 'pointer');
   // 偏差値------------------------------------------------------------------------------------
   const standardScoreCompute = (dataset, mean, standardDeviation) => {
-    if (!storeBase.state.base.targetCitycode) return 'X'
-    const result = dataset.find(value => String(value.citycode) === String(storeBase.state.base.targetCitycode));
+    if (!storeBase.state.base.targetCitycode) return 'X';
+    const result = dataset.find(value => String(value.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]));
     if (result) {
       const zScore = ss.zScore(result.data, mean, standardDeviation);
       return (zScore * 10 + 50).toLocaleString();
@@ -278,7 +278,10 @@ export default function (val, parentDiv) {
   rect
   .on('click', function (d) {
     // 実際の色塗りはwatch.jsで塗っている。
-    const payload = d3.select(this).attr('fill') === 'orange' ? '' : d.citycode;
+    const payload = {
+      citycode: d3.select(this).attr('fill') === 'orange' ? '' : d.citycode,
+      prefOrCity: prefOrCity
+    };
     storeBase.commit('base/targetCitycodeChange', payload);
     // ------------------------------------------------------------------------------------------
     ssText.text(`偏差値＝${standardScoreCompute(dc.dataset, dc.mean, dc.standardDeviation)}`)
@@ -288,7 +291,10 @@ export default function (val, parentDiv) {
     // 実際の色塗りはwatch.jsで塗っている。
     const target = d.cityname ? d.cityname : d;// 逃げのコード
     const cityCode = dc.dataset.find(value => value.cityname === target).citycode;
-    const payload = storeBase.state.base.targetCitycode === cityCode ? '' : cityCode;
+    const payload = {
+      citycode: storeBase.state.base.targetCitycode === cityCode ? '' : cityCode,
+      prefOrCity: prefOrCity
+    };
     storeBase.commit('base/targetCitycodeChange', payload);
     // ------------------------------------------------------------------------------------------
     ssText.text(`偏差値＝${standardScoreCompute(dc.dataset, dc.mean, dc.standardDeviation)}`)
@@ -358,7 +364,7 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
     .attr('y', function (d) {
-      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
       if (d.data >= 0) {
         d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
         return yScale(d.data)
@@ -382,7 +388,7 @@ export default function (val, parentDiv) {
     .duration(200)
     .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
     .attr('y', function (d) {
-      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
       if (d.data >= 0) {
         d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
         return yScale(d.data)

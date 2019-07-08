@@ -52,7 +52,11 @@ export default function (val, parentDiv) {
       if (prefOrCity === 'pref') this.dataset.shift();
       this.data = this.dataset.map(value => value.data);
       this.circleData = this.dataset.map(value => {
-        return {data: value.data, cityname: value.cityname}
+        return {
+          data: value.data,
+          cityname: value.cityname,
+          citycode: value.citycode
+        }
       });
       const dataSorted = this.data.sort(d3.ascending);
       this.q1 = d3.quantile(dataSorted, .25);
@@ -192,20 +196,36 @@ export default function (val, parentDiv) {
   .data(dc.circleData)
   .enter()
   .append('circle')
+  .attr('class', 'box-circle-' + prefOrCity)
   .attr('cx', () => center - jitterWidth / 2 + Math.random() * jitterWidth )
   .attr('cy', d => yScale(d.data))
   .attr('r', 0)
-  .style('fill', 'white')
-  .attr('stroke', 'black');
+  .attr('fill', d => {
+    const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
+    return isTarget ? 'orange' : 'white'
+  })
+  .attr('stroke', 'black')
+  .style('cursor', 'pointer');
+  const radius = dc.circleData.length > 30 ? 2 : 4;
   if (transitionFlg) {
     circle
     .transition()
     .delay((d, i) => i * 30)
-    .attr('r', 2)
+    .attr('r', radius)
   } else {
     circle
-    .attr('r', 2)
+    .attr('r', radius)
   }
+  // クリックでカレントに色を塗る------------------------------------------------------------------
+  circle
+  .on('click', function (d) {
+    // 実際の色塗りはwatch.jsで塗っている。
+    const payload = {
+      citycode: d3.select(this).attr('fill') === 'orange' ? '' : d.citycode,
+      prefOrCity: prefOrCity
+    };
+    storeBase.commit('base/targetCitycodeChange', payload);
+  });
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);

@@ -57,12 +57,11 @@ const base = {
         mean: null,
       }
     },
-    targetCitycode: '',
-    // targetCitycode: {
-    //   miyazaki: null,
-    //   pref: null,
-    //   city: null
-    // },
+    targetCitycode: {
+      miyazaki: null,
+      pref: null,
+      city: null
+    },
     rightSideDivShow: false,
     menuChange: true,
     leftDivList: Div,
@@ -276,8 +275,7 @@ const base = {
       state.ssData[payload.city].mean = payload.mean
     },
     targetCitycodeChange (state, payload) {
-      // state.targetCitycode[payload.city] = payload.citycode
-      state.targetCitycode = payload
+      state.targetCitycode[payload.prefOrCity] = payload.citycode
     },
     barSortChange (state, payload) {
       state.barSort = payload
