@@ -87,6 +87,10 @@ export default {
             const isTarget = String(d.citycode) === String(val[prefOrCity]);
             return isTarget ? 'orange' : 'white';
           });
+          d3.selectAll('.box-circle-' + prefOrCity).attr('stroke', d => {
+            const isTarget = String(d.citycode) === String(val[prefOrCity]);
+            return isTarget ? 'orange' : 'black';
+          });
         });
       },
       deep: true,
