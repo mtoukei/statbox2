@@ -82,6 +82,11 @@ export default {
             const isTarget = String(d.data.citycode) === String(val[prefOrCity]);
             return isTarget ? 'orange' : d.parent.data.color;
           });
+          // 箱ひげ図のカレント行色塗り-----------------------------------------------------------
+          d3.selectAll('.box-circle-' + prefOrCity).attr('fill', d => {
+            const isTarget = String(d.citycode) === String(val[prefOrCity]);
+            return isTarget ? 'orange' : 'white';
+          });
         });
       },
       deep: true,
@@ -91,7 +96,6 @@ export default {
       handler: function(val) {
         // bubble.jsだけにはスライダーの詳細を設定するコードが書かれている。
         Bubble(val, '#left-bubble-city-miyazaki');
-        // Bar(val, '#left-bar-miyazaki-city');
         Bar(val, '#left-bar-city-miyazaki');
         BoxProt(val, '#left-box-city-miyazaki');
         Rank(val, '#left-rank-city-miyazaki');
@@ -99,7 +103,6 @@ export default {
         Pie(val, '#left-pie-city-miyazaki');
         Tree(val, '#left-tree-city-miyazaki');
         Histogram(val, '#left-histogram-city-miyazaki');
-
         Scatter(this.s_leftStat, this.s_rightStat);
       },
       deep: true,
