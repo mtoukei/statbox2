@@ -206,7 +206,7 @@ export default function (val, parentDiv) {
   })
   .attr('stroke', 'black')
   .style('cursor', 'pointer');
-  const radius = dc.circleData > 30 ? 2 : 4;
+  const radius = dc.circleData.length > 30 ? 2 : 4;
   if (transitionFlg) {
     circle
     .transition()
