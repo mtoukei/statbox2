@@ -93,8 +93,8 @@ export default function (val, parentDiv) {
   .outerRadius(radius)
   .innerRadius(40 * multi);
   const path = pieGroup.append('path')
-  .attr('id', d => `pie-path-${d.data.citycode}`)
-  .attr('class', 'pie-path')
+  .attr('id', d => 'pie-path-' + d.data.citycode)
+  .attr('class', 'pie-path-' + prefOrCity)
   .attr('fill', d => {
     if (d.data.citycode === '99999') {
       return 'slategrey'
@@ -107,13 +107,13 @@ export default function (val, parentDiv) {
       return colorScale(d.index)
   })
   .attr('stroke', d => {
-    if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) {
+    if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity])) {
       if ((d.data.data !== 0)) return 'orange'
     }
     return 'whitesmoke'
   })
   .attr('stroke-width', d => {
-    if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) {
+    if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity])) {
       if ((d.data.data !== 0)) return '8px'
     }
     return 0
@@ -181,8 +181,11 @@ export default function (val, parentDiv) {
   }
   // クリックでカレントに色を塗る-------------------------------------------------------------------
   const elClick = (d, path) => {
-    // 実際の色塗りはwatch.jsで塗っている。
-    const payload = path.attr('stroke') === 'orange' ? '' : d.data.citycode;
+    // 実際の色塗りはwatch.jsで塗っている。;
+    const payload = {
+      citycode: path.attr('stroke') === 'orange' ? '' : d.data.citycode,
+      prefOrCity: prefOrCity
+    };
     storeBase.commit('base/targetCitycodeChange', payload);
   };
   path
@@ -191,7 +194,7 @@ export default function (val, parentDiv) {
   });
   textP
   .on('click', function (d) {
-    elClick(d, d3.select(`#pie-path-${d.data.citycode}`))
+    elClick(d, d3.select('#pie-path-' + d.data.citycode))
   });
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
@@ -230,13 +233,13 @@ export default function (val, parentDiv) {
         return colorScale(d.index)
     })
     .attr('stroke', d => {
-      if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) {
+      if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity])) {
         if ((d.data.data !== 0)) return 'orange'
       }
         return 'whitesmoke'
     })
     .attr('stroke-width', d => {
-      if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) {
+      if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity])) {
         if ((d.data.data !== 0)) return '8px'
       }
         return 0

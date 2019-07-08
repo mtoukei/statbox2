@@ -275,13 +275,13 @@ export default function (val, parentDiv) {
   .on('mouseout', tip.hide);
   // ブロック作成------------------------------------------------------------------------------
   const rect = treeSvg.append('rect')
-  .attr('class', 'tree-rect')
+  .attr('class', 'tree-rect-' + prefOrCity)
   .attr('width', 0)
   .attr('height', 0)
   .attr('stroke', 'black')
   .attr('stroke-width', '0.3px')
   .attr('fill', d => {
-    if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) return 'orange';
+    if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity])) return 'orange';
     while(d.depth > 1) d = d.parent;
     return d.data.color;
   });
@@ -314,7 +314,10 @@ export default function (val, parentDiv) {
   rect
   .on('click', function (d) {
     // 実際の色塗りはwatch.jsで塗っている。
-    const payload = d3.select(this).attr('fill') === 'orange' ? '' : d.data.citycode;
+    const payload = {
+      citycode: d3.select(this).attr('fill') === 'orange' ? '' : d.data.citycode,
+      prefOrCity: prefOrCity
+    };
     storeBase.commit('base/targetCitycodeChange', payload);
   });
   // 表名-------------------------------------------------------------------------------------
@@ -342,7 +345,7 @@ export default function (val, parentDiv) {
     .attr('width', d => d.x1 - d.x0)
     .attr('height', d => d.y1 - d.y0)
     .attr('fill', d => {
-      if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode)) return 'orange';
+      if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity])) return 'orange';
       while(d.depth > 1) d = d.parent;
       return d.data.color;
     });

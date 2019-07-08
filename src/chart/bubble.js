@@ -104,8 +104,8 @@ export default function (val, parentDiv) {
   .attr('class', 'bubble')
   .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
   const circle = bubbles.append('circle')
-  .attr('class', 'bubble-circle')
-  .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : d.rgb)
+  .attr('class', 'bubble-circle-' + prefOrCity)
+  .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? 'orange' : d.rgb)
   .style('cursor', 'pointer');
   if (transitionFlg) {
     circle.attr('r', 0)
@@ -141,7 +141,10 @@ export default function (val, parentDiv) {
   bubbles
   .on('click', function (d) {
     // 実際の色塗りはwatch.jsで塗っている。
-    const payload = d3.select(this).select('circle').attr('fill') === 'orange' ? '' : d.data.citycode;
+    const payload = {
+      citycode: d3.select(this).select('circle').attr('fill') === 'orange' ? '' : d.data.citycode,
+      prefOrCity: prefOrCity
+    };
     storeBase.commit('base/targetCitycodeChange', payload);
   });
   // ツールチップ---------------------------------------------------------------------------------
@@ -172,7 +175,7 @@ export default function (val, parentDiv) {
     circle
     .data(dc.data, d => d.data.citycode)
     .attr('r', d => d.r)
-    .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode) ? 'orange' : d.rgb);
+    .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? 'orange' : d.rgb);
     text
     .data(dc.data, d => d.data.citycode)
     .text(d => {

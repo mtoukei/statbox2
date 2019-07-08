@@ -81,12 +81,12 @@ export default function (val, parentDiv) {
   // 横棒(上位)--------------------------------------------------------------------------------
   const rectG1 = g.append('g')
   .append('rect')
-  .attr('class', 'rank-rect')
+  .attr('class', 'rank-rect-' + prefOrCity)
   .attr('width', 130 * multi)
   .attr('height', 15 * multi)
   .attr('transform', (d, i) => 'translate(' + (0) + ',' + (15 * i * multi) + ')')
   .attr('fill', d => {
-    const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
+    const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
     return isTarget ? 'orange' : d.rgb
   })
   .attr('stroke', 'black')
@@ -126,12 +126,12 @@ export default function (val, parentDiv) {
   // 横棒(下位)--------------------------------------------------------------------------------
   const rectG2 = g2.append('g')
   .append('rect')
-  .attr('class', 'rank-rect')
+  .attr('class', 'rank-rect-' + prefOrCity)
   .attr('width', 130 * multi)
   .attr('height', 15 * multi)
   .attr('transform', (d, i) => 'translate(0,' + (15 * i * multi) + ')')
   .attr('fill', d => {
-    const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
+    const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
     return isTarget ? 'orange' : d.rgb
   })
   .attr('stroke', 'black')
@@ -165,7 +165,12 @@ export default function (val, parentDiv) {
   // クリックでカレントに色を塗る------------------------------------------------------------------
   const rectClick = (d, rect) => {
     // 実際の色塗りはwatch.jsで塗っている。
-    const payload = rect.attr('fill') === 'orange' ? '' : d.citycode;
+    // const payload = rect.attr('fill') === 'orange' ? '' : d.citycode;
+
+    const payload = {
+      citycode: rect.attr('fill') === 'orange' ? '' : d.citycode,
+      prefOrCity: prefOrCity
+    };
     storeBase.commit('base/targetCitycodeChange', payload);
   };
   rectG1
@@ -193,7 +198,7 @@ export default function (val, parentDiv) {
     .transition()
     .duration(200)
     .attr('fill', d => {
-      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
       return isTarget ? 'orange' : d.rgb
     })
     .attr('transform', (d, i) => {
@@ -227,7 +232,7 @@ export default function (val, parentDiv) {
     .transition()
     .duration(200)
     .attr('fill', d => {
-      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode);
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
       return isTarget ? 'orange' : d.rgb
     })
     .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * (i - 1) * multi) + ')');
