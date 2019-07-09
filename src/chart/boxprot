@@ -103,83 +103,84 @@ export default function (val, parentDiv) {
   .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
   .call(d3.axisLeft(yScale));
   // --------------------------------------------------------------------------------------------
-  const boxWidth = 50;
-  const center = margin.left + boxWidth - 10;
+  const boxWidth = 100;
+  const center = margin.left + boxWidth / 2 + 20;
+  const jitterWidth = 95;
   // 縦線---------------------------------------------------------------------------------------
-  const vLine = svg.append("line")
-  .attr("x1", center)
-  .attr("x2", center)
-  .attr("y1", 0)
-  .attr("y2", 0)
-  .attr("stroke", "black");
+  const vLine = svg.append('line')
+  .attr('x1', center)
+  .attr('x2', center)
+  .attr('y1', 0)
+  .attr('y2', 0)
+  .attr('stroke', 'black');
   if (transitionFlg) {
     vLine
     .transition()
     .duration(1000)
-    .attr("y1", yScale(dc.min) )
-    .attr("y2", yScale(dc.max) )
+    .attr('y1', yScale(dc.min) )
+    .attr('y2', yScale(dc.max) )
   } else {
     vLine
-    .attr("y1", yScale(dc.min) )
-    .attr("y2", yScale(dc.max) )
+    .attr('y1', yScale(dc.min) )
+    .attr('y2', yScale(dc.max) )
   }
   // ボックス作成--------------------------------------------------------------------------------
-  const box = svg.append("rect")
-  .attr("x", center - boxWidth / 2)
-  .attr("y", yScale(dc.q3) )
-  .attr("height", 0)
-  .attr("width", boxWidth )
-  .attr("stroke", "black")
-  .style("fill", "slategrey");
+  const box = svg.append('rect')
+  .attr('x', center - boxWidth / 2)
+  .attr('y', yScale(dc.q3))
+  .attr('height', 0)
+  .attr('width', boxWidth)
+  .attr('stroke', 'black')
+  .style('fill', 'slategrey');
   if (transitionFlg) {
     box
     .transition()
     .duration(1000)
-    .attr("height", (yScale(dc.q1) - yScale(dc.q3)) )
+    .attr('height', (yScale(dc.q1) - yScale(dc.q3)) )
   } else {
     box
     .transition()
     .duration(1000)
-    .attr("height", (yScale(dc.q1) - yScale(dc.q3)) )
+    .attr('height', (yScale(dc.q1) - yScale(dc.q3)) )
   }
   // 最小値、中央値、最大値 横線-------------------------------------------------------------
-  const hLine = svg.selectAll(".horizontal-line")
+  const hLine = svg.selectAll('.horizontal-line')
   .data([dc.min, dc.median, dc.max])
   .enter()
-  .append("line")
-  .attr("x1", center - boxWidth / 2)
-  .attr("x2", center + boxWidth / 2)
-  .attr("y1", 0)
-  .attr("y2", 0)
-  .attr("stroke", "black");
+  .append('line')
+  .attr('x1', center - boxWidth / 2)
+  .attr('x2', center + boxWidth / 2)
+  .attr('y1', 0)
+  .attr('y2', 0)
+  .attr('stroke', 'black');
   if (transitionFlg) {
     hLine
     .transition()
     .duration(1000)
-    .attr("y1", d => yScale(d))
-    .attr("y2", d => yScale(d))
+    .attr('y1', d => yScale(d))
+    .attr('y2', d => yScale(d))
   } else {
     hLine
-    .attr("y1", d => yScale(d))
-    .attr("y2", d => yScale(d))
+    .attr('y1', d => yScale(d))
+    .attr('y2', d => yScale(d))
   }
   // 最小値、中央値、最大値テキスト------------------------------------------------------------
-  const hLineText = svg.selectAll(".horizontal-line-text")
+  const hLineText = svg.selectAll('.horizontal-line-text')
   .data([
-    {data: dc.min, text: '最小値', citys: dc.minCitys},
-    {data: dc.median, text: '中央値', citys: ''},
-    {data: dc.max, text: '最大値', citys: dc.maxCitys}
+    {data: dc.min, text: 'min ', citys: dc.minCitys},
+    {data: dc.median, text: '中央値 ', citys: ''},
+    {data: dc.max, text: 'max ', citys: dc.maxCitys}
   ])
   .enter()
-  .append("text")
+  .append('text')
   .attr('x', center + boxWidth / 2 + 5)
   .attr('y', 0)
   .attr('font-size', 10 * multi + 'px')
-  .attr("fill", "black")
+  .attr('fill', 'black')
   .text(d => {
     const citys = d.citys ? d.citys.join() : '';
     const data = (Math.floor(d.data * 10) / 10).toLocaleString() + unit;
-    return `${d.text}=${data} ${citys}`
+    return `${d.text}${data} ${citys}`
   });
   if (transitionFlg) {
     hLineText
@@ -191,8 +192,7 @@ export default function (val, parentDiv) {
     .attr('y', d => yScale(d.data))
   }
   // 散布イメージ-------------------------------------------------------------------------------
-  const jitterWidth = 60;
-  const circle = svg.selectAll("circle")
+  const circle = svg.selectAll('circle')
   .data(dc.circleData)
   .enter()
   .append('circle')
@@ -206,7 +206,7 @@ export default function (val, parentDiv) {
   })
   .attr('stroke', 'black')
   .style('cursor', 'pointer');
-  const radius = dc.circleData.length > 30 ? 2 : 4;
+  const radius = dc.circleData.length > 30 ? 4 : 6;
   if (transitionFlg) {
     circle
     .transition()
