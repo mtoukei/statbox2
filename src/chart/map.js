@@ -36,7 +36,6 @@ export default function (val, parentDiv) {
     constructor (dataset) {
       this.dataset = dataset;
       this.colorScale = null;
-      this.maxLeft = null;
       this.legendDataSet = null;
       this.prefCode = null;
     }
@@ -48,23 +47,19 @@ export default function (val, parentDiv) {
         if (a.data < b.data) return 1;
         return 0;
       });
-      this.dataset.forEach((v, i) => v['leftTop'] = i + 1);
+      this.dataset.forEach((value, index) => value['top'] = index + 1);
       this.dataset.sort((a, b) => {
         if (a.citycode < b.citycode) return -1;
         if (a.citycode > b.citycode) return 1;
         return 0;
       });
-      this.maxLeft = d3.max(this.dataset, d => d.data);
-      const minLeft = d3.min(this.dataset, d => d.data);
       this.colorScale = d3.scaleLinear()
-      .domain([minLeft, this.maxLeft])
-      .range(['white', 'red']);
-      const value = this.maxLeft / 5;
+      .domain([20, 50, 70, 120])
+      .range(['blue', 'white', 'red', 'brown']);
       this.legendDataSet = [];
-      for (let i = 0; i < 5; i++) {
+      for (let i = 120; i > 20; i -= 3) {
         this.legendDataSet.push({
-          color: this.colorScale(value * (5 - i)),
-          value: value * (5 - i)
+          color: this.colorScale(i),
         })
       }
       const data0 = String(this.dataset[0].citycode).substr(0, 2);
@@ -120,7 +115,7 @@ export default function (val, parentDiv) {
     if (result) {
       tooltip
       .style('visibility', 'visible')
-      .html(`${result.cityname}<br>${result.data}${unit}`);
+      .html(`${result.cityname}<br>${result.data.toLocaleString()}${unit}<br>偏差値 ${result.standardScore.toLocaleString()}`);
     }
   })
   .on('mousemove', () => {
@@ -137,7 +132,6 @@ export default function (val, parentDiv) {
   .on('click', function (d) {
     console.log(d);
     // 実際の色塗りはwatch.jsで塗っている。
-    // const payload = d3.select(this).attr('stroke') === 'orange' ? '' : d.properties.citycode;
     const payload = {
       citycode: d3.select(this).attr('stroke') === 'orange' ? '' : d.properties.citycode,
       prefOrCity: prefOrCity
@@ -151,8 +145,8 @@ export default function (val, parentDiv) {
     .delay((d, i) => i * 10)
     .attr("fill", d => {
       if (d.properties.citycode) {
-        const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
-        return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
+        const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
+        return result ? dc.colorScale(result.standardScore) : 'rgba(0,0,0,0)'
       }
         return 'rgba(0,0,0,0)'
     });
@@ -160,7 +154,7 @@ export default function (val, parentDiv) {
     pathG
     .attr("fill", d => {
       if (d.properties.citycode) {
-        const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
+        const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
         return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
       }
         return 'rgba(0,0,0,0)'
@@ -173,23 +167,17 @@ export default function (val, parentDiv) {
   .data(dc.legendDataSet)
   .enter();
   const rect = g2.append('rect')
-  .attr('transform', (d, i) => 'translate(0,' + (20 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(0,' + (2.5 * i * multi) + ')')
   .attr('width', 20 * multi)
   .attr('height', 20 * multi)
-  .attr('stroke', 'black')
-  .attr('stroke-width', '0.3px')
   .attr('fill', 'rgba(255,255,255,0.1)');
   if (transitionFlg) {
     rect.transition()
-    .delay((d, i) => i * 100)
+    .delay((d, i) => i * 10)
     .attr('fill', d => d.color);
   } else {
     rect.attr('fill', d => d.color);
   }
-  const legendText = g2.append('text')
-  .attr('font-size', 10 * multi + 'px')
-  .attr('transform', (d, i) => 'translate(' + (22 * multi) + ',' + (10 * multi + 20 * i * multi) + ')')
-  .text(d => Math.floor(d.value).toLocaleString() + ' ' + unit);
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
@@ -197,6 +185,14 @@ export default function (val, parentDiv) {
   .attr('class', 'no-print')
   .append('text')
   .text(statName);
+  // 表名---------------------------------------------------------------------------------------
+  svg.append('g')
+  .attr('font-size', 12 * multi + 'px')
+  .attr('transform', () => 'translate(5,' + (height - 5) + ')')
+  .attr('class', 'no-print')
+  .append('text')
+  .text('偏差値　赤＝大　白＝50　青＝小');
+
   // ズーム--------------------------------------------------------------------------------------
   const zoom =
     d3.zoom()
@@ -210,17 +206,11 @@ export default function (val, parentDiv) {
     pathG
     .attr("fill", d => {
       if (d.properties.citycode) {
-        const result = dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
-        return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
+        const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
+        return result ? dc.colorScale(result.standardScore) : 'rgba(0,0,0,0)'
       }
         return 'rgba(0,0,0,0)'
     });
-    rect
-    .data(dc.legendDataSet)
-    .attr('fill', d => d.color);
-    legendText
-    .data(dc.legendDataSet)
-    .text(d => Math.floor(d.value).toLocaleString() + ' ' + unit);
   };
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
