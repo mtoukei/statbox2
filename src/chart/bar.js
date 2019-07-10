@@ -348,7 +348,7 @@ export default function (val, parentDiv) {
     let dc;
     if (isEStat) {
       const rangeValue = d3.select('#year-range-' + prefOrCity + ' .year-range').property('value');
-      dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[rangeValue].data2)), orderType);
+      dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[rangeValue])), orderType);
     } else {
       dc = new DataCreate(JSON.parse(JSON.stringify(dataset)), orderType);
     }
