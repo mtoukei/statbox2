@@ -35,6 +35,7 @@ export default function (val, parentDiv) {
       this.dataset = dataset;
       this.root = null;
       this.fontScale = null;
+      this.isDraw = true
     }
     create () {
       if (prefOrCity === 'pref') this.dataset.shift();
@@ -143,7 +144,7 @@ export default function (val, parentDiv) {
         ]
       };
 
-      if (val.estat) {
+      if (prefOrCity === 'pref') {
         dataKeniki = japanKeniki;
         this.dataset.forEach(value => {
           let result, result2;
@@ -185,43 +186,67 @@ export default function (val, parentDiv) {
               break;
           }
         });
-      } else {
+      } else if (String(this.dataset[0].citycode) === '45201') {
         dataKeniki = miyazakiKeniki;
         this.dataset.forEach(value => {
           let result, result2;
-          switch(value.cityname) {
-            case '宮崎市':case '国富町':case '綾町':
+          switch (value.cityname) {
+            case '宮崎市':
+            case '国富町':
+            case '綾町':
               result = dataKeniki.children.find(val => val.name === '宮崎東諸県圏域');
               result2 = result.children.find(val => val.name === value.cityname);
               result2.value = value.data;
               break;
-            case '日南市':case '串間市':
+            case '日南市':
+            case '串間市':
               result = dataKeniki.children.find(value => value.name === '日南・串間圏域');
               result2 = result.children.find(val => val.name === value.cityname);
               result2.value = value.data;
               break;
-            case '都城市':case '三股町':
+            case '都城市':
+            case '三股町':
               result = dataKeniki.children.find(val => val.name === '都城北諸県圏域');
               result2 = result.children.find(val => val.name === value.cityname);
               result2.value = value.data;
               break;
-            case '小林市':case 'えびの市':case '高原町':
+            case '小林市':
+            case 'えびの市':
+            case '高原町':
               result = dataKeniki.children.find(val => val.name === '西諸県圏域');
               result2 = result.children.find(val => val.name === value.cityname);
               result2.value = value.data;
               break;
-            case '西都市':case '高鍋町':case '新富町':case '西米良村':case '木城町':case '川南町':case '都農町':
+            case '西都市':
+            case '高鍋町':
+            case '新富町':
+            case '西米良村':
+            case '木城町':
+            case '川南町':
+            case '都農町':
               result = dataKeniki.children.find(val => val.name === '西都児湯圏域');
               result2 = result.children.find(val => val.name === value.cityname);
               result2.value = value.data;
               break;
-            case '延岡市':case '日向市':case '門川町':case '諸塚村':case '椎葉村':case '美郷町':case '高千穂町':case '日之影町':case '五ヶ瀬町':
+            case '延岡市':
+            case '日向市':
+            case '門川町':
+            case '諸塚村':
+            case '椎葉村':
+            case '美郷町':
+            case '高千穂町':
+            case '日之影町':
+            case '五ヶ瀬町':
               result = dataKeniki.children.find(val => val.name === '宮崎県北部圏域');
               result2 = result.children.find(val => val.name === value.cityname);
               result2.value = value.data;
               break;
           }
         });
+      } else {
+        palentDiv.select('.chart-svg').remove();
+        this.isDraw = false;
+        return
       }
       // 描画用のデータ変換---------------------------------------------------------------------
       this.root = d3.hierarchy(dataKeniki);
@@ -239,6 +264,7 @@ export default function (val, parentDiv) {
   //--------------------------------------------------------------------------------------------
   const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
+  if (!dc.isDraw) return;
   // --------------------------------------------------------------------------------------------
   const treemap = d3.treemap()
   .size([width - 20, height - 40])// ツリーマップ全体の大きさ

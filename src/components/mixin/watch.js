@@ -150,6 +150,7 @@ export default {
         Rank(val, '#left-rank-city');
         Map(val, '#left-map-city');
         Pie(val, '#left-pie-city');
+        Tree(val, '#left-tree-city');
         Histogram(val, '#left-histogram-city');
         Time2(val, '#left-time-city');
         BoxProt(val, '#left-box-city');
