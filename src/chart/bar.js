@@ -89,11 +89,8 @@ export default function (val, parentDiv) {
         this.minVal = this.minVal * 1.1
       }
       this.dataset = data2;
-      // 平均値---------------------------------------------------------------------------------
       this.mean = this.datasetOriginal.mean;
-      // 中央値---------------------------------------------------------------------------------
       this.median = this.datasetOriginal.median;
-      // 標準偏差-------------------------------------------------------------------------------
       this.standardDeviation = this.datasetOriginal.standardDeviation;
     }
   }
@@ -269,13 +266,12 @@ export default function (val, parentDiv) {
   svg.call(tip);
   rect
   .on('mouseover', function (d) {
-    return tip.show(`${d.top}位 ${d.cityname}<br>${d.data.toLocaleString()}${unit}`, this)
+    return tip.show(`${d.top}位 ${d.cityname}<br><br>${d.data.toLocaleString()}${unit}<br><br>偏差値 ${d.standardScore.toLocaleString()}`, this)
   })
   .on('mouseout', tip.hide);
   // クリックでカレントに色を塗る+偏差値を計算する-----------------------------------------------
   rect
   .on('click', function (d) {
-    console.log(d)
     // 実際の色塗りはwatch.jsで塗っている。
     const payload = {
       citycode: d3.select(this).attr('fill') === 'orange' ? '' : d.citycode,
@@ -352,7 +348,7 @@ export default function (val, parentDiv) {
     let dc;
     if (isEStat) {
       const rangeValue = d3.select('#year-range-' + prefOrCity + ' .year-range').property('value');
-      dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[rangeValue].data2)), orderType);
+      dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[rangeValue])), orderType);
     } else {
       dc = new DataCreate(JSON.parse(JSON.stringify(dataset)), orderType);
     }
