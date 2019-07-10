@@ -12,7 +12,6 @@ import Maps77 from '../../chart/maps77'
 import Rank from '../../chart/rank'
 import Time2 from '../../chart/time2'
 import BoxProt from '../../chart/boxprot'
-import * as ss from 'simple-statistics'
 export default {
   name: 'watch',
   computed: {
@@ -36,15 +35,9 @@ export default {
         // 棒グラフのカレント行色塗りと同時に偏差値計算------------------------------------------
         ['pref', 'city', 'miyazaki'].forEach(prefOrCity => {
           d3.selectAll('.bar-rect-' + prefOrCity).attr('fill', d => {
-            // シティコードも3つ必要
             const isTarget = String(d.citycode) === String(val[prefOrCity]);
-            // 偏差値計算------------------------------------------------------------------------
-            if (isTarget) {
-              const zScore = ss.zScore(d.data, this.s_ssData[prefOrCity].mean, this.s_ssData[prefOrCity].standardDeviation);
-              const standardScore = (zScore * 10 + 50).toLocaleString();
-              const el = d3.select('.standard-score-text-' + prefOrCity);
-              el.text(`偏差値＝${standardScore}`)
-            }
+            // // 偏差値計算------------------------------------------------------------------------
+            if (isTarget) d3.select('.standard-score-text-' + prefOrCity).text(`偏差値＝${d.standardScore.toLocaleString()}`);
             // ------------------------------------------------------------------------------------
             if (d.data >= 0) return isTarget ? 'orange' : 'slategray';
             return isTarget ? 'orange' : 'coral';

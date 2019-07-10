@@ -45,20 +45,6 @@ const Div = [
 const base = {
   namespaced: true,
   state: {
-    ssData: {
-      miyazaki: {
-        standardDeviation: null,
-        mean: null,
-      },
-      pref: {
-        standardDeviation: null,
-        mean: null,
-      },
-      city: {
-        standardDeviation: null,
-        mean: null,
-      }
-    },
     targetCitycode: {
       miyazaki: null,
       pref: null,
@@ -272,10 +258,6 @@ const base = {
     }, ],
   },
   mutations: {
-    ssDataChange (state, payload) {
-      state.ssData[payload.city].standardDeviation = payload.standardDeviation;
-      state.ssData[payload.city].mean = payload.mean
-    },
     targetCitycodeChange (state, payload) {
       state.targetCitycode[payload.prefOrCity] = payload.citycode
     },

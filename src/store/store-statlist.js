@@ -2,6 +2,7 @@ import storeBase from './store-base'
 import * as statData from './data/data-miyazaki'
 import * as statDataTime from './data/data-miyazaki-time'
 import Citycodes from './data/citycodes'
+import * as ss from 'simple-statistics'
 import MetaPref from './meta/meta-pref'
 import MetaCity from './meta/meta-city'
 import MetaMiyazaki from './meta/meta-miyazaki'
@@ -184,7 +185,7 @@ const statList = {
       }
     },
     // サイドのツリーをクリックしたとき---------------------------------------------------------------
-    // 宮崎県用
+    // いろんなグラフで見える化。宮崎県市町村用
     selectStat (state, payload) {
       const statName = payload.value.split('/')[0];
       const target = payload.value.split('/')[1];
@@ -199,11 +200,28 @@ const statList = {
           data: value[column]
         }
       });
+      // 統計の計算--------------------------------------------------------------------------
+      const map = statDataObj.data.map(value => value[column]);
+      const mean = ss.mean(map); // 平均値
+      const median = ss.median(map);// 中央値
+      const standardDeviation = ss.standardDeviation(map);// 標準偏差
+      // 偏差値計算-----------------------------------------------------------------------
+      data.forEach(value => {
+        const zScore = ss.zScore(value.data, mean, standardDeviation);
+        value['standardScore'] = zScore * 10 + 50;
+      });
       const stat = payload.side === 'leftSide' ? state.leftStat : state.rightStat;
       stat.transition = true;
       stat.count = stat.count + 1;
       stat.stat = payload.value;
-      stat.statData = {title, unit, data};
+      stat.statData = {
+        title,
+        unit,
+        data,
+        mean,
+        median,
+        standardDeviation
+      };
     },
     // ------------------------------------------------------------------------------------------
     // いろんなグラフで見える化。都道府県と市区町村共用
@@ -233,10 +251,22 @@ const statList = {
         const times = dataAr.map(value => value['@time']).filter((x, i, self) => self.indexOf(x) === i);
         const dataSet = [];
         times.forEach(value => {
+          let mean, median, standardDeviation;
           const data = dataAr.filter(val => val['@time'] === value);
           const data2 = [];
+          if (payload.prefOrCity === 'pref') {
+            // 統計の計算--------------------------------------------------------------------------
+            const map = data.map(value => Number(value['$']));
+            map.shift();
+            mean = ss.mean(map); // 平均値
+            median = ss.median(map);// 中央値
+            standardDeviation = ss.standardDeviation(map);// 標準偏差
+          }
           data.forEach(value2 => {
             if (payload.prefOrCity === 'pref') {
+              // 偏差値計算-----------------------------------------------------------------------
+              const zScore = ss.zScore(Number(value2['$']), mean, standardDeviation);
+              const standardScore = zScore * 10 + 50;
               const prefs = storeBase.state.base.prefOptions;
               const prefsResult = prefs.find(val => val.value === value2['@area']);
               const prefName = prefsResult.label;
@@ -244,9 +274,11 @@ const statList = {
                 citycode: value2['@area'],
                 cityname: prefName,
                 data: Number(value2['$']),
-                time: value2['@time']
+                time: value2['@time'],
+                standardScore: standardScore
               })
             } else if (payload.prefOrCity === 'city') {
+              // 市町村用は市町村コード「@area」の数字を見て区かどうかを判断している。区を除いている。
               if (value2['@area'] .substr(0, 2) === prefCode.substr(0, 2)) {
                 const citysResult = Citycodes.find(val => val.id === value2['@area']);
                 const digit3 = value2['@area'].substr(2, 2);// 3桁目から2文字
@@ -279,13 +311,29 @@ const statList = {
                 }
               }
             }
-          });
+          }); // 内ループ終了
+          // 市町村のときは再度ループしないと偏差値を求めることができないので
+          if (payload.prefOrCity === 'city') {
+            // 統計の計算--------------------------------------------------------------------------
+            const map = data2.map(value => value.data);
+            mean = ss.mean(map); // 平均値
+            median = ss.median(map);// 中央値
+            standardDeviation = ss.standardDeviation(map);// 標準偏差
+            // 偏差値計算-----------------------------------------------------------------------
+            data2.forEach(value => {
+              const zScore = ss.zScore(value.data, mean, standardDeviation);
+              value['standardScore'] = zScore * 10 + 50;
+            })
+          }
           dataSet.push({
             time: value,
-            data: data,
-            data2: data2
+            mean,
+            median,
+            standardDeviation,
+            data,
+            data2
           })
-        });
+        }); // 外ループ終了
         let stat;
         let source = '';
         if (payload.prefOrCity === 'pref') {

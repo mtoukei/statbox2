@@ -1,5 +1,4 @@
 import storeBase from '../store/store-base'
-import * as ss from 'simple-statistics'
 import * as Common from './common'
 const eventkey = {};
 // ---------------------------------------------------------------------------------------------
@@ -14,11 +13,11 @@ export default function (val, parentDiv) {
   if (isEStat) {
     const target = val.statData[val.statData.length - 1];
     const allPrefData = target.data;
-    dataset = target.data2;
+    dataset = target;
     statName = val.statName;
     unit = allPrefData[0]['@unit'];
   } else {
-    dataset = val.statData.data;
+    dataset = val.statData;
     statName = val.statData.title;
     unit = val.statData.unit;
   }
@@ -34,7 +33,8 @@ export default function (val, parentDiv) {
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset, orderType) {
-      this.dataset = dataset;
+      this.datasetOriginal = dataset;
+      this.dataset = null;
       this.orderType = orderType;
       this.maxVal = null;
       this.minVal = null;
@@ -43,22 +43,23 @@ export default function (val, parentDiv) {
       this.standardDeviation = null;
     }
     create () {
-      if (prefOrCity === 'pref') this.dataset.shift();
+      const data2 = isEStat ? this.datasetOriginal.data2 : this.datasetOriginal.data;
+      if (prefOrCity === 'pref') data2.shift();
       // ソートして順位をつける-------------------------------------------------------------------
-      this.dataset.sort((a, b) => {
+      data2.sort((a, b) => {
         if (a.data > b.data) return -1;
         if (a.data < b.data) return 1;
         return 0;
       });
-      this.dataset.forEach((v, i) => v['top'] = i + 1);
+      data2.forEach((v, i) => v['top'] = i + 1);
       if(this.orderType === 'original') {
-        this.dataset.sort((a, b) => {
+        data2.sort((a, b) => {
           if (a.citycode < b.citycode) return -1;
           if (a.citycode > b.citycode) return 1;
           return 0;
         });
       } else if (this.orderType === 'asc') {
-        this.dataset.sort((a, b) => {
+        data2.sort((a, b) => {
           if (a.data < b.data) return -1;
           if (a.data > b.data) return 1;
           return 0;
@@ -79,23 +80,21 @@ export default function (val, parentDiv) {
           });
         })
       } else {
-        this.maxVal = d3.max(this.dataset, d => d.data);
-        this.minVal = d3.min(this.dataset, d => d.data);
+        this.maxVal = d3.max(data2, d => d.data);
+        this.minVal = d3.min(data2, d => d.data);
       }
       if (this.minVal >= 0) {
         this.minVal = 0
       } else {
         this.minVal = this.minVal * 1.1
       }
-      const map = this.dataset.map(value => value.data);
+      this.dataset = data2;
       // 平均値---------------------------------------------------------------------------------
-      this.mean = ss.mean(map);
+      this.mean = this.datasetOriginal.mean;
       // 中央値---------------------------------------------------------------------------------
-      this.median = ss.median(map);
+      this.median = this.datasetOriginal.median;
       // 標準偏差-------------------------------------------------------------------------------
-      this.standardDeviation = ss.standardDeviation(map);
-      // 標準偏差、平均値をstoreに保存--------------------------------------------------------
-      storeBase.commit('base/ssDataChange', {city: prefOrCity, standardDeviation: this.standardDeviation, mean: this.mean})
+      this.standardDeviation = this.datasetOriginal.standardDeviation;
     }
   }
   //---------------------------------------------------------------------------------------------
@@ -248,22 +247,21 @@ export default function (val, parentDiv) {
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer');
   // 偏差値------------------------------------------------------------------------------------
-  const standardScoreCompute = (dataset, mean, standardDeviation) => {
+  const standardScoreCompute = dataset => {
     if (!storeBase.state.base.targetCitycode) return 'X';
     const result = dataset.find(value => String(value.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]));
     if (result) {
-      const zScore = ss.zScore(result.data, mean, standardDeviation);
-      return (zScore * 10 + 50).toLocaleString();
+      return result.standardScore.toLocaleString()
     }
-      return 'XX'
+    return 'XX'
   };
+  //---------------------------------------------------------------------------------------------
   const ssText = svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',66)')
   .attr('class', 'no-print').append('text')
   .attr('class', 'standard-score-text-' + prefOrCity)
-  .text(`偏差値＝${standardScoreCompute(dc.dataset, dc.mean, dc.standardDeviation)}`)
-  // .text(`偏差値＝XXX`)
+  .text(`偏差値＝${standardScoreCompute(dc.dataset)}`)
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer');
   // ツールチップ---------------------------------------------------------------------------------
@@ -277,6 +275,7 @@ export default function (val, parentDiv) {
   // クリックでカレントに色を塗る+偏差値を計算する-----------------------------------------------
   rect
   .on('click', function (d) {
+    console.log(d)
     // 実際の色塗りはwatch.jsで塗っている。
     const payload = {
       citycode: d3.select(this).attr('fill') === 'orange' ? '' : d.citycode,
@@ -284,7 +283,7 @@ export default function (val, parentDiv) {
     };
     storeBase.commit('base/targetCitycodeChange', payload);
     // ------------------------------------------------------------------------------------------
-    ssText.text(`偏差値＝${standardScoreCompute(dc.dataset, dc.mean, dc.standardDeviation)}`)
+    ssText.text(`偏差値＝${d.standardScore.toLocaleString()}`)
   });
   cityNameText
   .on('click', function (d) {
@@ -297,7 +296,7 @@ export default function (val, parentDiv) {
     };
     storeBase.commit('base/targetCitycodeChange', payload);
     // ------------------------------------------------------------------------------------------
-    ssText.text(`偏差値＝${standardScoreCompute(dc.dataset, dc.mean, dc.standardDeviation)}`)
+    ssText.text(`偏差値＝${d.standardScore.toLocaleString()}`)
   });
   // 単位---------------------------------------------------------------------------------------
   svg.append('g')
@@ -380,7 +379,7 @@ export default function (val, parentDiv) {
   const rangeInput = e => {
     const value = Number(e.target.value);
     const orderType = storeBase.state.base.barSort;
-    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)), orderType);
+    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value])), orderType);
     dc.create();
     rect
     .data(dc.dataset)
@@ -414,7 +413,7 @@ export default function (val, parentDiv) {
     // 標準偏差--------------------------------------------------------------------------------
     sdText.text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`);
     // 偏差値-----------------------------------------------------------------------------------
-    ssText.text(`偏差値＝${standardScoreCompute(dc.dataset, dc.mean, dc.standardDeviation)}`)
+    ssText.text(`偏差値＝${standardScoreCompute(dc.dataset)}`)
   };
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
