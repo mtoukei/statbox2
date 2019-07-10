@@ -274,24 +274,24 @@ export default function (val, parentDiv) {
     vLine
     .transition()
     .duration(200)
-    .attr("y1", yScale(dc.min) )
-    .attr("y2", yScale(dc.max) );
+    .attr('y1', yScale(dc.min))
+    .attr('y2', yScale(dc.max));
     box
     .transition()
     .duration(200)
-    .attr("y", yScale(dc.q3))
-    .attr("height", (yScale(dc.q1) - yScale(dc.q3)) );
+    .attr('y', yScale(dc.q3))
+    .attr('height', yScale(dc.q1) - yScale(dc.q3));
     hLine
     .data([dc.min, dc.median, dc.max])
     .transition()
     .duration(200)
-    .attr("y1", function(d) { return(yScale(d)) } )
-    .attr("y2", function(d) { return(yScale(d)) } );
+    .attr('y1', d => yScale(d))
+    .attr('y2', d => yScale(d));
     hLineText
     .data([
-      {data: dc.min, text: '最小値', citys: dc.minCitys},
-      {data: dc.median, text: '中央値', citys: ''},
-      {data: dc.max, text: '最大値', citys: dc.maxCitys}
+      {data: dc.min, text: 'min ', citys: dc.minCitys},
+      {data: dc.median, text: '中央値 ', citys: ''},
+      {data: dc.max, text: 'max ', citys: dc.maxCitys}
     ])
     .text(d => {
       const citys = d.citys ? d.citys.join() : '';
@@ -300,7 +300,7 @@ export default function (val, parentDiv) {
     })
     .transition()
     .duration(200)
-    .attr('y', d => yScale(d.data))
+    .attr('y', d => yScale(d.data));
     // 散布イメージ-------------------------------------------------------------------------------
     circle
     .data(dc.circleData)
