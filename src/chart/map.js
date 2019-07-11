@@ -40,6 +40,7 @@ export default function (val, parentDiv) {
       this.prefCode = null;
     }
     create () {
+      console.log(1111)
       if (prefOrCity === 'pref') this.dataset.shift();
       // ソートして順位をつける-------------------------------------------------------------------
       this.dataset.sort((a, b) => {
@@ -95,7 +96,7 @@ export default function (val, parentDiv) {
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
-  .classed("chart-svg", true);
+  .attr('class', 'chart-svg');
   // -------------------------------------------------------------------------------------------
   const g = svg.append('g')
   .selectAll('path')
@@ -155,7 +156,7 @@ export default function (val, parentDiv) {
     .attr("fill", d => {
       if (d.properties.citycode) {
         const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
-        return result ? dc.colorScale(result.data) : 'rgba(0,0,0,0)'
+        return result ? dc.colorScale(result.standardScore) : 'rgba(0,0,0,0)'
       }
         return 'rgba(0,0,0,0)'
     });
@@ -185,14 +186,13 @@ export default function (val, parentDiv) {
   .attr('class', 'no-print')
   .append('text')
   .text(statName);
-  // 表名---------------------------------------------------------------------------------------
+  // 偏差値説明--------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', () => 'translate(5,' + (height - 5) + ')')
   .attr('class', 'no-print')
   .append('text')
   .text('偏差値　赤＝大　白＝50　青＝小');
-
   // ズーム--------------------------------------------------------------------------------------
   const zoom =
     d3.zoom()
