@@ -97,7 +97,7 @@ export default function (val, parentDiv) {
   .attr('class', 'chart-svg');
   // Y軸---------------------------------------------------------------------------------------
   const yScale = d3.scaleLinear()
-  .domain([0, dc.maxAll * 1.1])
+  .domain([dc.minAll, dc.maxAll * 1.05])
   .range([height - margin.bottom, margin.top]);
   svg.append('g')
   .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
