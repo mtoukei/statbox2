@@ -12,10 +12,9 @@ export default function (val, parentDiv) {
   let unit;
   if (isEStat) {
     const target = val.statData[val.statData.length - 1];
-    const allPrefData = target.data;
     dataset = target;
     statName = val.statName;
-    unit = allPrefData[0]['@unit'];
+    unit = target.data[0]['@unit'];
   } else {
     dataset = val.statData;
     statName = val.statData.title;

@@ -13,10 +13,9 @@ export default function (val, parentDiv) {
   let unit;
   if (isEStat) {
     const target = val.statData[val.statData.length - 1];
-    const allPrefData = target.data;
     dataset = target.data2;
     statName = val.statName;
-    unit = allPrefData[0]['@unit'];
+    unit = target.data[0]['@unit'];
   } else {
     dataset = val.statData.data;
     statName = val.statData.title;
@@ -40,7 +39,6 @@ export default function (val, parentDiv) {
       this.prefCode = null;
     }
     create () {
-      console.log(1111)
       if (prefOrCity === 'pref') this.dataset.shift();
       // ソートして順位をつける-------------------------------------------------------------------
       this.dataset.sort((a, b) => {
@@ -131,7 +129,6 @@ export default function (val, parentDiv) {
   // クリックでカレントに色を塗る------------------------------------------------------------------
   pathG
   .on('click', function (d) {
-    console.log(d);
     // 実際の色塗りはwatch.jsで塗っている。
     const payload = {
       citycode: d3.select(this).attr('stroke') === 'orange' ? '' : d.properties.citycode,
