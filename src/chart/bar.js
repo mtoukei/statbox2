@@ -28,7 +28,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 10 * multi, 'left': 50 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.transition;
+  const isTransition = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset, orderType) {
@@ -167,30 +167,18 @@ export default function (val, parentDiv) {
   .attr('y', yScale(0))
   .attr('height', 0)
   .style('cursor', 'pointer');
-  if (transitionFlg) {
-    rect.transition()
-    .duration(1000)
-    .attr('y', function (d) {
-      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
-      if (d.data >= 0) {
-        d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
-        return yScale(d.data)
-      }
-      d3.select(this).attr('fill', isTarget ? 'orange' : 'coral');
-      return yScale(0)
-    })
-    .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
-  } else {
-    rect.attr('y', function (d) {
-      if (d.data >= 0) {
-        d3.select(this).attr('fill', 'slategray');
-        return yScale(d.data)
-      }
-        d3.select(this).attr('fill', 'coral');
-        return yScale(0)
-    })
-    .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
-  }
+  rect
+  .transition()
+  .duration(() => isTransition ? 1000 : 0)
+  .attr('y', d => d.data >= 0 ? yScale(d.data) : yScale(0))
+  .attr('fill', d => {
+    const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
+    if (d.data >= 0) {
+      return isTarget ? 'orange' : 'slategray';
+    }
+    return isTarget ? 'orange' : 'coral'
+  })
+  .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
   // 平均値-------------------------------------------------------------------------------------
   const sumPolyline = svg.append('polyline')
   .attr('id', 'sum-polyline')

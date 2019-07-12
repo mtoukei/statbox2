@@ -151,7 +151,6 @@ export default function (val, palentDiv) {
       return fontScale2(len) + 'px'
     }
       return fontScale(len) + 'px'
-
   });
   svg.selectAll(".tick line")
   .attr('stroke', '#ccc')

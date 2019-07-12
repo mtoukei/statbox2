@@ -28,7 +28,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const radius = Math.min(width, height) / 2 - 10;
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.transition;
+  const isTransition = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -117,21 +117,17 @@ export default function (val, parentDiv) {
     }
     return 0
   });
-  if (transitionFlg) {
-    path
-    .transition()
-    .duration(70)
-    .delay((d, i) => 60 * i)
-    .attrTween('d', d => {
-      const interpolate = d3.interpolate(
-        {startAngle: d.startAngle, endAngle: d.startAngle},
-        {startAngle: d.startAngle, endAngle: d.endAngle}
-      );
-      return t => arc(interpolate(t));
-    });
-  } else {
-    path.attr('d', arc)
-  }
+  path
+  .transition()
+  .duration(() => isTransition ? 70 : 0)
+  .delay((d, i) => isTransition ? i * 60 : 0)
+  .attrTween('d', d => {
+    const interpolate = d3.interpolate(
+      {startAngle: d.startAngle, endAngle: d.startAngle},
+      {startAngle: d.startAngle, endAngle: d.endAngle}
+    );
+    return t => arc(interpolate(t));
+  });
   //---------------------------------------------------------------------------------------------
   const text = d3.arc()
   .outerRadius(radius - 30 * multi)
@@ -164,20 +160,11 @@ export default function (val, parentDiv) {
     return fontSize
   })
   .attr('text-anchor', 'middle');
-  if (transitionFlg) {
-    textP
-    .transition()
-    .duration(80)
-    .delay((d, i) => 70 * i)
-    .text(d => {
-      if (d.data.data !== 0) return d.data.cityname
-    });
-  } else {
-    textP
-    .text(d => {
-      if (d.data.data !== 0) return d.data.cityname
-    });
-  }
+  textP
+  .transition()
+  .duration(() => isTransition ? 80 : 0)
+  .delay((d, i) => isTransition ? i * 70 : 0)
+  .text(d => d.data.data !== 0 ? d.data.cityname : '');
   // クリックでカレントに色を塗る-------------------------------------------------------------------
   const elClick = (d, path) => {
     // 実際の色塗りはwatch.jsで塗っている。;

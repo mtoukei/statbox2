@@ -31,7 +31,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 30 * multi, 'bottom': 10 * multi, 'right': 10 * multi, 'left': 70 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.transition;
+  const isTransition = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -113,17 +113,11 @@ export default function (val, parentDiv) {
   .attr('y1', 0)
   .attr('y2', 0)
   .attr('stroke', 'black');
-  if (transitionFlg) {
-    vLine
-    .transition()
-    .duration(1000)
-    .attr('y1', yScale(dc.min) )
-    .attr('y2', yScale(dc.max) )
-  } else {
-    vLine
-    .attr('y1', yScale(dc.min) )
-    .attr('y2', yScale(dc.max) )
-  }
+  vLine
+  .transition()
+  .duration(() => isTransition ? 1000 : 0)
+  .attr('y1', yScale(dc.min) )
+  .attr('y2', yScale(dc.max) );
   // ボックス作成--------------------------------------------------------------------------------
   const box = svg.append('rect')
   .attr('x', center - boxWidth / 2)
@@ -132,17 +126,10 @@ export default function (val, parentDiv) {
   .attr('width', boxWidth)
   .attr('stroke', 'black')
   .style('fill', 'slategrey');
-  if (transitionFlg) {
-    box
-    .transition()
-    .duration(1000)
-    .attr('height', (yScale(dc.q1) - yScale(dc.q3)) )
-  } else {
-    box
-    .transition()
-    .duration(1000)
-    .attr('height', (yScale(dc.q1) - yScale(dc.q3)) )
-  }
+  box
+  .transition()
+  .duration(() => isTransition ? 1000 : 0)
+  .attr('height', (yScale(dc.q1) - yScale(dc.q3)) );
   // 最小値、中央値、最大値 横線-------------------------------------------------------------
   const hLine = svg.selectAll('.horizontal-line')
   .data([dc.min, dc.median, dc.max])
@@ -153,17 +140,11 @@ export default function (val, parentDiv) {
   .attr('y1', 0)
   .attr('y2', 0)
   .attr('stroke', 'black');
-  if (transitionFlg) {
-    hLine
-    .transition()
-    .duration(1000)
-    .attr('y1', d => yScale(d))
-    .attr('y2', d => yScale(d))
-  } else {
-    hLine
-    .attr('y1', d => yScale(d))
-    .attr('y2', d => yScale(d))
-  }
+  hLine
+  .transition()
+  .duration(() => isTransition ? 1000 : 0)
+  .attr('y1', d => yScale(d))
+  .attr('y2', d => yScale(d));
   // 最小値、中央値、最大値テキスト------------------------------------------------------------
   const hLineText = svg.selectAll('.horizontal-line-text')
   .data([
@@ -182,15 +163,10 @@ export default function (val, parentDiv) {
     const data = (Math.floor(d.data * 10) / 10).toLocaleString() + unit;
     return `${d.text}${data} ${citys}`
   });
-  if (transitionFlg) {
-    hLineText
-    .transition()
-    .duration(1000)
-    .attr('y', d => yScale(d.data))
-  } else {
-    hLineText
-    .attr('y', d => yScale(d.data))
-  }
+  hLineText
+  .transition()
+  .duration(() => isTransition ? 1000 : 0)
+  .attr('y', d => yScale(d.data));
   // 散布イメージ-------------------------------------------------------------------------------
   const circle = svg.selectAll('circle')
   .data(dc.circleData)
@@ -207,15 +183,11 @@ export default function (val, parentDiv) {
   .attr('stroke', 'black')
   .style('cursor', 'pointer');
   const radius = dc.circleData.length > 30 ? 4 : 6;
-  if (transitionFlg) {
-    circle
-    .transition()
-    .delay((d, i) => i * 30)
-    .attr('r', radius)
-  } else {
-    circle
-    .attr('r', radius)
-  }
+  circle
+  .transition()
+  .duration(() => isTransition ? 100 : 0)
+  .delay((d, i) => isTransition ? i * 40 : 0)
+  .attr('r', radius);
   // クリックでカレントに色を塗る------------------------------------------------------------------
   circle
   .on('click', function (d) {
