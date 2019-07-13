@@ -30,7 +30,7 @@ export default function (val, parentDiv) {
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
-  const isTransition = storeBase.state.statList.transition;
+  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -106,13 +106,15 @@ export default function (val, parentDiv) {
   const circle = bubbles.append('circle')
   .attr('class', 'bubble-circle-' + prefOrCity)
   .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? 'orange' : d.rgb)
-  .style('cursor', 'pointer')
-  .attr('r', 0);
-  circle
-  .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 70 : 0)
-  .attr('r', d => d.r);
+  .style('cursor', 'pointer');
+  if (transitionFlg) {
+    circle.attr('r', 0)
+    .transition()
+    .delay((d, i) => i * 70)
+    .attr('r', d => d.r);
+  } else {
+    circle.attr('r', d => d.r);
+  }
   // バブルのテキスト
   const text = bubbles.append('text')
   .text(d => {
@@ -121,18 +123,20 @@ export default function (val, parentDiv) {
   .attr('font-size', d => dc.fontScale(d.r))
   .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
   .attr('text-anchor', 'middle')
-  .attr('fill', d => {
+  .attr('fill', function (d) {
     const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 200 ? 'black' : 'white';
   })
-  .style('cursor', 'pointer')
-  .attr('opacity', 0);
-  text
-  .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 70 : 0)
-  .attr('opacity', 1);
+  .attr('opacity', 0)
+  .style('cursor', 'pointer');
+  if (transitionFlg) {
+    text.transition()
+    .delay((d, i) => i * 70)
+    .attr('opacity', 1);
+  } else {
+    text.attr('opacity', 1);
+  }
   // クリックでカレントに色を塗る------------------------------------------------------------------
   bubbles
   .on('click', function (d) {

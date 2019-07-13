@@ -23,7 +23,7 @@ export default function (val, parentDiv) {
   const defaultWidth = 300;
   const multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
   //トランジションフラグ----------------------------------------------------------------------------
-  const isTransition = storeBase.state.statList.transition;
+  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor(dataset) {
@@ -160,14 +160,21 @@ export default function (val, parentDiv) {
       }
     }
   };
-  rect.transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 20 : 0)
-  .attr('fill', d => rectColor(d))
-  .attr('stroke-dasharray', d => dash(d))
-  .attr('stroke-dashoffset', d => dashOffset(d))
-  .attr('stroke', 'black')
-  .attr('stroke-width', 0.5);
+  if (transitionFlg) {
+    rect.transition()
+    .delay((d, i) => i * 20)
+    .attr('fill', d => rectColor(d))
+    .attr('stroke-dasharray', d => dash(d))
+    .attr('stroke-dashoffset', d => dashOffset(d))
+    .attr('stroke', 'black')
+    .attr('stroke-width', 0.5)
+  } else {
+    rect.attr('fill', d => rectColor(d))
+    .attr('stroke-dasharray', d => dash(d))
+    .attr('stroke-dashoffset', d => dashOffset(d))
+    .attr('stroke', 'black')
+    .attr('stroke-width', 0.5)
+  }
   // 県名---------------------------------------------------------------------------------------
   const prefText = rectG.append('text')
   .attr('display', (d, i) => i <= 1 ? 'none' : 'block')
@@ -175,11 +182,14 @@ export default function (val, parentDiv) {
   .attr('x', 5 * multi)
   .attr('y', 10 * multi)
   .attr('fill', 'black');
-  prefText
-  .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 20 : 0)
-  .text(d => d.prefname);
+  if (transitionFlg) {
+    prefText
+    .transition()
+    .delay((d, i) => i * 20)
+    .text(d => d.prefname)
+  } else {
+    prefText.text(d => d.prefname)
+  }
   // サークル------------------------------------------------------------------------------------
   const circleG = g.append('g')
   .attr('display', (d, i) => i <= 1 ? 'none' : 'block')
@@ -197,10 +207,13 @@ export default function (val, parentDiv) {
       if (result) return dc.colorScale(result.data)
     }
   });
-  circle .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? 1000 + i * 40 : 0)
-  .attr('r', 12 * multi);
+  if (transitionFlg) {
+    circle .transition()
+    .delay((d, i) => 1000 + i * 40)
+    .attr('r', 12 * multi)
+  } else {
+    circle.attr('r', 12 * multi)
+  }
   const circleText = circleG.append('text')
   .attr('x', rectSize / 2 * multi)
   .attr('y', rectSize / 2 * multi + 10 * multi)
@@ -214,15 +227,24 @@ export default function (val, parentDiv) {
       return cY > 200 ? 'gray' : 'white';
     }
   });
-  circleText .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? 1000 + i * 40 : 0)
-  .text(d => {
-    if (d.chihou8id) {
-      const result = dc.dataset.find(value => Number(value.citycode) === Number(d.prefcode));
-      if (result) return result.leftTop
-    }
-  });
+  if (transitionFlg) {
+    circleText .transition()
+    .delay((d, i) => 1000 + (i * 40))
+    .text(d => {
+      if (d.chihou8id) {
+        const result = dc.dataset.find(value => Number(value.citycode) === Number(d.prefcode));
+        if (result) return result.leftTop
+      }
+    })
+  } else {
+    circleText
+    .text(d => {
+      if (d.chihou8id) {
+        const result = dc.dataset.find(value => Number(value.citycode) === Number(d.prefcode));
+        if (result) return result.leftTop
+      }
+    })
+  }
   // 表名-------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', (12 * multi) + 'px')

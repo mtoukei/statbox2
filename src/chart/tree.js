@@ -27,7 +27,7 @@ export default function (val, parentDiv) {
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
-  const isTransition = storeBase.state.statList.transition;
+  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -310,11 +310,15 @@ export default function (val, parentDiv) {
     while(d.depth > 1) d = d.parent;
     return d.data.color;
   });
-  rect.transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 20 : 0)
-  .attr('width', d => d.x1 - d.x0)
-  .attr('height', d => d.y1 - d.y0);
+  if (transitionFlg) {
+    rect.transition()
+    .delay((d, i) => i * 15)
+    .attr('width', d => d.x1 - d.x0)
+    .attr('height', d => d.y1 - d.y0)
+  } else {
+     rect.attr('width', d => d.x1 - d.x0)
+    .attr('height', d => d.y1 - d.y0)
+  }
   // ブロックのテキスト
   const text = treeSvg.append('text')
   .attr('text-anchor', 'start')
@@ -322,13 +326,15 @@ export default function (val, parentDiv) {
   .attr('dy', d => dc.fontScale(d.data.value))
   .attr('font-size', d => dc.fontScale(d.data.value))
   .attr('class', 'node-label')
-  .text(d => d.data.name);
-  text
-  .attr('opacity', 0)
-  .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 20 : 0)
-  .attr('opacity', 1);
+  .text(d => d.data.name)
+  .attr('opacity', 0);
+  if (transitionFlg) {
+    text.transition()
+    .delay((d, i) => i * 10)
+    .attr('opacity', 1);
+  } else {
+    text.attr('opacity', 1);
+  }
   // クリックでカレントに色を塗る-------------------------------------------------------------------
   rect
   .on('click', function (d) {

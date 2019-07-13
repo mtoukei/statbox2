@@ -165,6 +165,8 @@ export default function (val, parentDiv) {
   // クリックでカレントに色を塗る------------------------------------------------------------------
   const rectClick = (d, rect) => {
     // 実際の色塗りはwatch.jsで塗っている。
+    // const payload = rect.attr('fill') === 'orange' ? '' : d.citycode;
+
     const payload = {
       citycode: rect.attr('fill') === 'orange' ? '' : d.citycode,
       prefOrCity: prefOrCity
@@ -199,7 +201,9 @@ export default function (val, parentDiv) {
       const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
       return isTarget ? 'orange' : d.rgb
     })
-    .attr('transform', (d, i) => 'translate(0,' + (12 * multi + 15 * (i - 1) * multi) + ')');
+    .attr('transform', (d, i) => {
+      return 'translate(0,' + (12 * multi + 15 * (i - 1) * multi) + ')'
+    });
     text1_1
     .data(dc.dataset, d => d.citycode)
     .transition()

@@ -28,7 +28,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 60 * multi, 'bottom': 60 * multi, 'right': 60 * multi, 'left': 20 * multi };
   //トランジションフラグ----------------------------------------------------------------------------
-  let isTransition = storeBase.state.statList.transition;
+  let transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -79,11 +79,15 @@ export default function (val, parentDiv) {
     .attr('fill', 'slategray')
     .attr('y', yScale(0))
     .attr('height', 0);
-    rect
-    .transition()
-    .duration(() => isTransition ? 1500 : 0)
-    .attr('y', d => yScale(d.length))
-    .attr("height", d => height - yScale(d.length) - margin.bottom - margin.top);
+    if (transitionFlg) {
+      rect.transition()
+      .duration(1500)
+      .attr('y', d => yScale(d.length))
+      .attr("height", d => height - yScale(d.length) - margin.bottom - margin.top);
+    } else {
+      rect.attr('y', d => yScale(d.length))
+      .attr("height", d => height - yScale(d.length) - margin.bottom - margin.top);
+    }
     // ツールチップ---------------------------------------------------------------------------------
     const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
     svg.call(tip);
@@ -103,9 +107,13 @@ export default function (val, parentDiv) {
     .attr("x", (xScale(histoData[0].x1) - xScale(histoData[0].x0)) / 2)
     .attr('y', d => yScale(d.length) - 5)
     .attr('opacity', 0);
-    text.transition()
-    .duration(() => isTransition ? 4000 : 0)
-    .attr('opacity', 1);
+    if (transitionFlg) {
+      text.transition()
+      .duration(4000)
+      .attr('opacity', 1);
+    } else {
+      text.attr('opacity', 1);
+    }
     // x軸描画---------------------------------------------------------------------------------
     const kankaku = histoData[0].x1 - histoData[0].x0;
     const tick = histoData.map((d, i) => kankaku * (i + 1) - kankaku / 2);
@@ -139,7 +147,7 @@ export default function (val, parentDiv) {
     const value = Number(e.target.value);
     const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
     dc.create();
-    isTransition = false;
+    transitionFlg = false;
     histgramCreate(dc.dataset)
   };
   //--------------------------------------------------------------------------------------------
