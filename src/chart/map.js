@@ -29,7 +29,7 @@ export default function (val, parentDiv) {
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.transition;
+  const isTransition = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -137,45 +137,32 @@ export default function (val, parentDiv) {
     storeBase.commit('base/targetCitycodeChange', payload);
   });
   // --------------------------------------------------------------------------------------------
-  if (transitionFlg) {
-    pathG
-    .transition()
-    .delay((d, i) => i * 10)
-    .attr("fill", d => {
-      if (d.properties.citycode) {
-        const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
-        return result ? dc.colorScale(result.standardScore) : 'rgba(0,0,0,0)'
-      }
-        return 'rgba(0,0,0,0)'
-    });
-  } else {
-    pathG
-    .attr("fill", d => {
-      if (d.properties.citycode) {
-        const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
-        return result ? dc.colorScale(result.standardScore) : 'rgba(0,0,0,0)'
-      }
-        return 'rgba(0,0,0,0)'
-    });
-  }
+  pathG
+  .transition()
+  .duration(() => isTransition ? 100 : 0)
+  .delay((d, i) => isTransition ? i * 50 : 0)
+  .attr("fill", d => {
+    if (d.properties.citycode) {
+      const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
+      return result ? dc.colorScale(result.standardScore) : 'rgba(0,0,0,0)'
+    }
+    return 'rgba(0,0,0,0)'
+  });
   // 凡例---------------------------------------------------------------------------------------
-  const g2 = svg.append('g')
+  svg.append('g')
   .attr('transform', 'translate(' + (5) + ',' + (30 * multi) + ')')
   .selectAll('rect')
   .data(dc.legendDataSet)
-  .enter();
-  const rect = g2.append('rect')
+  .enter()
+  .append('rect')
   .attr('transform', (d, i) => 'translate(0,' + (2.5 * i * multi) + ')')
   .attr('width', 20 * multi)
   .attr('height', 20 * multi)
-  .attr('fill', 'rgba(255,255,255,0.1)');
-  if (transitionFlg) {
-    rect.transition()
-    .delay((d, i) => i * 10)
-    .attr('fill', d => d.color);
-  } else {
-    rect.attr('fill', d => d.color);
-  }
+  .attr('fill', 'rgba(255,255,255,0.1)')
+  .transition()
+  .duration(() => isTransition ? 100 : 0)
+  .delay((d, i) => isTransition ? i * 10 : 0)
+  .attr('fill', d => d.color);
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
@@ -206,7 +193,7 @@ export default function (val, parentDiv) {
         const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
         return result ? dc.colorScale(result.standardScore) : 'rgba(0,0,0,0)'
       }
-        return 'rgba(0,0,0,0)'
+      return 'rgba(0,0,0,0)'
     });
   };
   //--------------------------------------------------------------------------------------------

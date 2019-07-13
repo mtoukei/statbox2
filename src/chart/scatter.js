@@ -18,7 +18,7 @@ export default function (leftVal, rightVal) {
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 30 * multi, 'bottom': 100 * multi, 'right': 30 * multi, 'left': 60 * multi };
   //トランジションフラグ---------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.leftStat.transition;
+  const isTransition = storeBase.state.statList.leftStat.transition;
   //データセット作成-----------------------------------------------------------------------------
   const dataset = [];
   const leftDataAr = [], rightDataAr = [];
@@ -105,8 +105,8 @@ export default function (leftVal, rightVal) {
   const leftMax = d3.max(dataset, d => d.leftData);
   let leftMin = d3.min(dataset, d => d.leftData);
   if (leftMin > 0) leftMin = 0;
-    rightMin = rightMin * 0.9;
-    leftMin = leftMin * 0.9;
+  rightMin = rightMin * 0.9;
+  leftMin = leftMin * 0.9;
   const xScale = d3.scaleLinear()
   .domain([0, rightMax * 1.1])
   .range([margin.left, width - margin.right]);
@@ -144,18 +144,12 @@ export default function (leftVal, rightVal) {
   .attr('stroke-width', '1px')
   .attr('stroke', 'black')
   .attr('stroke-dasharray', '4,4');
-  if (transitionFlg) {
-    kaikiLine
-    .transition()
-    .duration(1000)
-    .ease(d3.easeCircleOut)
-    .attr('x2', xScale(rightMax))
-    .attr('y2', yScale(linRegLine(rightMax)));
-  } else {
-    kaikiLine
-    .attr('x2', xScale(rightMax))
-    .attr('y2', yScale(linRegLine(rightMax)));
-  }
+  kaikiLine
+  .transition()
+  .duration(() => isTransition ? 1000 : 0)
+  .ease(d3.easeCircleOut)
+  .attr('x2', xScale(rightMax))
+  .attr('y2', yScale(linRegLine(rightMax)));
   // 軸の表示----------------------------------------------------------------------------------
   const axisx = d3.axisBottom(xScale)
   .ticks(20)
@@ -197,13 +191,11 @@ export default function (leftVal, rightVal) {
   .attr('cy', d => yScale(d.leftData))
   .attr('fill', 'orange')
   .attr('r', 16);
-  if (transitionFlg) {
-    circle.transition()
-    .delay((d, i) => i * 30)
-    .attr('r', 6);
-  } else {
-    circle.attr('r', 6);
-  }
+  circle
+  .transition()
+  .duration(() => isTransition ? 1 : 0)
+  .delay((d, i) => isTransition ? i * 30 : 0)
+  .attr('r', 6);
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
@@ -224,14 +216,11 @@ export default function (leftVal, rightVal) {
   .attr('y', d => yScale(d.leftData) + 3)
   .attr('text-anchor', 'start')
   .attr('font-size', 10 * multi + 'px');
-  if (transitionFlg) {
-    text.attr('opacity', 0)
-    .transition()
-    .delay((d, i) => i * 30)
-    .attr('opacity', '1');
-  } else {
-    text.attr('opacity', '1');
-  }
+  text.attr('opacity', 0)
+  .transition()
+  .duration(() => isTransition ? 1 : 0)
+  .delay((d, i) => isTransition ? i * 30 : 0)
+  .attr('opacity', '1');
   // 縦軸単位----------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', 12 * multi + 'px')
