@@ -174,9 +174,7 @@ export default function (val, parentDiv) {
     .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? 'orange' : d.rgb);
     text
     .data(dc.data, d => d.data.citycode)
-    .text(d => {
-      if(d.r !== 0) return d.data.name
-    })
+    .text(d => d.r !== 0 ? d.data.name : '')
     .attr('font-size', d => dc.fontScale(d.r))
     .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
     .attr('text-anchor', 'middle')
@@ -222,4 +220,24 @@ export default function (val, parentDiv) {
       storeBase.commit('statList/yearRangeCityChange', val.statData.length - 1)
     }
   }
+  // --------------------------------------------------------------------------------------------
+  const resize = (width, height) => {
+    width = Number(width.replace('px', ''));
+    height = Number(height.replace('px', ''));
+    console.log(width, height)
+  }
+
+
+  const targetDiv = palentDiv.node();
+  const observer = new MutationObserver(() => {
+    resize(targetDiv.style.width, targetDiv.style.height);
+    // console.log(targetDiv.style.width, targetDiv.style.height);
+  });
+  const options = {
+    attriblutes: true,
+    attributeFilter: ["style"]
+  };
+  observer.observe(targetDiv, options);
+
+
 }
