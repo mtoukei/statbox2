@@ -16,11 +16,10 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   const rightStatName = rightVal.statName;
   const rightUnit = rightVal.unit;
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
-  const width = palentDiv.node().getBoundingClientRect().width;
-  const height = palentDiv.node().getBoundingClientRect().height
-    - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+  let width = palentDiv.node().getBoundingClientRect().width;
+  let height = palentDiv.node().getBoundingClientRect().height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 980;
-  const multi = width / defaultWidth < 1 ? width / defaultWidth : 1;
+  let multi = width / defaultWidth < 1 ? width / defaultWidth : 1;
   const margin = { 'top': 50 * multi, 'bottom': 100 * multi, 'right': 30 * multi, 'left': 70 * multi };
   // データセットの元を作成----------------------------------------------------------------------
   const mixDataset = [];
@@ -46,6 +45,10 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
       this.dataset = [];
       this.soukan = null;
       this.linRegLine = null;
+      this.rightMax = null;
+      this.rightMin = null;
+      this.xScale = null;
+      this.yScale = null;
     }
     create () {
       const time = this.mixDataset.time;
@@ -78,6 +81,17 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
       this.soukan = ss.sampleCorrelation(leftDataAr, rightDataAr).toFixed(2);
       const linReg = ss.linearRegression(kaikiData);
       this.linRegLine = ss.linearRegressionLine(linReg);
+      this.rightMax = d3.max(this.dataset, d => d.rightData);
+      this.rightMin = d3.min(this.dataset, d => d.rightData);
+      const leftMax = d3.max(this.dataset, d => d.leftData);
+      let leftMin = d3.min(this.dataset, d => d.leftData);
+      if (leftMin > 0) leftMin = 0;
+      this.xScale = d3.scaleLinear()
+      .domain([0, this.rightMax * 1.1])
+      .range([margin.left, width - margin.right]);
+      this.yScale = d3.scaleLinear()
+      .domain([leftMin * 1.1, leftMax * 1.1])
+      .range([height - margin.bottom, margin.top]);
     }
   }
   const dc = new DataCreate(mixDataset.length - 1);
@@ -89,7 +103,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .attr('height', height)
   .classed("chart-svg", true);
   // クリップ領域-------------------------------------------------------------------------------
-  svg.append('defs').append('clipPath')
+  const clip = svg.append('defs').append('clipPath')
   .attr('transform', 'translate(' + (margin.left) + ',' + (margin.top) + ')')
   .attr('id', 'scatter-estat-clip-' + prefOrCity)
   .append('rect')
@@ -105,74 +119,69 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .attr('text-anchor', 'middle ')
   .attr('font-weight', 'normal');
   // 相関係数---------------------------------------------------------------------------------
-  svg.append('g')
+  const soukanTextG = svg.append('g')
+  .attr('transform', 'translate(' + (10 * multi) + ',' + (12 * multi + height - 70 * multi) + ')');
+  const soukanTextD = soukanTextG.selectAll('text')
+  .data([dc.soukan])
+  .enter();
+  const soukanText = soukanTextD.append('text')
+  .text(d =>'相関係数 = ' + d)
   .attr('font-size', 12 * multi + 'px')
-  .attr('transform', 'translate(' + (10 * multi) + ',' + (12 * multi + height - 70 * multi) + ')')
-  .append('text')
-  .text('相関係数 = ' + dc.soukan)
-  .attr('id', 'soukan-text')
   .attr('text-anchor', 'start');
   // 相関係数の注釈-------------------------------------------------------------------------
-  let str = '', fill = 'black';
-  svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
-  .attr('transform', 'translate(' + (10 * multi) + ',' + (12 * multi + height - 50 * multi) + ')')
-  .append('text')
-  .text(() => {
-    if (dc.soukan >= 0.7) {
-      str = '強い相関あり';
-      fill = '#d50000'
-    } else if (dc.soukan >= 0.4) {
-      str = 'やや相関あり';
-      fill = '#ff8000'
-    } else if (dc.soukan >= 0.2) {
-      str = '弱い相関あり';
-      fill = '#00d500'
-    } else if (dc.soukan >= -0.2) {
-      str = 'ほとんど相関なし';
-      fill = 'black'
-    } else if (dc.soukan >= -0.4) {
-      str = '弱い相関あり（負）';
-      fill = '#00d500'
-    } else if (dc.soukan >= -0.7) {
-      str = 'やや相関あり（負）';
-      fill = '#ff8000'
-    } else if (dc.soukan >= -1) {
-      str = '強い相関あり（負）';
-      fill = '#d50000'
+  const cyuuSyaku = d => {
+    {
+      if (d >= 0.7) {
+        str = '強い相関あり';
+        fill = '#d50000'
+      } else if (d >= 0.4) {
+        str = 'やや相関あり';
+        fill = '#ff8000'
+      } else if (d >= 0.2) {
+        str = '弱い相関あり';
+        fill = '#00d500'
+      } else if (d >= -0.2) {
+        str = 'ほとんど相関なし';
+        fill = 'black'
+      } else if (d >= -0.4) {
+        str = '弱い相関あり（負）';
+        fill = '#00d500'
+      } else if (d >= -0.7) {
+        str = 'やや相関あり（負）';
+        fill = '#ff8000'
+      } else if (d >= -1) {
+        str = '強い相関あり（負）';
+        fill = '#d50000'
+      }
+      return str
     }
-    return str
-  })
+  };
+  let str = '', fill = 'black';
+  const soukanTextCyuuG = svg.append('g')
+  .attr('transform', 'translate(' + (10 * multi) + ',' + (12 * multi + height - 50 * multi) + ')');
+  const soukanTextCyuuD = soukanTextCyuuG.selectAll('text')
+  .data([dc.soukan])
+  .enter();
+  const soukanTextCyuu = soukanTextCyuuD.append('text')
+  .text(d => cyuuSyaku(d))
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .attr('fill', () => fill);
-  // 軸スケールの設定-------------------------------------------------------------------------
-  const rightMax = d3.max(dc.dataset, d => d.rightData);
-  const rightMin = d3.min(dc.dataset, d => d.rightData);
-  const leftMax = d3.max(dc.dataset, d => d.leftData);
-  let leftMin = d3.min(dc.dataset, d => d.leftData);
-  if (leftMin > 0) leftMin = 0;
-  const xScale = d3.scaleLinear()
-  .domain([0, rightMax * 1.1])
-  .range([margin.left, width - margin.right]);
-  const yScale = d3.scaleLinear()
-  .domain([leftMin * 1.1, leftMax * 1.1])
-  .range([height - margin.bottom, margin.top]);
   // 0のラインx----------------------------------------------------------------------------------
   const zeroLineX = svg.append('line')
   .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
   .attr('x1', margin.left * multi)
-  .attr('y1', yScale(0))
+  .attr('y1', dc.yScale(0))
   .attr('x2', width - margin.right * multi)
-  .attr('y2', yScale(0))
+  .attr('y2', dc.yScale(0))
   .attr('stroke-width', '1px')
   .attr('stroke', 'black');
   // 0のラインy----------------------------------------------------------------------------------
   const zeroLineY = svg.append('line')
   .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
-  .attr('x1', xScale(0))
+  .attr('x1', dc.xScale(0))
   .attr('y1', margin.top * multi)
-  .attr('x2', xScale(0))
+  .attr('x2', dc.xScale(0))
   .attr('y2', height - margin.bottom * multi)
   .attr('stroke-width', '1px')
   .attr('stroke', 'black');
@@ -181,18 +190,18 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
   .append('line')
   .attr('id', 'kaiki-line')
-  .attr('x1', xScale(rightMin))
-  .attr('y1', yScale(dc.linRegLine(rightMin)))
-  .attr('x2', xScale(rightMax))
-  .attr('y2', yScale(dc.linRegLine(rightMax)))
+  .attr('x1', dc.xScale(dc.rightMin))
+  .attr('y1', dc.yScale(dc.linRegLine(dc.rightMin)))
+  .attr('x2', dc.xScale(dc.rightMax))
+  .attr('y2', dc.yScale(dc.linRegLine(dc.rightMax)))
   .attr('stroke-width', '1px')
   .attr('stroke', 'black')
   .attr('stroke-dasharray', '4,4');
   // 軸の表示-----------------------------------------------------------------------------------
-  const axisx = d3.axisBottom(xScale)
+  const axisx = d3.axisBottom(dc.xScale)
   .ticks(20)
   .tickSize((margin.top + margin.bottom) - height);
-  const axisy = d3.axisLeft(yScale)
+  const axisy = d3.axisLeft(dc.yScale)
   // .ticks(10)
   .tickSize((margin.left + margin.right) - width);
   const gX = svg.append('g')
@@ -218,7 +227,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .attr('stroke-opacity', '0.5px')
   .attr('shape-rendering', 'crispEdges')
   .attr('stroke-dasharray', '2');
-  // サークルの表示-----------------------------------------------------------------------------
+  // 丸の表示----------------------------------------------------------------------------------
   let tgtprefCode;
   if (d3.select('#scatter-pref-input').size()) {
     const tgtPrefName = d3.select('#scatter-pref-input').property("value");
@@ -227,15 +236,15 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   } else {
     tgtprefCode = '45000'
   }
-  const circle = svg.append('g')
+  const circleG = svg.append('g')
   .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
   .selectAll('circle')
   .data(dc.dataset)
   .enter()
   .append('circle')
   .attr('id', d => 'circle' + d.cityname)
-  .attr('cx', d => xScale( d.rightData ))
-  .attr('cy', d => yScale( d.leftData ))
+  .attr('cx', d => dc.xScale( d.rightData ))
+  .attr('cy', d => dc.yScale( d.leftData ))
   .attr('fill', d => d.cityname === tgtprefCode ? 'red' : 'orange')
   .attr('r', 6);
   // テキスト表示--------------------------------------------------------------------------------
@@ -246,8 +255,8 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .enter()
   .append('text')
   .text(d => d.cityname)
-  .attr('x', d => xScale(d.rightData) + 7)
-  .attr('y', d => yScale(d.leftData) + 3)
+  .attr('x', d => dc.xScale(d.rightData) + 7)
+  .attr('y', d => dc.yScale(d.leftData) + 3)
   .attr('text-anchor', 'start')
   .attr('font-size', 10 * multi + 'px');
   // 縦軸単位----------------------------------------------------------------------------------
@@ -265,50 +274,10 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .text('単位:' + rightUnit)
   .attr('text-anchor', 'end')
   .attr('font-weight', 'normal');
-  // 年-----------------------------------------------------------------------------------------
-  svg.append('g')
-  .attr('font-size', 50 * multi + 'px')
-  .attr('transform', () => 'translate(' + (margin.left + 10) + ',' + (50 * multi + margin.top + 10) + ')')
-  .append('text')
-  .text(mixDataset[mixDataset.length - 1].time.substr(0, 4))
-  .attr('id', 'year-text-' + prefOrCity)
-  .attr('text-anchor', 'start')
-  .attr('font-weight', 'normal')
-  .attr('fill', 'gray')
-  .style('font-style', 'italic');
   //--------------------------------------------------------------------------------------------
   // ズーム時にもスケールを対応させるために
-  let newXScale = xScale;
-  let newYScale = yScale;
-  // インプットレンジの関数-----------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
-    const year = mixDataset[value].time.substr(0, 4);
-    d3.select('#year-text-' + prefOrCity).text(year);
-    rangeDiv.select('.year-range-text').text(year);
-    const dc = new DataCreate(value);
-    dc.create();
-    circle
-    .data(dc.dataset, d => d.cityname)
-    .transition()
-    .attr('cx', d => newXScale(d.rightData))
-    .attr('cy', d => newYScale(d.leftData));
-    textG
-    .data(dc.dataset, d => d.cityname)
-    .transition()
-    .attr('x', d => newXScale(d.rightData) + 7)
-    .attr('y', d => newYScale(d.leftData) + 3);
-    d3.select('#soukan-text').text('相関係数 = ' + dc.soukan);
-    // 回帰直線--------------------------------------------------------------------------------
-    const rightMin = d3.min(dc.dataset, d => d.rightData);
-    const rightMax = d3.max(dc.dataset, d => d.rightData);
-    kaikiLine
-    .transition()
-    .attr('x1', newXScale(rightMin))
-    .attr('y1', newYScale(dc.linRegLine(rightMin)))
-    .attr('x2', newXScale(rightMax))
-    .attr('y2', newYScale(dc.linRegLine(rightMax)));
-  };
+  let newXScale = dc.xScale;
+  let newYScale = dc.yScale;
   // インプットレンジ------------------------------------------------------------------------------
   rangeDiv.select('.year-range')
   .attr('max', String(mixDataset.length - 1));
@@ -332,7 +301,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   });
   // インプットテキスト----------------------------------------------------------------------------
   const textInput = cityName => {
-    circle.attr('fill', d => d.cityname === cityName ? 'red' : 'orange')
+    circleG.attr('fill', d => d.cityname === cityName ? 'red' : 'orange')
   };
   if (!d3.select('#scatter-pref-input-' + prefOrCity).size()) {
     palentDiv.append('div')
@@ -360,28 +329,45 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   // ツールチップ---------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
-  circle
+  circleG
   .on('mouseover', function (d) {
     return tip.show(`${d.cityname}<br>${d.leftData.toLocaleString()}${leftUnit}<br>${d.rightData.toLocaleString()}${rightUnit}`, this)
   })
   .on('mouseout', tip.hide);
   // ズーム--------------------------------------------------------------------------------------
   const zoomed = () => {
-    newXScale = d3.event.transform.rescaleX(xScale);
-    newYScale = d3.event.transform.rescaleY(yScale);
+    multi = width / defaultWidth < 1 ? width / defaultWidth : 1;
+    const value = Number(d3.select('#year-range-' + prefOrCity).select('.year-range').property("value"));
+    const dc = new DataCreate(value);
+    dc.create();
+    newXScale = d3.event.transform.rescaleX(dc.xScale);
+    newYScale = d3.event.transform.rescaleY(dc.yScale);
+    // クリップ領域-------------------------------------------------------------------------------
+    clip
+    .attr('width', width - margin.right - margin.left)
+    .attr('height', height - margin.top - margin.bottom);
     // サークル----------------------------------------------------------------------------------
-    circle
+    circleG
     .attr('cx', d => newXScale(d.rightData))
     .attr('cy', d => newYScale(d.leftData));
     textG
     .attr('x', d => newXScale(d.rightData) + 7)
     .attr('y', d => newYScale(d.leftData) + 3);
-    gX.call(axisx.scale(d3.event.transform.rescaleX(xScale)))
+    // x軸--------------------------------------------------------------------------------------
+    const axisx = d3.axisBottom(newXScale)
+    .ticks(20)
+    .tickSize((margin.top + margin.bottom) - height);
+    gX.call(axisx)
+    .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
     .selectAll('text')
     .attr('font-size', 10 * multi + 'px')
     .attr('transform', 'rotate(45)')
     .attr('text-anchor', 'start');
-    gY.call(axisy.scale(d3.event.transform.rescaleY(yScale)))
+    // y軸--------------------------------------------------------------------------------------
+    const axisy = d3.axisLeft(newYScale)
+    .tickSize((margin.left + margin.right) - width);
+    gY.call(axisy)
+    .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
     .selectAll('text')
     .attr('font-size', 10 * multi + 'px')
     .attr('text-anchor', 'end');
@@ -399,13 +385,11 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     .attr('x2', newXScale(0))
     .attr('y2', height - margin.bottom * multi);
     // 回帰直線--------------------------------------------------------------------------------
-    const rightMin = d3.min(dc.dataset, d => d.rightData);
-    const rightMax = d3.max(dc.dataset, d => d.rightData);
     kaikiLine
-    .attr('x1', newXScale(rightMin))
-    .attr('y1', newYScale(dc.linRegLine(rightMin)))
-    .attr('x2', newXScale(rightMax))
-    .attr('y2', newYScale(dc.linRegLine(rightMax)));
+    .attr('x1', newXScale(dc.rightMin))
+    .attr('y1', newYScale(dc.linRegLine(dc.rightMin)))
+    .attr('x2', newXScale(dc.rightMax))
+    .attr('y2', newYScale(dc.linRegLine(dc.rightMax)));
     //-------------------------------------------------------------------------------------------
     svg.selectAll('.axis line')
     .attr('stroke', 'lightgray')
@@ -415,11 +399,114 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   };
   const zoom = d3.zoom().on('zoom', zoomed);
   svg.call(zoom);
+  // --------------------------------------------------------------------------------------------
+  const redraw = () => {
+    multi = width / defaultWidth < 1 ? width / defaultWidth : 1;
+    svg.attr('width', width);
+    svg.attr('height', height);
+    const value = Number(d3.select('#year-range-' + prefOrCity).select('.year-range').property("value"));
+    const year = mixDataset[value].time.substr(0, 4);
+    rangeDiv.select('.year-range-text').text(year);
+    const dc = new DataCreate(value);
+    dc.create();
+    // クリップ領域-------------------------------------------------------------------------------
+    clip
+    .attr('width', width - margin.right - margin.left)
+    .attr('height', height - margin.top - margin.bottom);
+    // x軸--------------------------------------------------------------------------------------
+    const axisx = d3.axisBottom(dc.xScale)
+    .ticks(20)
+    .tickSize((margin.top + margin.bottom) - height);
+    gX
+    .call(axisx)
+    .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
+    .selectAll('text')
+    .attr('font-size', 10 * multi + 'px')
+    .attr('transform', 'rotate(45)')
+    .attr('text-anchor', 'start');
+    // y軸--------------------------------------------------------------------------------------
+    const axisy = d3.axisLeft(dc.yScale)
+    .tickSize((margin.left + margin.right) - width);
+    gY
+    .call(axisy)
+    .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
+    .selectAll('text')
+    .attr('font-size', 10 * multi + 'px')
+    .attr('text-anchor', 'end');
+    // 丸---------------------------------------------------------------------------------------
+    circleG
+    .data(dc.dataset, d => d.cityname)
+    .transition()
+    .attr('cx', d => dc.xScale(d.rightData))
+    .attr('cy', d => dc.yScale(d.leftData));
+    // テキスト-----------------------------------------------------------------------------------
+    textG
+    .data(dc.dataset, d => d.cityname)
+    .transition()
+    .attr('x', d => dc.xScale(d.rightData) + 7)
+    .attr('y', d => dc.yScale(d.leftData) + 3);
+    // 相関係数--------------------------------------------------------------------------------
+    soukanTextG
+    .attr('transform', 'translate(' + (10 * multi) + ',' + (12 * multi + height - 70 * multi) + ')');
+    soukanText
+    .data([dc.soukan])
+    .text(d => '相関係数 = ' + d);
+    soukanTextCyuuG
+    .attr('transform', 'translate(' + (10 * multi) + ',' + (12 * multi + height - 50 * multi) + ')');
+    soukanTextCyuu
+    .data([dc.soukan])
+    .attr('font-size', 12 * multi + 'px')
+    .text(d => cyuuSyaku(d));
+    // 0のラインx--------------------------------------------------------------------------------
+    zeroLineX
+    .attr('x1', margin.left * multi)
+    .attr('y1', dc.yScale(0))
+    .attr('x2', width - margin.right * multi)
+    .attr('y2', dc.yScale(0));
+    // 0のラインy--------------------------------------------------------------------------------
+    zeroLineY
+    .attr('clip-path', 'url(#scatter-estat-clip-' + prefOrCity + ')')
+    .attr('x1', dc.xScale(0))
+    .attr('y1', margin.top * multi)
+    .attr('x2', dc.xScale(0))
+    .attr('y2', height - margin.bottom * multi);
+    // 回帰直線--------------------------------------------------------------------------------
+    const rightMin = d3.min(dc.dataset, d => d.rightData);
+    const rightMax = d3.max(dc.dataset, d => d.rightData);
+    kaikiLine
+    .transition()
+    .attr('x1', dc.xScale(rightMin))
+    .attr('y1', dc.yScale(dc.linRegLine(rightMin)))
+    .attr('x2', dc.xScale(rightMax))
+    .attr('y2', dc.yScale(dc.linRegLine(rightMax)));
+    // 罫線-------------------------------------------------------------------------------------
+    svg.selectAll('.axis line')
+    .attr('stroke', 'lightgray')
+    .attr('stroke-opacity', '0.5px')
+    .attr('shape-rendering', 'crispEdges')
+    .attr('stroke-dasharray', '2');
+  };
+  // リサイズ検知--------------------------------------------------------------------------------
+  const isFirst = {miyazaki: true, pref: true, city: true};
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!isFirst[prefOrCity]) { // 最初(統計を選択した時) は動作させない。
+      if (!storeBase.state.base.menuChange) { // メニュー移動時も動作させない。
+        for (const entry of entries) {
+          width = entry.contentRect.width;
+          height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+          redraw()
+        }
+      }
+    }
+    isFirst[prefOrCity] = false
+  });
+  const target = palentDiv.node();
+  resizeObserver.observe(target);
   //--------------------------------------------------------------------------------------------
   const type = ie ? 'change' : 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
   eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-scatter-' + prefOrCity + ' .year-range'), type, (() => {
-    return e => rangeInput(e)
+    return () => redraw()
   })(1), false);
   if (prefOrCity === 'pref') {
     storeBase.commit('statList/yearRangeScatterPrefChange', mixDataset.length - 1)
