@@ -21,11 +21,10 @@ export default function (val, parentDiv) {
     unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
-  const width = palentDiv.node().getBoundingClientRect().width;
-  const height = palentDiv.node().getBoundingClientRect().height
-    - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+  let width = palentDiv.node().getBoundingClientRect().width;
+  let height = palentDiv.node().getBoundingClientRect().height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
-  const multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
+  let multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor(dataset) {
@@ -119,6 +118,7 @@ export default function (val, parentDiv) {
   .style('pointer-events', 'none');
   //--------------------------------------------------------------------------------------------
   const g2 = svg.append('g')
+  .attr('id', 'g2')
   .attr('transform', 'translate(' + (10 * multi + 135 * multi) + ',' + (10 * multi + 15) + ')')
   .selectAll('rect')
   .data(dc.dataset2)
@@ -165,8 +165,6 @@ export default function (val, parentDiv) {
   // クリックでカレントに色を塗る------------------------------------------------------------------
   const rectClick = (d, rect) => {
     // 実際の色塗りはwatch.jsで塗っている。
-    // const payload = rect.attr('fill') === 'orange' ? '' : d.citycode;
-
     const payload = {
       citycode: rect.attr('fill') === 'orange' ? '' : d.citycode,
       prefOrCity: prefOrCity
@@ -188,15 +186,26 @@ export default function (val, parentDiv) {
   .attr('class', 'no-print')
   .append('text')
   .text(statName + '　単位：' + unit);
-  //--------------------------------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
-    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+  // --------------------------------------------------------------------------------------------
+  const redraw = () => {
+    multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
+    svg.attr('width', width);
+    svg.attr('height', height);
+    let target;
+    if (isEStat) {
+      const value = Number(d3.select('#year-range-' + prefOrCity).select('.year-range').property("value"));
+      target = val.statData[value].data2;
+    } else {
+      target = dataset
+    }
+    const dc = new DataCreate(JSON.parse(JSON.stringify(target)));
     dc.create();
+    palentDiv.select('#rank-container-div')
+    .style('height', (height - 20 * multi) + 'px');
     rectG1
     .data(dc.dataset, d => d.citycode)
-    .transition()
-    .duration(200)
+    .attr('width', 130 * multi)
+    .attr('height', 15 * multi)
     .attr('fill', d => {
       const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
       return isTarget ? 'orange' : d.rgb
@@ -206,10 +215,9 @@ export default function (val, parentDiv) {
     });
     text1_1
     .data(dc.dataset, d => d.citycode)
-    .transition()
-    .duration(200)
     .attr('transform', (d, i) => 'translate(0,' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
+    .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
       const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
@@ -217,20 +225,21 @@ export default function (val, parentDiv) {
     });
     text1_2
     .data(dc.dataset, d => d.citycode)
-    .transition()
-    .duration(200)
     .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
+    .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
       const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });
     //-------------------------------------------------------------------------------------------
+    svg.select('#g2')
+    .attr('transform', 'translate(' + (10 * multi + 135 * multi) + ',' + (10 * multi + 15) + ')');
     rectG2
     .data(dc.dataset2, d => d.citycode)
-    .transition()
-    .duration(200)
+    .attr('width', 130 * multi)
+    .attr('height', 15 * multi)
     .attr('fill', d => {
       const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
       return isTarget ? 'orange' : d.rgb
@@ -238,10 +247,9 @@ export default function (val, parentDiv) {
     .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * (i - 1) * multi) + ')');
     text2_1
     .data(dc.dataset2, d => d.citycode)
-    .transition()
-    .duration(200)
     .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
+    .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
       const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
@@ -249,22 +257,37 @@ export default function (val, parentDiv) {
     });
     text2_2
     .data(dc.dataset2, d => d.citycode)
-    .transition()
-    .duration(200)
     .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
+    .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
       const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });
   };
+  // リサイズ検知--------------------------------------------------------------------------------
+  const isFirst = {miyazaki: true, pref: true, city: true};
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!isFirst[prefOrCity]) { // 最初(統計を選択した時) は動作させない。
+      if (!storeBase.state.base.menuChange) { // メニュー移動時も動作させない。
+        for (const entry of entries) {
+          width = entry.contentRect.width;
+          height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+          redraw()
+        }
+      }
+    }
+    isFirst[prefOrCity] = false
+  });
+  const target = palentDiv.node();
+  resizeObserver.observe(target);
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
     const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-      return e => rangeInput(e)
+      return () => redraw()
     })(1), false);
   }
 }
