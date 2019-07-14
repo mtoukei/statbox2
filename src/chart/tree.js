@@ -21,18 +21,17 @@ export default function (val, parentDiv) {
     unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
-  const width = palentDiv.node().getBoundingClientRect().width;
-  const height = palentDiv.node().getBoundingClientRect().height
+  let width = palentDiv.node().getBoundingClientRect().width;
+  let height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
-  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
-  //トランジションフラグ----------------------------------------------------------------------------
-  const isTransition = storeBase.state.statList.transition;
+  let multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
       this.dataset = dataset;
       this.root = null;
+      this.treemap = null;
       this.fontScale = null;
       this.isDraw = true
     }
@@ -258,6 +257,12 @@ export default function (val, parentDiv) {
       this.fontScale = d3.scaleLinear()
       .domain([minVal, maxVal])
       .range([6 * multi, 20 * multi]);
+      //-----------------------------------------------------------------------------------------
+      this.treemap = d3.treemap()
+      .size([width - 20, height - 40])// ツリーマップ全体の大きさ
+      .padding(0)
+      // .paddingOuter(2)
+      .round(true);
     }
   }
   //--------------------------------------------------------------------------------------------
@@ -265,18 +270,13 @@ export default function (val, parentDiv) {
   dc.create();
   if (!dc.isDraw) return;
   // --------------------------------------------------------------------------------------------
-  const treemap = d3.treemap()
-  .size([width - 20, height - 40])// ツリーマップ全体の大きさ
-  .padding(0)
-  // .paddingOuter(2)
-  .round(true);
-  treemap(dc.root);
+  dc.treemap(dc.root);
   // SVG領域作成---------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
-  .classed("chart-svg", true);
+  .attr('class', 'chart-svg');
   // ツリーマップ--------------------------------------------------------------------------------
   const tip = d3Tip().attr('class', 'd3-tip').html(d => d);
   svg.call(tip);
@@ -311,8 +311,7 @@ export default function (val, parentDiv) {
     return d.data.color;
   });
   rect.transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 20 : 0)
+  .delay((d, i) => i * 20)
   .attr('width', d => d.x1 - d.x0)
   .attr('height', d => d.y1 - d.y0);
   // ブロックのテキスト
@@ -326,8 +325,7 @@ export default function (val, parentDiv) {
   text
   .attr('opacity', 0)
   .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 20 : 0)
+  .delay((d, i) => i * 20)
   .attr('opacity', 1);
   // クリックでカレントに色を塗る-------------------------------------------------------------------
   rect
@@ -346,12 +344,21 @@ export default function (val, parentDiv) {
   .attr('class', 'no-print')
   .append('text')
   .text(statName);
-  // -------------------------------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
-    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+  // --------------------------------------------------------------------------------------------
+  const redraw = () => {
+    multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
+    svg.attr('width', width);
+    svg.attr('height', height);
+    let target;
+    if (isEStat) {
+      const value = Number(d3.select('#year-range-' + prefOrCity).select('.year-range').property("value"));
+      target = val.statData[value].data2;
+    } else {
+      target = dataset
+    }
+    const dc = new DataCreate(JSON.parse(JSON.stringify(target)));
     dc.create();
-    treemap(dc.root);
+    dc.treemap(dc.root);
     treeSvg
     .data(dc.root.leaves())
     .transition()
@@ -371,17 +378,35 @@ export default function (val, parentDiv) {
     text
     .data(dc.root.leaves())
     .attr('x', 2)
+    .transition()
+    .duration(500)
     .attr('dy', d => dc.fontScale(d.data.value))
     .attr('font-size', d => dc.fontScale(d.data.value))
-    .attr('class', 'node-label')
+    // .attr('class', 'node-label')
     .text(d => d.data.name);
   };
+  // リサイズ検知--------------------------------------------------------------------------------
+  const isFirst = {miyazaki: true, pref: true, city: true};
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!isFirst[prefOrCity]) { // 最初(統計を選択した時) は動作させない。
+      if (!storeBase.state.base.menuChange) { // メニュー移動時も動作させない。
+        for (const entry of entries) {
+          width = entry.contentRect.width;
+          height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+          redraw()
+        }
+      }
+    }
+    isFirst[prefOrCity] = false
+  });
+  const target = palentDiv.node();
+  resizeObserver.observe(target);
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
     const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-      return e => rangeInput(e)
+      return () => redraw()
     })(1), false);
   }
 }
