@@ -27,8 +27,6 @@ export default function (val, parentDiv) {
   const defaultWidth = 600;
   let multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 10 * multi, 'left': 50 * multi };
-  //トランジションフラグ----------------------------------------------------------------------------
-  const isTransition = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset, orderType) {
@@ -441,7 +439,6 @@ export default function (val, parentDiv) {
     const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-      // return e => rangeInput(e)
       return () => redraw()
     })(1), false);
   }
