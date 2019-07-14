@@ -31,9 +31,7 @@ export default function (val, parentDiv) {
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
-    constructor (dataset, width, height) {
-      this.width = width;
-      this.height = height;
+    constructor (dataset) {
       this.dataset = dataset;
       this.data = null;
       this.colorScale = null;
@@ -58,7 +56,7 @@ export default function (val, parentDiv) {
       children.forEach((value, index) => value['top'] = index + 1);
       const data_set = {children: children};
       const bubble = d3.pack()
-      .size([this.width, this.height])
+      .size([width, height])
       .padding(1.5);//バブル間の間隔
       const nodes = d3.hierarchy(data_set)
       .sum(d => d.val);// バブルの半径： val要素使用
@@ -86,7 +84,7 @@ export default function (val, parentDiv) {
     }
   }
   //--------------------------------------------------------------------------------------------
-  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)), width, height);
+  const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   // SVG領域作成-----------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
@@ -188,7 +186,7 @@ export default function (val, parentDiv) {
     } else {
       target = dataset
     }
-    const dc = new DataCreate(JSON.parse(JSON.stringify(target)), width, height);
+    const dc = new DataCreate(JSON.parse(JSON.stringify(target)));
     dc.create();
     bubbles
     .data(dc.data, d => d.data.citycode)
