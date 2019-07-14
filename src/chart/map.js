@@ -23,9 +23,8 @@ export default function (val, parentDiv) {
   }
   const tooltip = d3.select('.d3-tooltip');
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
-  const width = palentDiv.node().getBoundingClientRect().width;
-  const height = palentDiv.node().getBoundingClientRect().height
-    - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+  let width = palentDiv.node().getBoundingClientRect().width;
+  let height = palentDiv.node().getBoundingClientRect().height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   //トランジションフラグ----------------------------------------------------------------------------
@@ -37,6 +36,7 @@ export default function (val, parentDiv) {
       this.colorScale = null;
       this.legendDataSet = null;
       this.prefCode = null;
+      this.geoPath = null
     }
     create () {
       if (prefOrCity === 'pref') this.dataset.shift();
@@ -64,30 +64,31 @@ export default function (val, parentDiv) {
       const data0 = String(this.dataset[0].citycode).substr(0, 2);
       const data1 = String(this.dataset[1].citycode).substr(0, 2);
       this.prefCode = data0 !== data1 ? '00' : data0
+
+      // projectionを定義----------------------------------------------------------------------
+      let projection;
+      if (this.prefCode === '00') {
+        projection = d3.geoMercator()
+        .center([138.141, 38.219])
+        .translate([width / 2, height / 2]) // svgの中心
+        .scale(2.5 * (width < height ? width : height));
+      } else if ((this.prefCode === '13')) {
+        projection = d3.geoMercator()
+        .center([139.360, 35.6941])
+        .translate([width / 2, height / 2]) // svgの中心
+        .scale(50 * (width < height ? width : height));
+      } else {
+        const json = GeoPref['pref' + dc.prefCode];
+        projection = d3.geoMercator()
+        .fitExtent([[20, 20], [width - 10, height - 20]], json)
+      }
+      // pathを定義
+      this.geoPath = d3.geoPath(projection);
     }
   }
   //---------------------------------------------------------------------------------------------
   const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
-  const json = GeoPref['pref' + dc.prefCode];
-  // projectionを定義----------------------------------------------------------------------
-  let projection;
-  if (dc.prefCode === '00') {
-    projection = d3.geoMercator()
-    .center([138.141, 38.219])
-    .translate([width / 2, height / 2]) // svgの中心
-    .scale(2.5 * (width < height ? width : height));
-  } else if ((dc.prefCode === '13')) {
-    projection = d3.geoMercator()
-    .center([139.360, 35.6941])
-    .translate([width / 2, height / 2]) // svgの中心
-    .scale(50 * (width < height ? width : height));
-  } else {
-    projection = d3.geoMercator()
-    .fitExtent([[20, 20], [width - 10, height - 20]], json)
-  }
-  // pathを定義
-  const path = d3.geoPath(projection);
   // SVG領域作成---------------------------------------------------------------------------
   palentDiv.select('.chart-svg').remove();
   palentDiv.style('background', '#d0d0d0');
@@ -96,13 +97,14 @@ export default function (val, parentDiv) {
   .attr('height', height)
   .attr('class', 'chart-svg');
   // -------------------------------------------------------------------------------------------
+  const json = GeoPref['pref' + dc.prefCode];
   const g = svg.append('g')
   .selectAll('path')
   .data(json.features)
   .enter();
   const pathG = g.append('path')
   .attr('class', 'map-path-' + prefOrCity)
-  .attr('d', path)
+  .attr('d', dc.geoPath)
   .attr('stroke', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? 'orange' : 'gray')
   .attr('stroke-width', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? '3px' : '0.2px')
   .attr('fill', 'rgba(255,255,255,0.1)')
@@ -172,6 +174,7 @@ export default function (val, parentDiv) {
   .text(statName);
   // 偏差値説明--------------------------------------------------------------------------------
   svg.append('g')
+  .attr('id', 'ssText')
   .attr('font-size', 12 * multi + 'px')
   .attr('transform', () => 'translate(5,' + (height - 5) + ')')
   .attr('class', 'no-print')
@@ -182,12 +185,21 @@ export default function (val, parentDiv) {
     d3.zoom()
     .on('zoom', () => svg.selectAll('path').attr("transform", d3.event.transform));
   svg.call(zoom);
-  // -------------------------------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
-    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+  // --------------------------------------------------------------------------------------------
+  const redraw = () => {
+    svg.attr('width', width);
+    svg.attr('height', height);
+    let target;
+    if (isEStat) {
+      const value = Number(d3.select('#year-range-' + prefOrCity).select('.year-range').property("value"));
+      target = val.statData[value].data2;
+    } else {
+      target = dataset
+    }
+    const dc = new DataCreate(JSON.parse(JSON.stringify(target)));
     dc.create();
     pathG
+    .attr('d', dc.geoPath, d => d.properties.citycode)
     .attr("fill", d => {
       if (d.properties.citycode) {
         const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
@@ -195,13 +207,31 @@ export default function (val, parentDiv) {
       }
       return 'rgba(0,0,0,0)'
     });
+    svg.select('#ssText')
+    .attr('transform', () => 'translate(5,' + (height - 5) + ')')
   };
+  // リサイズ検知--------------------------------------------------------------------------------
+  const isFirst = {miyazaki: true, pref: true, city: true};
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!isFirst[prefOrCity]) { // 最初(統計を選択した時) は動作させない。
+      if (!storeBase.state.base.menuChange) { // メニュー移動時も動作させない。
+        for (const entry of entries) {
+          width = entry.contentRect.width;
+          height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+          redraw()
+        }
+      }
+    }
+    isFirst[prefOrCity] = false
+  });
+  const target = palentDiv.node();
+  resizeObserver.observe(target);
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
     const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-      return e => rangeInput(e)
+      return () => redraw()
     })(1), false);
   }
 }
