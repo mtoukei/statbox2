@@ -24,19 +24,17 @@ export default function (val, parentDiv) {
     unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
-  const width = palentDiv.node().getBoundingClientRect().width;
-  const height = palentDiv.node().getBoundingClientRect().height
-    - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+  let width = palentDiv.node().getBoundingClientRect().width;
+  let height = palentDiv.node().getBoundingClientRect().height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 30 * multi, 'bottom': 10 * multi, 'right': 10 * multi, 'left': 70 * multi };
-  //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
-      this.dataset = dataset;
+      this.datasetOriginal = dataset;
       this.data = null;
+      this.yScale = null;
       this.circleData = null;
       this.q1 = null;
       this.median = null;
@@ -49,9 +47,9 @@ export default function (val, parentDiv) {
       this.maxAll = null;
     }
     create () {
-      if (prefOrCity === 'pref') this.dataset.shift();
-      this.data = this.dataset.map(value => value.data);
-      this.circleData = this.dataset.map(value => {
+      if (prefOrCity === 'pref') this.datasetOriginal.shift();
+      this.data = this.datasetOriginal.map(value => value.data);
+      this.circleData = this.datasetOriginal.map(value => {
         return {
           data: value.data,
           cityname: value.cityname,
@@ -77,13 +75,16 @@ export default function (val, parentDiv) {
           });
         })
       } else {
-        this.maxAll = d3.max(this.dataset, d => d.data);
-        this.minAll = d3.min(this.dataset, d => d.data);
+        this.maxAll = d3.max(this.datasetOriginal, d => d.data);
+        this.minAll = d3.min(this.datasetOriginal, d => d.data);
       }
       this.min = d3.min(this.data);
       this.max = d3.max(this.data);
-      this.minCitys = this.dataset.filter(value => value.data === this.min).map(value => value.cityname);
-      this.maxCitys = this.dataset.filter(value => value.data === this.max).map(value => value.cityname)
+      this.minCitys = this.datasetOriginal.filter(value => value.data === this.min).map(value => value.cityname);
+      this.maxCitys = this.datasetOriginal.filter(value => value.data === this.max).map(value => value.cityname)
+      this.yScale = d3.scaleLinear()
+      .domain([this.minAll, this.maxAll * 1.05])
+      .range([height - margin.bottom, margin.top]);
     }
   }
   //--------------------------------------------------------------------------------------------
@@ -96,12 +97,10 @@ export default function (val, parentDiv) {
   .attr('height', height)
   .attr('class', 'chart-svg');
   // Y軸---------------------------------------------------------------------------------------
-  const yScale = d3.scaleLinear()
-  .domain([dc.minAll, dc.maxAll * 1.05])
-  .range([height - margin.bottom, margin.top]);
   svg.append('g')
+  .attr('id', 'box-y-axis')
   .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
-  .call(d3.axisLeft(yScale));
+  .call(d3.axisLeft(dc.yScale));
   // --------------------------------------------------------------------------------------------
   const boxWidth = 100;
   const center = margin.left + boxWidth / 2 + 20;
@@ -113,36 +112,23 @@ export default function (val, parentDiv) {
   .attr('y1', 0)
   .attr('y2', 0)
   .attr('stroke', 'black');
-  if (transitionFlg) {
-    vLine
-    .transition()
-    .duration(1000)
-    .attr('y1', yScale(dc.min) )
-    .attr('y2', yScale(dc.max) )
-  } else {
-    vLine
-    .attr('y1', yScale(dc.min) )
-    .attr('y2', yScale(dc.max) )
-  }
+  vLine
+  .transition()
+  .duration(1000)
+  .attr('y1', dc.yScale(dc.min) )
+  .attr('y2', dc.yScale(dc.max) );
   // ボックス作成--------------------------------------------------------------------------------
   const box = svg.append('rect')
   .attr('x', center - boxWidth / 2)
-  .attr('y', yScale(dc.q3))
+  .attr('y', dc.yScale(dc.q3))
   .attr('height', 0)
   .attr('width', boxWidth)
   .attr('stroke', 'black')
   .style('fill', 'slategrey');
-  if (transitionFlg) {
-    box
-    .transition()
-    .duration(1000)
-    .attr('height', (yScale(dc.q1) - yScale(dc.q3)) )
-  } else {
-    box
-    .transition()
-    .duration(1000)
-    .attr('height', (yScale(dc.q1) - yScale(dc.q3)) )
-  }
+  box
+  .transition()
+  .duration(1000)
+  .attr('height', (dc.yScale(dc.q1) - dc.yScale(dc.q3)) );
   // 最小値、中央値、最大値 横線-------------------------------------------------------------
   const hLine = svg.selectAll('.horizontal-line')
   .data([dc.min, dc.median, dc.max])
@@ -153,17 +139,11 @@ export default function (val, parentDiv) {
   .attr('y1', 0)
   .attr('y2', 0)
   .attr('stroke', 'black');
-  if (transitionFlg) {
-    hLine
-    .transition()
-    .duration(1000)
-    .attr('y1', d => yScale(d))
-    .attr('y2', d => yScale(d))
-  } else {
-    hLine
-    .attr('y1', d => yScale(d))
-    .attr('y2', d => yScale(d))
-  }
+  hLine
+  .transition()
+  .duration(1000 )
+  .attr('y1', d => dc.yScale(d))
+  .attr('y2', d => dc.yScale(d));
   // 最小値、中央値、最大値テキスト------------------------------------------------------------
   const hLineText = svg.selectAll('.horizontal-line-text')
   .data([
@@ -182,15 +162,10 @@ export default function (val, parentDiv) {
     const data = (Math.floor(d.data * 10) / 10).toLocaleString() + unit;
     return `${d.text}${data} ${citys}`
   });
-  if (transitionFlg) {
-    hLineText
-    .transition()
-    .duration(1000)
-    .attr('y', d => yScale(d.data))
-  } else {
-    hLineText
-    .attr('y', d => yScale(d.data))
-  }
+  hLineText
+  .transition()
+  .duration(1000)
+  .attr('y', d => dc.yScale(d.data));
   // 散布イメージ-------------------------------------------------------------------------------
   const circle = svg.selectAll('circle')
   .data(dc.circleData)
@@ -198,7 +173,7 @@ export default function (val, parentDiv) {
   .append('circle')
   .attr('class', 'box-circle-' + prefOrCity)
   .attr('cx', () => center - jitterWidth / 2 + Math.random() * jitterWidth )
-  .attr('cy', d => yScale(d.data))
+  .attr('cy', d => dc.yScale(d.data))
   .attr('r', 0)
   .attr('fill', d => {
     const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
@@ -207,15 +182,10 @@ export default function (val, parentDiv) {
   .attr('stroke', 'black')
   .style('cursor', 'pointer');
   const radius = dc.circleData.length > 30 ? 4 : 6;
-  if (transitionFlg) {
-    circle
-    .transition()
-    .delay((d, i) => i * 30)
-    .attr('r', radius)
-  } else {
-    circle
-    .attr('r', radius)
-  }
+  circle
+  .transition()
+  .delay((d, i) => i * 40)
+  .attr('r', radius);
   // クリックでカレントに色を塗る------------------------------------------------------------------
   circle
   .on('click', function (d) {
@@ -266,27 +236,32 @@ export default function (val, parentDiv) {
       circle.style('display', 'block')
     }
   });
-  // -------------------------------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
-    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+  // --------------------------------------------------------------------------------------------
+  const redraw = () => {
+    svg.attr('width', width);
+    svg.attr('height', height);
+    let target;
+    if (isEStat) {
+      const value = Number(d3.select('#year-range-' + prefOrCity).select('.year-range').property("value"));
+      target = val.statData[value].data2;
+    } else {
+      target = dataset
+    }
+    const dc = new DataCreate(JSON.parse(JSON.stringify(target)));
     dc.create();
+    svg.select('#box-y-axis')
+    .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
+    .call(d3.axisLeft(dc.yScale));
     vLine
-    .transition()
-    .duration(200)
-    .attr('y1', yScale(dc.min))
-    .attr('y2', yScale(dc.max));
+    .attr('y1', dc.yScale(dc.min))
+    .attr('y2', dc.yScale(dc.max));
     box
-    .transition()
-    .duration(200)
-    .attr('y', yScale(dc.q3))
-    .attr('height', yScale(dc.q1) - yScale(dc.q3));
+    .attr('y', dc.yScale(dc.q3))
+    .attr('height', dc.yScale(dc.q1) - dc.yScale(dc.q3));
     hLine
     .data([dc.min, dc.median, dc.max])
-    .transition()
-    .duration(200)
-    .attr('y1', d => yScale(d))
-    .attr('y2', d => yScale(d));
+    .attr('y1', d => dc.yScale(d))
+    .attr('y2', d => dc.yScale(d));
     hLineText
     .data([
       {data: dc.min, text: 'min ', citys: dc.minCitys},
@@ -298,20 +273,34 @@ export default function (val, parentDiv) {
       const data = (Math.floor(d.data * 10) / 10).toLocaleString() + unit;
       return `${d.text}=${data} ${citys}`
     })
-    .transition()
-    .duration(200)
-    .attr('y', d => yScale(d.data));
+    .attr('y', d => dc.yScale(d.data));
     // 散布イメージ-------------------------------------------------------------------------------
     circle
     .data(dc.circleData)
-    .attr('cy', d => yScale(d.data))
+    .attr('cy', d => dc.yScale(d.data))
   };
+  // リサイズ検知--------------------------------------------------------------------------------
+  const isFirst = {miyazaki: true, pref: true, city: true};
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!isFirst[prefOrCity]) { // 最初(統計を選択した時) は動作させない。
+      if (!storeBase.state.base.menuChange) { // メニュー移動時も動作させない。
+        for (const entry of entries) {
+          width = entry.contentRect.width;
+          height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+          redraw()
+        }
+      }
+    }
+    isFirst[prefOrCity] = false
+  });
+  const target = palentDiv.node();
+  resizeObserver.observe(target);
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
     const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-      return e => rangeInput(e)
+      return () => redraw()
     })(1), false);
     if (prefOrCity === 'pref') {
       storeBase.commit('statList/yearRangePrefChange', val.statData.length - 1)

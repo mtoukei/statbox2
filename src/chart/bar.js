@@ -21,19 +21,20 @@ export default function (val, parentDiv) {
     unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
-  const width = palentDiv.node().getBoundingClientRect().width;
-  const height = palentDiv.node().getBoundingClientRect().height
+  let width = palentDiv.node().getBoundingClientRect().width;
+  let height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 600;
-  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
+  let multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 10 * multi, 'left': 50 * multi };
-  //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset, orderType) {
       this.datasetOriginal = dataset;
       this.dataset = null;
+      this.xScale = null;
+      this.yScale = null;
+      this.yFontSize = '8px';
       this.orderType = orderType;
       this.maxVal = null;
       this.minVal = null;
@@ -88,6 +89,30 @@ export default function (val, parentDiv) {
         this.minVal = this.minVal * 1.1
       }
       this.dataset = data2;
+      // 最大値に合わせて文字サイズと左マージンを設定---------------------------------------------
+      const len = String(Math.floor(this.maxVal)).length;
+      if (len >= 6) {
+        margin.left = 60;
+        this.yFontSize = 8 * multi + 'px'
+      } else if (len >= 5) {
+        margin.left = 50;
+        this.yFontSize = 10 * multi + 'px'
+      } else if (len >= 3) {
+        margin.left = 40;
+        this.yFontSize = 10 * multi + 'px'
+      } else {
+        margin.left = 30;
+        this.yFontSize = 10 * multi + 'px'
+      }
+      margin.left = margin.left * multi;
+      this.xScale = d3.scaleBand()
+      .range([margin.left, width - margin.right])
+      .padding(0.2)
+      .domain(this.dataset.map(d => d.cityname));
+      this.yScale = d3.scaleLinear()
+      .domain([this.minVal, this.maxVal])
+      .range([height - margin.bottom, margin.top]);
+      // 統計------------------------------------------------------------------------------------
       this.mean = this.datasetOriginal.mean;
       this.median = this.datasetOriginal.median;
       this.standardDeviation = this.datasetOriginal.standardDeviation;
@@ -104,37 +129,13 @@ export default function (val, parentDiv) {
     .attr('width', width)
     .attr('height', height)
     .classed("chart-svg", true);
-  // 最大値に合わせて文字サイズと左マージンを設定---------------------------------------------
-  const len = String(Math.floor(dc.maxVal)).length;
-  let fontSize = '8px';
-  if (len >= 6) {
-    margin.left = 60;
-    fontSize = 8 * multi + 'px'
-  } else if (len >= 5) {
-    margin.left = 50;
-    fontSize = 10 * multi + 'px'
-  } else if (len >= 3) {
-    margin.left = 40;
-    fontSize = 10 * multi + 'px'
-  } else {
-    margin.left = 30;
-    fontSize = 10 * multi + 'px'
-  }
-  margin.left = margin.left * multi;
-  // バー横軸-----------------------------------------------------------------------------------
-  const xScale = d3.scaleBand()
-  .range([margin.left, width - margin.right])
-  .padding(0.2)
-  .domain(dc.dataset.map(d => d.cityname));
-  // バー縦軸-----------------------------------------------------------------------------------
-  const yScale = d3.scaleLinear()
-  .domain([dc.minVal, dc.maxVal])
-  .range([height - margin.bottom, margin.top]);
+
   // 軸の表示----------------------------------------------------------------------------------
   // x軸
-  const axisx = d3.axisBottom(xScale)
+  const axisx = d3.axisBottom(dc.xScale)
   .ticks(20);
   const cityNameText = svg.append('g')
+  .attr('id', 'bar-x-axis')
   .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
   .call(axisx)
   .selectAll('text')
@@ -149,52 +150,41 @@ export default function (val, parentDiv) {
   .attr('fill', 'black')
   .attr('text-anchor', 'start')
   .style('cursor', 'pointer');
-  // y軸バー------------------------------------------------------------------------------------
-  svg.append('g')
+  // y軸----------------------------------------------------------------------------------------
+  const yText = svg.append('g')
+  .attr('id', 'bar-y-axis')
   .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
-  .call(d3.axisLeft(yScale))
+  .call(d3.axisLeft(dc.yScale))
   .selectAll('text')
-  .attr('font-size', fontSize);
-  // バーの表示---------------------------------------------------------------------------------
+  .attr('font-size', dc.yFontSize);
+  // 棒の表示-----------------------------------------------------------------------------------
   const g = svg.append('g')
   .selectAll('rect')
   .data(dc.dataset)
   .enter();
   const rect = g.append('rect')
   .attr('class', 'bar-rect-' + prefOrCity)
-  .attr('x', d => xScale(d.cityname))
-  .attr('width', xScale.bandwidth())
-  .attr('y', yScale(0))
+  .attr('x', d => dc.xScale(d.cityname))
+  .attr('width', dc.xScale.bandwidth())
+  .attr('y', dc.yScale(0))
   .attr('height', 0)
   .style('cursor', 'pointer');
-  if (transitionFlg) {
-    rect.transition()
-    .duration(1000)
-    .attr('y', function (d) {
-      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
-      if (d.data >= 0) {
-        d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
-        return yScale(d.data)
-      }
-      d3.select(this).attr('fill', isTarget ? 'orange' : 'coral');
-      return yScale(0)
-    })
-    .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
-  } else {
-    rect.attr('y', function (d) {
-      if (d.data >= 0) {
-        d3.select(this).attr('fill', 'slategray');
-        return yScale(d.data)
-      }
-        d3.select(this).attr('fill', 'coral');
-        return yScale(0)
-    })
-    .attr('height', d => Math.abs(yScale(d.data) - yScale(0)));
-  }
+  rect
+  .transition()
+  .duration(1000)
+  .attr('y', d => d.data >= 0 ? dc.yScale(d.data) : dc.yScale(0))
+  .attr('fill', d => {
+    const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
+    if (d.data >= 0) {
+      return isTarget ? 'orange' : 'slategray';
+    }
+    return isTarget ? 'orange' : 'coral'
+  })
+  .attr('height', d => Math.abs(dc.yScale(d.data) - dc.yScale(0)));
   // 平均値-------------------------------------------------------------------------------------
   const sumPolyline = svg.append('polyline')
   .attr('id', 'sum-polyline')
-  .attr('points', margin.left + ',' + yScale(dc.mean) + ' ' + (width - margin.right) + ',' + yScale(dc.mean))
+  .attr('points', margin.left + ',' + dc.yScale(dc.mean) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.mean))
   .attr('stroke', 'blue')
   .attr('fill', 'none')
   .attr('stroke-width', 1);
@@ -215,7 +205,7 @@ export default function (val, parentDiv) {
   // 中央値-------------------------------------------------------------------------------------
   const medianPolyline = svg.append('polyline')
   .attr('id', 'median-polyline')
-  .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median))
+  .attr('points', margin.left + ',' + dc.yScale(dc.median) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.median))
   .attr('stroke', 'red')
   .attr('fill', 'none')
   .attr('stroke-width', 1);
@@ -356,66 +346,99 @@ export default function (val, parentDiv) {
     .data(dc.dataset)
     .transition()
     .duration(200)
-    .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
+    .attr('height', d => Math.abs(dc.yScale(d.data) - dc.yScale(0)))
     .attr('y', function (d) {
       const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
       if (d.data >= 0) {
         d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
-        return yScale(d.data)
+        return dc.yScale(d.data)
       }
       d3.select(this).attr('fill', isTarget ? 'orange' : 'coral');
-      return yScale(0)
+      return dc.yScale(0)
     });
     cityNameText
     .data(dc.dataset)
     .text(d => d.cityname);
   };
   // --------------------------------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
+  const redraw = () => {
     const orderType = storeBase.state.base.barSort;
-    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value])), orderType);
+    svg.attr('width', width);
+    svg.attr('height', height);
+    let target;
+    if (isEStat) {
+      const value = Number(d3.select('#year-range-' + prefOrCity).select('.year-range').property("value"));
+      target = val.statData[value];
+    } else {
+      target = dataset
+    }
+    const dc = new DataCreate(JSON.parse(JSON.stringify(target)), orderType);
     dc.create();
+    // x軸--------------------------------------------------------------------------------------
+    const axisx = d3.axisBottom(dc.xScale)
+    .ticks(20);
+    svg.select("#bar-x-axis")
+    .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
+    .call(axisx);
+    multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
+    cityNameText
+    .attr('font-size', 10 * multi + 'px');
+   // y軸---------------------------------------------------------------------------------------
+    svg.select("#bar-y-axis")
+    .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
+    .call(d3.axisLeft(dc.yScale));
+    yText
+    .attr('font-size', dc.yFontSize);
+    // 棒----------------------------------------------------------------------------------------
     rect
     .data(dc.dataset)
-    .transition()
-    .duration(200)
-    .attr('height', d => Math.abs(yScale(d.data) - yScale(0)))
-    .attr('y', function (d) {
+    .attr('height', d => Math.abs(dc.yScale(d.data) - dc.yScale(0)))
+    .attr('y', d => d.data >= 0 ? dc.yScale(d.data) : dc.yScale(0))
+    .attr('x', d => dc.xScale(d.cityname))
+    .attr('width', dc.xScale.bandwidth())
+    .attr('fill', d => {
       const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
-      if (d.data >= 0) {
-        d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
-        return yScale(d.data)
-      }
-        d3.select(this).attr('fill', isTarget ? 'orange' : 'coral');
-        return yScale(0)
+      if (d.data >= 0) return isTarget ? 'orange' : 'slategray';
+      return isTarget ? 'orange' : 'coral';
     });
     cityNameText
     .data(dc.dataset)
     .text(d => d.cityname);
     // 平均値-----------------------------------------------------------------------------------
     sumPolyline
-    .transition()
-    .duration(200)
-    .attr('points', margin.left + ',' + yScale(dc.mean) + ' ' + (width - margin.right) + ',' + yScale(dc.mean));
+    .attr('points', margin.left + ',' + dc.yScale(dc.mean) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.mean));
     sumText.text(`青線：平均値＝${(Math.floor(dc.mean * 10) / 10).toLocaleString()}${unit}`);
     // 中央値-----------------------------------------------------------------------------------
     medianPolyline
-    .transition()
-    .duration(200)
-    .attr('points', margin.left + ',' + yScale(dc.median) + ' ' + (width - margin.right) + ',' + yScale(dc.median));
-    medianText.text(`赤線：中央値＝${(Math.floor(dc.median * 100) / 100).toLocaleString()}${unit}`)
+    .attr('points', margin.left + ',' + dc.yScale(dc.median) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.median));
+    medianText.text(`赤線：中央値＝${(Math.floor(dc.median * 100) / 100).toLocaleString()}${unit}`);
     // 標準偏差--------------------------------------------------------------------------------
     sdText.text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`);
     // 偏差値-----------------------------------------------------------------------------------
     ssText.text(`偏差値＝${standardScoreCompute(dc.dataset)}`)
   };
+  // リサイズ検知--------------------------------------------------------------------------------
+  const isFirst = {miyazaki: true, pref: true, city: true};
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!isFirst[prefOrCity]) { // 最初(統計を選択した時) は動作させない。
+      if (!storeBase.state.base.menuChange) { // メニュー移動時も動作させない。
+        for (const entry of entries) {
+          width = entry.contentRect.width;
+          height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+          redraw()
+        }
+      }
+    }
+    isFirst[prefOrCity] = false
+  });
+  const target = palentDiv.node();
+  resizeObserver.observe(target);
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
     const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-      return e => rangeInput(e)
+      return () => redraw()
     })(1), false);
   }
 }

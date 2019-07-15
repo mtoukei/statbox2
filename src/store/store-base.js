@@ -13,6 +13,8 @@ const Div = [
   {order: 105, statType: 'miyazakiCity', divId: 'pie-city-miyazaki', class: 'normal-chart-div', name: '円グラフ', show: true, rightSide: false},
   {order: 106, statType: 'miyazakiCity', divId: 'tree-city-miyazaki', class: 'normal-chart-div', name: 'ツリーマップ', show: true, rightSide: false},
   {order: 107, statType: 'miyazakiCity', divId: 'histogram-city-miyazaki', class: 'normal-chart-div', name: 'ヒストグラム', show: true, rightSide: false},
+  {order: 108, divId: 'scatterMiyazaki', class: 'large2-chart-div', name: '宮崎県市町村散布図', contents: '左右から選択してください。', show: false, rightSide: true},
+
   // 全国都道府県
   {order: 200, statType: 'pref', divId: 'bar-pref', class: 'large1-chart-div', name: '棒グラフ', show: false, rightSide: false},
   {order: 201, statType: 'pref', divId: 'box-pref', class: 'normal-chart-div', name: '箱ひげ図', show: false, rightSide: false},
@@ -24,6 +26,8 @@ const Div = [
   {order: 207, statType: 'pref', divId: 'tree-pref', class: 'normal-chart-div', name: 'ツリーマップ', show: false, rightSide: false},
   {order: 208, statType: 'pref', divId: 'histogram-pref', class: 'normal-chart-div', name: 'ヒストグラム', show: false, rightSide: false},
   {order: 209, statType: 'pref', divId: 'time-pref', class: 'large1-chart-div', name: '時系列', show: false, rightSide: false},
+  {order: 210, divId: 'scatterPref', class: 'large3-chart-div', name: '散布図 e-Stat(社会・人口統計体系)', contents: '左右から選択してください。', show: false, rightSide: true},
+
   // 全国市町村
   {order: 300, statType: 'city', divId: 'bar-city', class: 'large1-chart-div', name: '棒グラフ', show: false, rightSide: false},
   {order: 301, statType: 'city', divId: 'box-city', class: 'normal-chart-div', name: '箱ひげ図', show: false, rightSide: false},
@@ -33,14 +37,14 @@ const Div = [
   {order: 305, statType: 'city', divId: 'pie-city', class: 'normal-chart-div', name: '円グラフ', show: false, rightSide: false},
   {order: 306, statType: 'city', divId: 'tree-city', class: 'normal-chart-div', name: 'ツリーマップ　宮崎県のみ', show: false, rightSide: false},
   {order: 307, statType: 'city', divId: 'histogram-city', class: 'normal-chart-div', name: 'ヒストグラム', show: false, rightSide: false},
-  {order: 308, divId: 'scatterCity', class: 'large3-chart-div', name: '散布図 e-Stat(社会・人口統計体系)2', contents: '左右から選択してください。', show: false, rightSide: true},
-  {order: 309, statType: 'city', divId: 'time-city', class: 'large1-chart-div', name: '時系列', show: false, rightSide: false},
+  {order: 308, statType: 'city', divId: 'time-city', class: 'large1-chart-div', name: '時系列', show: false, rightSide: false},
+  {order: 309, divId: 'scatterCity', class: 'large3-chart-div', name: '散布図 e-Stat(社会・人口統計体系)2', contents: '左右から選択してください。', show: false, rightSide: true},
+
   // 時系列
   {order: 401, divId: 'time', class: 'large2-chart-div', name: '宮崎県時系列', show: false, rightSide: false},
   {order: 402, divId: 'timePref', class: 'large2-chart-div', name: '都道府県時系列', show: false, rightSide: false},
   {order: 403, divId: 'timeCity', class: 'large2-chart-div', name: '市町村時系列', show: false, rightSide: false},
-  {order: 404, divId: 'scatter', class: 'large2-chart-div', name: '散布図', contents: '左右から選択してください。', show: false, rightSide: true},
-  {order: 405, divId: 'scatterPref', class: 'large3-chart-div', name: '散布図 e-Stat(社会・人口統計体系)', contents: '左右から選択してください。', show: false, rightSide: true}
+
 ];
 const base = {
   namespaced: true,
@@ -269,6 +273,14 @@ const base = {
     },
     menuChange (state, payload) {
       state.menuChange = payload
+    },
+    leftDivListPartChange (state, payload) {
+      const result = state.leftDivList.find(value => {
+        if (value[payload.key1] === payload.value1) {
+          if (value[payload.key2] === payload.value2) return true
+        }
+      });
+      result.show = payload.show
     },
     leftDivListChange (state, payload) {
       state.leftDivList = payload

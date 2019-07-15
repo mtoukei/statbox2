@@ -9,7 +9,7 @@
       <!-- ツリーここから-->
       <div class="v-tree">
         <!--宮崎県市町村-->
-        <div v-show="statType === 'miyazakiCity' || statType === 'scatter'">
+        <div v-show="statType === 'miyazakiCity' || statType === 'scatterMiyazaki'">
           <div class="top-div top-div-h">
             <el-button
               type="info"
@@ -121,8 +121,8 @@
                 node-key="statId"
                 :check-on-click-node="true"
                 :check-strictly="true"
-                @node-expand="nodeClickEstat4"
-                @check="nodeClickEstat4"
+                @node-expand="nodeClickEstat4(arguments[0], el.statType)"
+                @check="nodeClickEstat4(arguments[0], el.statType)"
                 :data="s_eStatMetaCity"
                 :filter-node-method="filterNode"
                 highlight-current
@@ -428,7 +428,6 @@
       //-----------------------------------------------------------------------------------------
       nodeClickMiyazaki (e) {
         if (!e.children) {
-          this.$store.commit('statList/transitionSet', true);
           this.$store.commit('statList/selectStat', {value: e.statName, side: this.side})
         }
       },
@@ -450,7 +449,6 @@
             this.$refs.treeTime.setCheckedKeys(newKeys);
             return;
           }
-          this.$store.commit('statList/transitionSet', true);
           this.$store.commit('statList/selectStatTime', {statNames: statNames, endStat: e.statName, side: this.side })
         }
       },
@@ -458,15 +456,14 @@
       // 都道府県各種グラフと散布図
       nodeClickEstat1 (e) {
         if (!e.children) {
-          this.$store.commit('statList/transitionSet', true);
           this.$store.commit('statList/selectStatEstat', {statId: e.statId, side: this.side, statName: e.label, unit: e.unit, prefOrCity: 'pref', sourceId: e.sourceId})
         }
       },
       //-----------------------------------------------------------------------------------------
       // 都道府県。市町村時系列
-      nodeClickEstatTime (e, scatType) {
+      nodeClickEstatTime (e, statType) {
         if (!e.children) {
-          const refs = scatType === 'timePref' ? this.$refs.treeTimePref : this.$refs.treeTimeCity;
+          const refs = statType === 'timePref' ? this.$refs.treeTimePref : this.$refs.treeTimeCity;
           const keys = refs[0].getCheckedKeys(); // 何故か配列になる。原因不明。
           console.log(keys);
           const statIds = [];
@@ -487,7 +484,7 @@
             refs[0].setCheckedKeys(newKeys);
             return;
           }
-          if (scatType === 'timePref') {
+          if (statType === 'timePref') {
             this.$store.commit('statList/selectStatTimePref', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.s_prefCode, sourceIds })
           } else {
             this.$store.commit('statList/selectStatTimeCity', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.cityCode, sourceIds })
@@ -496,9 +493,18 @@
       },
       //-----------------------------------------------------------------------------------------
       // 全国市町村各種グラフと散布図
-      nodeClickEstat4 (e) {
+      nodeClickEstat4 (e, statType) {
         if (!e.children) {
-          this.$store.commit('statList/transitionSet', true);
+          // 宮崎県以外はツリーマップを隠す。
+          if (statType === 'city') {
+            this.$store.commit('base/leftDivListPartChange', {
+              key1: 'statType',
+              value1: 'city',
+              key2: 'divId',
+              value2: 'tree-city',
+              show: this.s_prefCode === '45000'
+            });
+          }
           this.$store.commit('statList/selectStatEstat', {statId: e.statId, side: this.side, statName: e.label, unit: e.unit, prefOrCity: 'city', prefCode: this.s_prefCode, sourceId: e.sourceId })
         }
       },

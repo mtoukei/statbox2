@@ -24,13 +24,11 @@ export default function (val, parentDiv) {
     unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
-  const width = palentDiv.node().getBoundingClientRect().width;
-  const height = palentDiv.node().getBoundingClientRect().height
+  let width = palentDiv.node().getBoundingClientRect().width;
+  let height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
-  //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -55,7 +53,7 @@ export default function (val, parentDiv) {
         if (a.val < b.val) return 1;
         return 0;
       });
-      children.forEach((v, i) => v['top'] = i + 1);
+      children.forEach((value, index) => value['top'] = index + 1);
       const data_set = {children: children};
       const bubble = d3.pack()
       .size([width, height])
@@ -94,7 +92,7 @@ export default function (val, parentDiv) {
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
-  .classed('chart-svg', true);
+  .attr('class', 'chart-svg');
   // バブル作成---------------------------------------------------------------------------------
   const bubbles = svg.append('g')
   .selectAll('.bubble')
@@ -106,15 +104,12 @@ export default function (val, parentDiv) {
   const circle = bubbles.append('circle')
   .attr('class', 'bubble-circle-' + prefOrCity)
   .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? 'orange' : d.rgb)
-  .style('cursor', 'pointer');
-  if (transitionFlg) {
-    circle.attr('r', 0)
-    .transition()
-    .delay((d, i) => i * 70)
-    .attr('r', d => d.r);
-  } else {
-    circle.attr('r', d => d.r);
-  }
+  .style('cursor', 'pointer')
+  .attr('r', 0);
+  circle
+  .transition()
+  .delay((d, i) => i * 70)
+  .attr('r', d => d.r);
   // バブルのテキスト
   const text = bubbles.append('text')
   .text(d => {
@@ -123,20 +118,17 @@ export default function (val, parentDiv) {
   .attr('font-size', d => dc.fontScale(d.r))
   .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
   .attr('text-anchor', 'middle')
-  .attr('fill', function (d) {
+  .attr('fill', d => {
     const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
     return cY > 200 ? 'black' : 'white';
   })
-  .attr('opacity', 0)
-  .style('cursor', 'pointer');
-  if (transitionFlg) {
-    text.transition()
-    .delay((d, i) => i * 70)
-    .attr('opacity', 1);
-  } else {
-    text.attr('opacity', 1);
-  }
+  .style('cursor', 'pointer')
+  .attr('opacity', 0);
+  text
+  .transition()
+  .delay((d, i) => i * 70)
+  .attr('opacity', 1);
   // クリックでカレントに色を塗る------------------------------------------------------------------
   bubbles
   .on('click', function (d) {
@@ -162,36 +154,6 @@ export default function (val, parentDiv) {
   .attr('class', 'no-print')
   .append('text')
   .text(statName);
-  // -------------------------------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
-    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
-    dc.create();
-    bubbles
-    .data(dc.data, d => d.data.citycode)
-    .transition()
-    .duration(500)
-    .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
-    circle
-    .data(dc.data, d => d.data.citycode)
-    .attr('r', d => d.r)
-    .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? 'orange' : d.rgb);
-    text
-    .data(dc.data, d => d.data.citycode)
-    .text(d => {
-      if(d.r !== 0) return d.data.name
-    })
-    .attr('font-size', d => dc.fontScale(d.r))
-    .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
-    .attr('text-anchor', 'middle')
-    .attr('fill', function (d) {
-      const rgb = d3.rgb(d.rgb);
-      const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
-      return cY > 200 ? 'black' : 'white';
-    });
-    const year = val.statData[value].time.substr(0, 4);
-    rangeDiv.select('.year-range-text').text(year);
-  };
   //--------------------------------------------------------------------------------------------
   rangeDiv.select('.year-range')
   .attr('max', String(val.statData.length - 1));
@@ -213,12 +175,62 @@ export default function (val, parentDiv) {
       return d.time.substr(2, 2)
     }
   });
+  // --------------------------------------------------------------------------------------------
+  const redraw = () => {
+    svg.attr('width', width);
+    svg.attr('height', height);
+    let target;
+    if (isEStat) {
+      const value = Number(rangeDiv.select('.year-range').property("value"));
+      target = val.statData[value].data2;
+    } else {
+      target = dataset
+    }
+    const dc = new DataCreate(JSON.parse(JSON.stringify(target)));
+    dc.create();
+    bubbles
+    .data(dc.data, d => d.data.citycode)
+    .transition()
+    .duration(500)
+    .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
+    circle
+    .data(dc.data, d => d.data.citycode)
+    .attr('r', d => d.r)
+    .attr('fill', d => String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? 'orange' : d.rgb);
+    text
+    .data(dc.data, d => d.data.citycode)
+    .text(d => d.r !== 0 ? d.data.name : '')
+    .attr('font-size', d => dc.fontScale(d.r))
+    .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
+    .attr('text-anchor', 'middle')
+    .attr('fill', function (d) {
+      const rgb = d3.rgb(d.rgb);
+      const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
+      return cY > 200 ? 'black' : 'white';
+    });
+  };
+  // リサイズ検知--------------------------------------------------------------------------------
+  const isFirst = {miyazaki: true, pref: true, city: true};
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!isFirst[prefOrCity]) { // 最初(統計を選択した時) は動作させない。
+      if (!storeBase.state.base.menuChange) { // メニュー移動時も動作させない。
+        for (const entry of entries) {
+          width = entry.contentRect.width;
+          height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+          redraw()
+        }
+      }
+    }
+    isFirst[prefOrCity] = false
+  });
+  const target = palentDiv.node();
+  resizeObserver.observe(target);
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
     const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-      return e => rangeInput(e)
+      return () => redraw()
     })(1), false);
     if (prefOrCity === 'pref') {
       storeBase.commit('statList/yearRangePrefChange', val.statData.length - 1)

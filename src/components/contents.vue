@@ -129,7 +129,7 @@
         this.$store.commit('base/dialogVisibleChange', {visible: true, target: el.divId})
       },
       // グラフダイアログのリサイズ検知-------------------------------------------------------------
-      chartDivDetectResize() {
+      chartDivDetectResize(divId) {
         const vm = this;
         // メニューを操作したときにはトランジションさせない。
         if (!vm.s_menuChange) {
@@ -138,13 +138,9 @@
             clearTimeout(vm.timer);
           }
           vm.timer = setTimeout(() => {
-            vm.$store.commit('statList/transitionSet', false);
-            vm.$store.commit('statList/statReload', 'left');
-            vm.$store.commit('statList/statReload', 'right');
-            vm.$store.commit('statList/eStatReload', {side: 'left'});
-            vm.$store.commit('statList/timeReload');
-            vm.$store.commit('statList/timePrefReload');
-            vm.$store.commit('statList/timeCityReload');
+            if (divId.includes('time')) {
+              vm.$store.commit('statList/' + divId + 'Reload');
+            }
           }, 20);
         }
       },

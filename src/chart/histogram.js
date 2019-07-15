@@ -21,14 +21,12 @@ export default function (val, parentDiv) {
     unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
-  const width = palentDiv.node().getBoundingClientRect().width;
-  const height = palentDiv.node().getBoundingClientRect().height
+  let width = palentDiv.node().getBoundingClientRect().width;
+  let height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
-  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
+  let multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 60 * multi, 'bottom': 60 * multi, 'right': 60 * multi, 'left': 20 * multi };
-  //トランジションフラグ----------------------------------------------------------------------------
-  let transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -42,7 +40,7 @@ export default function (val, parentDiv) {
   const dc = new DataCreate(JSON.parse(JSON.stringify(dataset)));
   dc.create();
   // --------------------------------------------------------------------------------------------
-  const histgramCreate = dataset => {
+  const histgramCreate = (dataset, isTransition) => {
     // SVG領域作成---------------------------------------------------------------------------
     palentDiv.select('.chart-svg').remove();
     const svg = palentDiv.select('.resizers').append('svg')
@@ -79,7 +77,7 @@ export default function (val, parentDiv) {
     .attr('fill', 'slategray')
     .attr('y', yScale(0))
     .attr('height', 0);
-    if (transitionFlg) {
+    if (isTransition) {
       rect.transition()
       .duration(1500)
       .attr('y', d => yScale(d.length))
@@ -107,7 +105,7 @@ export default function (val, parentDiv) {
     .attr("x", (xScale(histoData[0].x1) - xScale(histoData[0].x0)) / 2)
     .attr('y', d => yScale(d.length) - 5)
     .attr('opacity', 0);
-    if (transitionFlg) {
+    if (isTransition) {
       text.transition()
       .duration(4000)
       .attr('opacity', 1);
@@ -141,21 +139,43 @@ export default function (val, parentDiv) {
     .append('text')
     .text(statName);
   };
-  histgramCreate(dc.dataset);
-  //--------------------------------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
-    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+  histgramCreate(dc.dataset, true);
+  // --------------------------------------------------------------------------------------------
+  const redraw = () => {
+    multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
+    let target;
+    if (isEStat) {
+      const value = Number(d3.select('#year-range-' + prefOrCity).select('.year-range').property("value"));
+      target = val.statData[value].data2;
+    } else {
+      target = dataset
+    }
+    const dc = new DataCreate(JSON.parse(JSON.stringify(target)));
     dc.create();
-    transitionFlg = false;
-    histgramCreate(dc.dataset)
+    histgramCreate(dc.dataset, false)
   };
+  // リサイズ検知--------------------------------------------------------------------------------
+  const isFirst = {miyazaki: true, pref: true, city: true};
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!isFirst[prefOrCity]) { // 最初(統計を選択した時) は動作させない。
+      if (!storeBase.state.base.menuChange) { // メニュー移動時も動作させない。
+        for (const entry of entries) {
+          width = entry.contentRect.width;
+          height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+          redraw()
+        }
+      }
+    }
+    isFirst[prefOrCity] = false
+  });
+  const target = palentDiv.node();
+  resizeObserver.observe(target);
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
     const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-      return e => rangeInput(e)
+      return () => redraw()
     })(1), false);
   }
 }

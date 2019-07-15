@@ -21,18 +21,16 @@ export default function (val, parentDiv) {
     unit = val.statData.unit;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
-  const width = palentDiv.node().getBoundingClientRect().width;
-  const height = palentDiv.node().getBoundingClientRect().height
+  let width = palentDiv.node().getBoundingClientRect().width;
+  let height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
-  const radius = Math.min(width, height) / 2 - 10;
-  //トランジションフラグ----------------------------------------------------------------------------
-  const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
       this.dataset = dataset;
+      this.radius = null;
     }
     create () {
       if (prefOrCity === 'pref') this.dataset.shift();
@@ -62,6 +60,7 @@ export default function (val, parentDiv) {
         cityname: 'その他',
         data: hoka
       });
+      this.radius = Math.min(width, height) / 2 - 10
     }
   }
   //---------------------------------------------------------------------------------------------
@@ -72,7 +71,7 @@ export default function (val, parentDiv) {
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
-  .classed("chart-svg", true);
+  .attr('class', 'chart-svg');
   const colorScale = d3.scaleOrdinal(d3.schemeSet1);
   //--------------------------------------------------------------------------------------------
   const g = svg.append('g')
@@ -89,7 +88,7 @@ export default function (val, parentDiv) {
   .attr('class', 'pie');
   // 扇形---------------------------------------------------------------------------------------
   const arc = d3.arc()
-  .outerRadius(radius)
+  .outerRadius(dc.radius)
   .innerRadius(40 * multi);
   const path = pieGroup.append('path')
   .attr('id', d => 'pie-path-' + d.data.citycode)
@@ -99,11 +98,11 @@ export default function (val, parentDiv) {
       return 'slategrey'
     } else if (isEStat) {
       if (prefOrCity === 'pref') {
-       return colorScale(Number(d.data.citycode.substr(0, 2)))
+        return colorScale(Number(d.data.citycode.substr(0, 2)))
       }
-        return colorScale(Number(d.data.citycode.substr(3, 2)))
+      return colorScale(Number(d.data.citycode.substr(3, 2)))
     }
-      return colorScale(d.index)
+    return colorScale(d.index)
   })
   .attr('stroke', d => {
     if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity])) {
@@ -117,25 +116,21 @@ export default function (val, parentDiv) {
     }
     return 0
   });
-  if (transitionFlg) {
-    path
-    .transition()
-    .duration(70)
-    .delay((d, i) => 60 * i)
-    .attrTween('d', d => {
-      const interpolate = d3.interpolate(
-        {startAngle: d.startAngle, endAngle: d.startAngle},
-        {startAngle: d.startAngle, endAngle: d.endAngle}
-      );
-      return t => arc(interpolate(t));
-    });
-  } else {
-    path.attr('d', arc)
-  }
+  path
+  .transition()
+  .duration(70)
+  .delay((d, i) => i * 60)
+  .attrTween('d', d => {
+    const interpolate = d3.interpolate(
+      {startAngle: d.startAngle, endAngle: d.startAngle},
+      {startAngle: d.startAngle, endAngle: d.endAngle}
+    );
+    return t => arc(interpolate(t));
+  });
   //---------------------------------------------------------------------------------------------
   const text = d3.arc()
-  .outerRadius(radius - 30 * multi)
-  .innerRadius(radius - 30 * multi);
+  .outerRadius(dc.radius - 30 * multi)
+  .innerRadius(dc.radius - 30 * multi);
   const textP = pieGroup.append('text')
   .attr('fill', function (d) {
     let rgb;
@@ -164,20 +159,11 @@ export default function (val, parentDiv) {
     return fontSize
   })
   .attr('text-anchor', 'middle');
-  if (transitionFlg) {
-    textP
-    .transition()
-    .duration(80)
-    .delay((d, i) => 70 * i)
-    .text(d => {
-      if (d.data.data !== 0) return d.data.cityname
-    });
-  } else {
-    textP
-    .text(d => {
-      if (d.data.data !== 0) return d.data.cityname
-    });
-  }
+  textP
+  .transition()
+  .duration(80)
+  .delay((d, i) => i * 70)
+  .text(d => d.data.data !== 0 ? d.data.cityname : '');
   // クリックでカレントに色を塗る-------------------------------------------------------------------
   const elClick = (d, path) => {
     // 実際の色塗りはwatch.jsで塗っている。;
@@ -210,11 +196,23 @@ export default function (val, parentDiv) {
   .attr('class', 'no-print')
   .append('text')
   .text(statName);
-  // -------------------------------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
-    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+  // --------------------------------------------------------------------------------------------
+  const redraw = () => {
+    svg.attr('width', width);
+    svg.attr('height', height);
+    let target;
+    if (isEStat) {
+      const value = Number(d3.select('#year-range-' + prefOrCity).select('.year-range').property("value"));
+      target = val.statData[value].data2;
+    } else {
+      target = dataset
+    }
+    const dc = new DataCreate(JSON.parse(JSON.stringify(target)));
     dc.create();
+    g
+    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+    arc
+    .outerRadius(dc.radius);
     path
     .data(pie(dc.dataset, d => d.citycode))
     .transition()
@@ -227,29 +225,32 @@ export default function (val, parentDiv) {
         } else if (prefOrCity === 'pref') {
           return colorScale(Number(d.data.citycode.substr(0, 2)))
         }
-          return colorScale(Number(d.data.citycode.substr(3, 2)))
+        return colorScale(Number(d.data.citycode.substr(3, 2)))
       }
-        return colorScale(d.index)
+      return colorScale(d.index)
     })
     .attr('stroke', d => {
       if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity])) {
         if ((d.data.data !== 0)) return 'orange'
       }
-        return 'whitesmoke'
+      return 'whitesmoke'
     })
     .attr('stroke-width', d => {
       if (String(d.data.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity])) {
         if ((d.data.data !== 0)) return '8px'
       }
-        return 0
+      return 0
     });
+    text
+    .outerRadius(dc.radius - 30 * multi)
+    .innerRadius(dc.radius - 30 * multi);
     textP
     .data(pie(dc.dataset, d => d.citycode))
     .transition()
     .duration(500)
     .attr('transform', d => 'translate(' + text.centroid(d) + ')')
     .text(d => {
-        if (d.data.data !== 0) return d.data.cityname
+      if (d.data.data !== 0) return d.data.cityname
     })
     .attr('fill', d => {
       let rgb;
@@ -265,7 +266,7 @@ export default function (val, parentDiv) {
       if (0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b > 200) {
         return "black";
       }
-        return "white";
+      return "white";
     })
     .attr('font-size', d => {
       let fontSize = 10 * multi + 'px';
@@ -278,12 +279,28 @@ export default function (val, parentDiv) {
       return fontSize
     })
   };
+  // リサイズ検知--------------------------------------------------------------------------------
+  const isFirst = {miyazaki: true, pref: true, city: true};
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!isFirst[prefOrCity]) { // 最初(統計を選択した時) は動作させない。
+      if (!storeBase.state.base.menuChange) { // メニュー移動時も動作させない。
+        for (const entry of entries) {
+          width = entry.contentRect.width;
+          height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+          redraw()
+        }
+      }
+    }
+    isFirst[prefOrCity] = false
+  });
+  const target = palentDiv.node();
+  resizeObserver.observe(target);
   //--------------------------------------------------------------------------------------------
   if (isEStat) {
     const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-      return e => rangeInput(e)
+      return () => redraw()
     })(1), false);
   }
 }

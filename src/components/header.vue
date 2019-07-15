@@ -1,6 +1,6 @@
 宮崎県市町村
     いろんなグラフで..............miyazakiCity
-    散布図で.....................scatter
+    散布図で.....................scatterMiyazaki
 全国都道府県
     いろんなグラフで..............pref
     散布図で.....................scatterPref
@@ -33,7 +33,7 @@
           いろんなグラフで見える化
         </el-menu-item>
         <!--<el-menu-item index="double">２市町村を比較</el-menu-item>-->
-        <el-menu-item index="scatter">
+        <el-menu-item index="scatterMiyazaki">
           散布図で見える化
         </el-menu-item>
       </el-submenu>

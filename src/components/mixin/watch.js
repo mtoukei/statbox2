@@ -5,7 +5,6 @@ import Map from '../../chart/map'
 import Pie from '../../chart/pie'
 import Tree from '../../chart/tree'
 import Scatter from '../../chart/scatter'
-import ScatterEstat from '../../chart/scatter-estat'
 import Histogram from '../../chart/histogram'
 import Time from '../../chart/time'
 import Maps77 from '../../chart/maps77'
@@ -100,14 +99,16 @@ export default {
         Pie(val, '#left-pie-city-miyazaki');
         Tree(val, '#left-tree-city-miyazaki');
         Histogram(val, '#left-histogram-city-miyazaki');
-        Scatter(this.s_leftStat, this.s_rightStat);
+        // Scatter(this.s_leftStat, this.s_rightStat);
+        Scatter(this.s_leftStat, this.s_rightStat, 'miyazaki', '#left-scatterMiyazaki');
       },
       deep: true,
     },
     // 宮崎県散布図用-------------------------------------------------------------------------
     s_rightStat: {
       handler: function() {
-        Scatter(this.s_leftStat, this.s_rightStat);
+        // Scatter(this.s_leftStat, this.s_rightStat);
+        Scatter(this.s_leftStat, this.s_rightStat, 'miyazaki', '#left-scatterMiyazaki');
       },
       deep: true,
     },
@@ -124,14 +125,14 @@ export default {
         Histogram(val, '#left-histogram-pref');
         Time2(val, '#left-time-pref');
         BoxProt(val, '#left-box-pref');
-        ScatterEstat(this.s_leftStatEstatPref, this.s_rightStatEstatPref, 'pref', '#left-scatterPref');
+        Scatter(this.s_leftStatEstatPref, this.s_rightStatEstatPref, 'pref', '#left-scatterPref');
       },
       deep: true,
     },
     // 全国都道府県散布図用------------------------------------------------------------------
     s_rightStatEstatPref: {
       handler: function () {
-        ScatterEstat(this.s_leftStatEstatPref, this.s_rightStatEstatPref, 'pref', '#left-scatterPref');
+        Scatter(this.s_leftStatEstatPref, this.s_rightStatEstatPref, 'pref', '#left-scatterPref');
       },
       deep: true,
     },
@@ -147,14 +148,14 @@ export default {
         Histogram(val, '#left-histogram-city');
         Time2(val, '#left-time-city');
         BoxProt(val, '#left-box-city');
-        ScatterEstat(this.s_leftStatEstatCity, this.s_rightStatEstatCity, 'city', '#left-scatterCity');
+        Scatter(this.s_leftStatEstatCity, this.s_rightStatEstatCity, 'city', '#left-scatterCity');
       },
       deep: true,
     },
     // 全国市町村散布図用--------------------------------------------------------------------
     s_rightStatEstatCity: {
       handler: function () {
-        ScatterEstat(this.s_leftStatEstatCity, this.s_rightStatEstatCity, 'city', '#left-scatterCity');
+        Scatter(this.s_leftStatEstatCity, this.s_rightStatEstatCity, 'city', '#left-scatterCity');
       },
       deep: true,
     },

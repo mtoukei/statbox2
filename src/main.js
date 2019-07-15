@@ -9,19 +9,16 @@ import d3Tip from "d3-tip";
 import axios from 'axios'
 import 'vue-resize/dist/vue-resize.css'
 import VueResize from 'vue-resize'
+import ResizeObserver from 'resize-observer-polyfill';
 Vue.use(Element, { size: 'small', zIndex: 3000, locale });
 Vue.config.productionTip = false;
 Vue.use(VueResize);
 global.d3 = d3;
 global.d3Tip = d3Tip;
 global.axios = axios;
+global.ResizeObserver = ResizeObserver;
 global.eStatApiId = '63bd852098e1a13aeea70ed78cba31f9f3918d2f';
-const useragent = window.navigator.userAgent.toLowerCase();
-if (useragent.indexOf('msie') < 0 && useragent.indexOf('trident') < 0) {
-  global.ie = false
-} else {
-  global.ie = true
-}
+global.ie = window.navigator.userAgent.toLowerCase().includes('trident');
 new Vue({
   store: storeBase,
   render: h => h(App),
