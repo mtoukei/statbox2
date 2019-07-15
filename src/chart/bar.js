@@ -182,18 +182,18 @@ export default function (val, parentDiv) {
   })
   .attr('height', d => Math.abs(dc.yScale(d.data) - dc.yScale(0)));
   // 平均値-------------------------------------------------------------------------------------
-  const sumPolyline = svg.append('polyline')
+  const meanPolyline = svg.append('polyline')
   .attr('id', 'sum-polyline')
   .attr('points', margin.left + ',' + dc.yScale(dc.mean) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.mean))
   .attr('stroke', 'blue')
   .attr('fill', 'none')
   .attr('stroke-width', 1);
-  const sumText = svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
+  const meanTextG = svg.append('g')
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',15)')
-  .attr('class', 'no-print')
-  .append('text')
+  .attr('class', 'no-print');
+  const meanText = meanTextG.append('text')
   .text(`青線：平均値＝${(Math.floor(dc.mean * 10) / 10).toLocaleString()}${unit}`)
+  .attr('font-size', 12 * multi + 'px')
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
@@ -209,12 +209,12 @@ export default function (val, parentDiv) {
   .attr('stroke', 'red')
   .attr('fill', 'none')
   .attr('stroke-width', 1);
-  const medianText = svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
+  const medianTextG = svg.append('g')
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',32)')
-  .attr('class', 'no-print')
-  .append('text')
+  .attr('class', 'no-print');
+  const medianText = medianTextG.append('text')
   .text(`赤線：中央値＝${(Math.floor(dc.median * 100) / 100).toLocaleString()}${unit}`)
+  .attr('font-size', 12 * multi + 'px')
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
@@ -224,12 +224,12 @@ export default function (val, parentDiv) {
     target.style('display', () => target.style('display') !== 'none' ? 'none' : 'block')
   });
   // 標準偏差----------------------------------------------------------------------------------
-  const sdText = svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
+  const sdTextG = svg.append('g')
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',49)')
-  .attr('class', 'no-print')
-  .append('text')
+  .attr('class', 'no-print');
+  const sdText = sdTextG.append('text')
   .text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`)
+  .attr('font-size', 12 * multi + 'px')
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer');
   // 偏差値------------------------------------------------------------------------------------
@@ -242,12 +242,13 @@ export default function (val, parentDiv) {
     return 'XX'
   };
   //---------------------------------------------------------------------------------------------
-  const ssText = svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
+  const ssTextG = svg.append('g')
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',66)')
-  .attr('class', 'no-print').append('text')
-  .attr('class', 'standard-score-text-' + prefOrCity)
+  .attr('class', 'no-print');
+  const ssText = ssTextG.append('text')
   .text(`偏差値＝${standardScoreCompute(dc.dataset)}`)
+  .attr('class', 'standard-score-text-' + prefOrCity)
+  .attr('font-size', 12 * multi + 'px')
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer');
   // ツールチップ---------------------------------------------------------------------------------
@@ -405,16 +406,20 @@ export default function (val, parentDiv) {
     .data(dc.dataset)
     .text(d => d.cityname);
     // 平均値-----------------------------------------------------------------------------------
-    sumPolyline
+    meanPolyline
     .attr('points', margin.left + ',' + dc.yScale(dc.mean) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.mean));
-    sumText.text(`青線：平均値＝${(Math.floor(dc.mean * 10) / 10).toLocaleString()}${unit}`);
+    meanTextG.attr('transform', 'translate(' + (width - margin.right * multi) + ',15)');
+    meanText.text(`青線：平均値＝${(Math.floor(dc.mean * 10) / 10).toLocaleString()}${unit}`);
     // 中央値-----------------------------------------------------------------------------------
     medianPolyline
     .attr('points', margin.left + ',' + dc.yScale(dc.median) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.median));
+    medianTextG.attr('transform', 'translate(' + (width - margin.right * multi) + ',32)')
     medianText.text(`赤線：中央値＝${(Math.floor(dc.median * 100) / 100).toLocaleString()}${unit}`);
     // 標準偏差--------------------------------------------------------------------------------
+    sdTextG.attr('transform', 'translate(' + (width - margin.right * multi) + ',49)');
     sdText.text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`);
     // 偏差値-----------------------------------------------------------------------------------
+    ssTextG.attr('transform', 'translate(' + (width - margin.right * multi) + ',66)')
     ssText.text(`偏差値＝${standardScoreCompute(dc.dataset)}`)
   };
   // リサイズ検知--------------------------------------------------------------------------------
