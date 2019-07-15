@@ -171,7 +171,7 @@ export default function (val, parentDiv) {
   .style('cursor', 'pointer');
   rect
   .transition()
-  .duration(() => 1000)
+  .duration(1000)
   .attr('y', d => d.data >= 0 ? dc.yScale(d.data) : dc.yScale(0))
   .attr('fill', d => {
     const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
@@ -377,14 +377,14 @@ export default function (val, parentDiv) {
     // x軸--------------------------------------------------------------------------------------
     const axisx = d3.axisBottom(dc.xScale)
     .ticks(20);
-    svg.select("#bar-x-axis") // ??エレメントで指定しないと失敗する？
+    svg.select("#bar-x-axis")
     .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
     .call(axisx);
     multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
     cityNameText
     .attr('font-size', 10 * multi + 'px');
    // y軸---------------------------------------------------------------------------------------
-    svg.select("#bar-y-axis") // ??エレメントで指定しないと失敗する？
+    svg.select("#bar-y-axis")
     .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
     .call(d3.axisLeft(dc.yScale));
     yText
@@ -416,7 +416,6 @@ export default function (val, parentDiv) {
     sdText.text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`);
     // 偏差値-----------------------------------------------------------------------------------
     ssText.text(`偏差値＝${standardScoreCompute(dc.dataset)}`)
-
   };
   // リサイズ検知--------------------------------------------------------------------------------
   const isFirst = {miyazaki: true, pref: true, city: true};

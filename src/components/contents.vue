@@ -139,12 +139,12 @@
           }
           vm.timer = setTimeout(() => {
             vm.$store.commit('statList/transitionSet', false);
-            vm.$store.commit('statList/statReload', 'left');
-            vm.$store.commit('statList/statReload', 'right');
-            vm.$store.commit('statList/eStatReload', {side: 'left'});
-            vm.$store.commit('statList/timeReload');
-            vm.$store.commit('statList/timePrefReload');
-            vm.$store.commit('statList/timeCityReload');
+            // vm.$store.commit('statList/statReload', 'left');
+            // vm.$store.commit('statList/statReload', 'right');
+            // vm.$store.commit('statList/eStatReload', {side: 'left'});
+            // vm.$store.commit('statList/timeReload');
+            // vm.$store.commit('statList/timePrefReload');
+            // vm.$store.commit('statList/timeCityReload');
           }, 20);
         }
       },

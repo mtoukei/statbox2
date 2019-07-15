@@ -52,9 +52,9 @@ export default {
           document.querySelector('#left-scatterPref').style.width = (bodyWidth - leftSideDivWidth - rightSideDivWidth - 20) + 'px';
           document.querySelector('#left-scatterPref').style.height = (bodyHeight - footerHeight - 200) + 'px';
         }
-        if (statType === 'scatter') {
-          document.querySelector('#left-scatter').style.width = (bodyWidth - leftSideDivWidth - rightSideDivWidth - 20) + 'px';
-          document.querySelector('#left-scatter').style.height = (bodyHeight - footerHeight - 200) + 'px';
+        if (statType === 'scatterMiyazaki') {
+          document.querySelector('#left-scatterMiyazaki').style.width = (bodyWidth - leftSideDivWidth - rightSideDivWidth - 20) + 'px';
+          document.querySelector('#left-scatterMiyazaki').style.height = (bodyHeight - footerHeight - 200) + 'px';
         }
       })
     }

@@ -97,9 +97,6 @@ export default function (val, parentDiv) {
   .attr('height', height)
   .attr('class', 'chart-svg');
   // Y軸---------------------------------------------------------------------------------------
-  // const yScale = d3.scaleLinear()
-  // .domain([dc.minAll, dc.maxAll * 1.05])
-  // .range([height - margin.bottom, margin.top]);
   svg.append('g')
   .attr('id', 'box-y-axis')
   .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')

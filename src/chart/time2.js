@@ -1,4 +1,7 @@
+import storeBase from "../store/store-base";
+
 export default function (val, parentDiv) {
+  const prefOrCity = parentDiv.split('-')[parentDiv.split('-').length - 1 ];
   const palentDiv = d3.select(parentDiv);
   if(palentDiv.style('display') === 'none') return;
   const dataset = val.statData;
@@ -7,14 +10,11 @@ export default function (val, parentDiv) {
   // const allPrefData = target.data;
   // const unit = allPrefData[0]['@unit'];
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
-  const width = palentDiv.node().getBoundingClientRect().width;
-  const height = palentDiv.node().getBoundingClientRect().height
-    - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+  let width = palentDiv.node().getBoundingClientRect().width;
+  let height = palentDiv.node().getBoundingClientRect().height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 600;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 20 * multi, 'bottom': 30 * multi, 'right': 100 * multi, 'left': 60 * multi };
-  //トランジションフラグ----------------------------------------------------------------------------
-  // const transitionFlg = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -244,4 +244,20 @@ export default function (val, parentDiv) {
     .attr('stroke-width', '1px')
     .attr('stroke-dasharray', '2');
   }
+  // リサイズ検知--------------------------------------------------------------------------------
+  const isFirst = {miyazaki: true, pref: true, city: true};
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!isFirst[prefOrCity]) { // 最初(統計を選択した時) は動作させない。
+      if (!storeBase.state.base.menuChange) { // メニュー移動時も動作させない。
+        for (const entry of entries) {
+          width = entry.contentRect.width;
+          height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+          redraw()
+        }
+      }
+    }
+    isFirst[prefOrCity] = false
+  });
+  const target = palentDiv.node();
+  resizeObserver.observe(target);
 }

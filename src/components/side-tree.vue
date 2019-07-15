@@ -9,7 +9,7 @@
       <!-- ツリーここから-->
       <div class="v-tree">
         <!--宮崎県市町村-->
-        <div v-show="statType === 'miyazakiCity' || statType === 'scatter'">
+        <div v-show="statType === 'miyazakiCity' || statType === 'scatterMiyazaki'">
           <div class="top-div top-div-h">
             <el-button
               type="info"
