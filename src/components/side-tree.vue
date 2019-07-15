@@ -428,7 +428,6 @@
       //-----------------------------------------------------------------------------------------
       nodeClickMiyazaki (e) {
         if (!e.children) {
-          this.$store.commit('statList/transitionSet', true);
           this.$store.commit('statList/selectStat', {value: e.statName, side: this.side})
         }
       },
@@ -450,7 +449,6 @@
             this.$refs.treeTime.setCheckedKeys(newKeys);
             return;
           }
-          this.$store.commit('statList/transitionSet', true);
           this.$store.commit('statList/selectStatTime', {statNames: statNames, endStat: e.statName, side: this.side })
         }
       },
@@ -458,7 +456,6 @@
       // 都道府県各種グラフと散布図
       nodeClickEstat1 (e) {
         if (!e.children) {
-          this.$store.commit('statList/transitionSet', true);
           this.$store.commit('statList/selectStatEstat', {statId: e.statId, side: this.side, statName: e.label, unit: e.unit, prefOrCity: 'pref', sourceId: e.sourceId})
         }
       },
@@ -498,7 +495,14 @@
       // 全国市町村各種グラフと散布図
       nodeClickEstat4 (e) {
         if (!e.children) {
-          this.$store.commit('statList/transitionSet', true);
+          this.$store.commit('base/leftDivListPartChange', {
+            key1: 'statType',
+            value1: 'city',
+            key2: 'divId',
+            value2: 'tree-city',
+            show: this.s_prefCode === '45000'
+          });
+
           this.$store.commit('statList/selectStatEstat', {statId: e.statId, side: this.side, statName: e.label, unit: e.unit, prefOrCity: 'city', prefCode: this.s_prefCode, sourceId: e.sourceId })
         }
       },

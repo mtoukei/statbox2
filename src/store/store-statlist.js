@@ -162,9 +162,6 @@ const statList = {
     yearRangeScatterPrefChange (state, payload) {
       state.yearRangeScatterPref = payload
     },
-    transitionSet (state, payload) {
-      state.transition = payload
-    },
     timeCityReload (state) {
       state.leftStatTimeCity.count = state.leftStatTimeCity.count + 1;
     },
@@ -174,15 +171,6 @@ const statList = {
     timeReload (state) {
       state.leftStatTime.count = state.leftStatTime.count + 1;
       state.leftStatTime.transition = false;
-    },
-    eStatReload (state, payload) {
-      if (payload.side === 'left') {
-        state.leftStatEstatPref.count = state.leftStatEstatPref.count + 1;
-        state.leftStatEstatCity.count = state.leftStatEstatCity.count + 1;
-      } else {
-        state.rightStatEstatPref.count = state.rightStatEstatPref.count + 1;
-        state.rightStatEstatCity.count = state.rightStatEstatCity.count + 1;
-      }
     },
     // サイドのツリーをクリックしたとき---------------------------------------------------------------
     // いろんなグラフで見える化。宮崎県市町村用
@@ -547,16 +535,6 @@ const statList = {
         stat.sourceId = sourceId;
         stat.source = source;
       })
-    },
-    //-------------------------------------------------------------------------------------------
-    statReload (state, payload) {
-      if (payload === 'left') {
-        state.leftStat.transition = false;
-        state.leftStat.count = state.leftStat.count + 1;
-      } else {
-        state.rightStat.transition = false;
-        state.rightStat.count = state.rightStat.count + 1;
-      }
     },
     //-------------------------------------------------------------------------------------------
     // 以前、ツールをクリックしたときにメタ情報を取得していっていたときのコード
