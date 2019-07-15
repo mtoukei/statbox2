@@ -1,4 +1,4 @@
-import storeBase from '../store/store-base'
+// import storeBase from '../store/store-base'
 export default function (val, palentDiv) {
   const tooltip = d3.select('.d3-tooltip');
   const endStat = val.endStat;

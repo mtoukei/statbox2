@@ -146,7 +146,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   .data([dc.soukan])
   .enter();
   const soukanText = soukanTextD.append('text')
-  .text(d =>'相関係数 = ' + d)
+  .text(d => '相関係数 = ' + d)
   .attr('font-size', 12 * multi + 'px')
   .attr('text-anchor', 'start');
   // 相関係数の注釈-------------------------------------------------------------------------
@@ -580,7 +580,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-scatter-' + prefOrCity + ' .year-range'), type, (() => {
-      return (e) => rangeInput(e)
+      return e => rangeInput(e)
     })(1), false);
     if (prefOrCity === 'pref') {
       storeBase.commit('statList/yearRangeScatterPrefChange', mixDataset.length - 1)

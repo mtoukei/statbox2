@@ -252,7 +252,7 @@ export default function (val, parentDiv) {
         for (const entry of entries) {
           width = entry.contentRect.width;
           height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
-          redraw()
+          // redraw()
         }
       }
     }
