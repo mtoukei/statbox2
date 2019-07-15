@@ -104,7 +104,7 @@ div {
 #left-side-div, #right-side-div{
     position: absolute;
     top: $header-menu-height;
-    width: 220px;
+    width: 200px;
     height: calc(100vh - #{$header-menu-height} - #{$footer-height});
     background-color: #dadada;
 }
