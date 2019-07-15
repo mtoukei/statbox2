@@ -108,7 +108,7 @@ export default function (val, parentDiv) {
   .style('cursor', 'pointer');
   // ツールチップ--------------------------------------------------------------------------------
   pathG
-  .on('mouseover', function(d) {
+  .on('mouseover', d => {
     const result = dataset.find(el => Number(el.citycode) === Number(d.properties.citycode));
     if (result) {
       tooltip
@@ -121,10 +121,7 @@ export default function (val, parentDiv) {
     .style('top', (d3.event.pageY - 45) + 'px')
     .style('left', (d3.event.pageX + 20) + 'px');
   })
-  .on('mouseout', function () {
-    tooltip.style('visibility', 'hidden');
-    d3.select(this)
-  });
+  .on('mouseout', () => tooltip.style('visibility', 'hidden'));
   // クリックでカレントに色を塗る------------------------------------------------------------------
   pathG
   .on('click', function (d) {
