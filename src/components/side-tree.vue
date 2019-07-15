@@ -121,8 +121,8 @@
                 node-key="statId"
                 :check-on-click-node="true"
                 :check-strictly="true"
-                @node-expand="nodeClickEstat4"
-                @check="nodeClickEstat4"
+                @node-expand="nodeClickEstat4(arguments[0], el.statType)"
+                @check="nodeClickEstat4(arguments[0], el.statType)"
                 :data="s_eStatMetaCity"
                 :filter-node-method="filterNode"
                 highlight-current
@@ -461,9 +461,9 @@
       },
       //-----------------------------------------------------------------------------------------
       // 都道府県。市町村時系列
-      nodeClickEstatTime (e, scatType) {
+      nodeClickEstatTime (e, statType) {
         if (!e.children) {
-          const refs = scatType === 'timePref' ? this.$refs.treeTimePref : this.$refs.treeTimeCity;
+          const refs = statType === 'timePref' ? this.$refs.treeTimePref : this.$refs.treeTimeCity;
           const keys = refs[0].getCheckedKeys(); // 何故か配列になる。原因不明。
           console.log(keys);
           const statIds = [];
@@ -484,7 +484,7 @@
             refs[0].setCheckedKeys(newKeys);
             return;
           }
-          if (scatType === 'timePref') {
+          if (statType === 'timePref') {
             this.$store.commit('statList/selectStatTimePref', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.s_prefCode, sourceIds })
           } else {
             this.$store.commit('statList/selectStatTimeCity', {statName: e.label, statIds: statIds, endStat: e.statId, side: this.side, cityCode: this.cityCode, sourceIds })
@@ -493,16 +493,18 @@
       },
       //-----------------------------------------------------------------------------------------
       // 全国市町村各種グラフと散布図
-      nodeClickEstat4 (e) {
+      nodeClickEstat4 (e, statType) {
         if (!e.children) {
-          this.$store.commit('base/leftDivListPartChange', {
-            key1: 'statType',
-            value1: 'city',
-            key2: 'divId',
-            value2: 'tree-city',
-            show: this.s_prefCode === '45000'
-          });
-
+          // 宮崎県以外はツリーマップを隠す。
+          if (statType === 'city') {
+            this.$store.commit('base/leftDivListPartChange', {
+              key1: 'statType',
+              value1: 'city',
+              key2: 'divId',
+              value2: 'tree-city',
+              show: this.s_prefCode === '45000'
+            });
+          }
           this.$store.commit('statList/selectStatEstat', {statId: e.statId, side: this.side, statName: e.label, unit: e.unit, prefOrCity: 'city', prefCode: this.s_prefCode, sourceId: e.sourceId })
         }
       },
