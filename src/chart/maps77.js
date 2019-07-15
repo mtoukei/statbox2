@@ -17,13 +17,10 @@ export default function (val, parentDiv) {
     statName = val.statData.title;
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
-  const width = palentDiv.node().getBoundingClientRect().width;
-  const height = palentDiv.node().getBoundingClientRect().height
-    - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+  let width = palentDiv.node().getBoundingClientRect().width;
+  let height = palentDiv.node().getBoundingClientRect().height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
-  const multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
-  //トランジションフラグ----------------------------------------------------------------------------
-  const isTransition = storeBase.state.statList.transition;
+  let multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor(dataset) {
@@ -75,16 +72,17 @@ export default function (val, parentDiv) {
   const svg = palentDiv.select('.resizers').append('svg')
   .attr('width', width)
   .attr('height', height)
-  .classed("chart-svg", true);
+  .attr('class', 'chart-svg');
   //--------------------------------------------------------------------------------------------
   const g = svg.append('g')
-  .attr('transform', 'translate(' + (15 * multi) + ',' + (10 * multi + 15) + ')')
-  .selectAll('rect')
+  .attr('transform', 'translate(' + (15 * multi) + ',' + (10 * multi + 15) + ')');
+
+  const gd = g.selectAll('rect')
   .data(dc.prefData)
   .enter();
   //--------------------------------------------------------------------------------------------
   const rectSize = 38;
-  const rectG = g.append('g')
+  const rectG = gd.append('g')
   .attr('transform', (d, i) => {
     const y = rectSize * Math.floor(i / 7);
     const x = rectSize * (i % 7);
@@ -161,8 +159,7 @@ export default function (val, parentDiv) {
     }
   };
   rect.transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 20 : 0)
+  .delay((d, i) => i * 20)
   .attr('fill', d => rectColor(d))
   .attr('stroke-dasharray', d => dash(d))
   .attr('stroke-dashoffset', d => dashOffset(d))
@@ -177,11 +174,10 @@ export default function (val, parentDiv) {
   .attr('fill', 'black');
   prefText
   .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 20 : 0)
+  .delay((d, i) => i * 20)
   .text(d => d.prefname);
   // サークル------------------------------------------------------------------------------------
-  const circleG = g.append('g')
+  const circleG = gd.append('g')
   .attr('display', (d, i) => i <= 1 ? 'none' : 'block')
   .attr('transform', (d, i) => {
     const y = rectSize * Math.floor(i / 7);
@@ -198,8 +194,7 @@ export default function (val, parentDiv) {
     }
   });
   circle .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? 1000 + i * 40 : 0)
+  .delay((d, i) => 1000 + i * 40)
   .attr('r', 12 * multi);
   const circleText = circleG.append('text')
   .attr('x', rectSize / 2 * multi)
@@ -215,8 +210,7 @@ export default function (val, parentDiv) {
     }
   });
   circleText .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? 1000 + i * 40 : 0)
+  .delay((d, i) => 1000 + i * 40)
   .text(d => {
     if (d.chihou8id) {
       const result = dc.dataset.find(value => Number(value.citycode) === Number(d.prefcode));
@@ -237,12 +231,37 @@ export default function (val, parentDiv) {
   .attr('class', 'no-print')
   .append('text')
   .text('8地方区分');
-  // -------------------------------------------------------------------------------------------
-  const rangeInput = e => {
-    const value = Number(e.target.value);
-    const dc = new DataCreate(JSON.parse(JSON.stringify(val.statData[value].data2)));
+  // --------------------------------------------------------------------------------------------
+  const redraw = () => {
+    multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
+    svg.attr('width', width);
+    svg.attr('height', height);
+    const value = Number(d3.select('#year-range-' + prefOrCity).select('.year-range').property("value"));
+    const target = val.statData[value].data2;
+    const dc = new DataCreate(JSON.parse(JSON.stringify(target)));
     dc.create();
+    rectG
+    .attr('transform', (d, i) => {
+      const y = rectSize * Math.floor(i / 7);
+      const x = rectSize * (i % 7);
+      return 'translate(' + (x * multi) + ',' + (y * multi) + ')';
+    });
+    rect
+    .data(dc.prefData, d => d.prefcode)
+    .attr('width', rectSize * multi)
+    .attr('height', rectSize * multi)
+    .attr('stroke-dasharray', d => dash(d))
+    .attr('stroke-dashoffset', d => dashOffset(d))
+    circleG
+    .attr('transform', (d, i) => {
+      const y = rectSize * Math.floor(i / 7);
+      const x = rectSize * (i % 7);
+      return 'translate(' + (x * multi) + ',' + (y * multi) + ')';
+    });
     circle
+    .attr('r', 12 * multi)
+    .attr('cx', rectSize / 2 * multi)
+    .attr('cy', rectSize / 2 * multi + 5 * multi)
     .attr('fill', d => {
       if (d.chihou8id) {
         const result = dc.dataset.find(value => Number(value.citycode) === Number(d.prefcode));
@@ -250,6 +269,9 @@ export default function (val, parentDiv) {
       }
     });
     circleText
+    .attr('x', rectSize / 2 * multi)
+    .attr('y', rectSize / 2 * multi + 10 * multi)
+    .attr('font-size', 10 * multi + 'px')
     .text(d => {
       if (d.chihou8id) {
         const result = dc.dataset.find(value => Number(value.citycode) === Number(d.prefcode));
@@ -257,10 +279,27 @@ export default function (val, parentDiv) {
       }
     });
   };
+  // リサイズ検知--------------------------------------------------------------------------------
+  const isFirst = {miyazaki: true, pref: true, city: true};
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!isFirst[prefOrCity]) { // 最初(統計を選択した時) は動作させない。
+      if (!storeBase.state.base.menuChange) { // メニュー移動時も動作させない。
+        for (const entry of entries) {
+          width = entry.contentRect.width;
+          height = entry.contentRect.height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+          redraw()
+        }
+      }
+    }
+    isFirst[prefOrCity] = false
+  });
+  const target = palentDiv.node();
+  resizeObserver.observe(target);
   //--------------------------------------------------------------------------------------------
   const type = ie ? 'change' : 'input';
   Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
   eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-' + prefOrCity + ' .year-range'), type, (() => {
-    return e => rangeInput(e)
+    // return e => rangeInput(e)
+    return () => redraw()
   })(1), false);
 }
