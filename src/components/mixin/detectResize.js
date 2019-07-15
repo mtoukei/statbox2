@@ -4,22 +4,29 @@ export default {
   methods: {
     mix_detectResize () {
       this.$nextTick(function () {
+        console.log(4444)
         const bodyHeight = document.body.clientHeight;
         const bodyWidth = document.body.clientWidth;
         const headerHeight = document.querySelector('#header-menu').clientHeight;
         const footerHeight = document.querySelector('#footer').clientHeight;
         const resizersLeft = document.querySelector('.resizers .resizer.left');
         const resizersRight = document.querySelector('.resizers .resizer.right');
-        // const treeDivs = document.querySelectorAll('.tree-div');
+        const treeDivs = document.querySelectorAll('.tree-div');
         const leftSideDivWidth = document.querySelector('#left-side-div').clientWidth;
         const rightSideDivWidth = document.querySelector('#right-side-div').clientWidth;
         const vTreeLefts = document.querySelectorAll('#left-side-div' + ' .v-tree');
         const vTreeRights = document.querySelectorAll('#right-side-div' + ' .v-tree');
         const contents = document.querySelector('#contents');
         // 高さ設定。画面ボトムのリサイズ---------------------------------------------------------
-        // treeDivs.forEach(value => {
-        //   if (value.style) value.style.height = (bodyHeight - footerHeight - 120) + 'px';
-        // });
+        if (!ie) {
+          treeDivs.forEach(value => {
+            if (value.style) value.style.height = (bodyHeight - footerHeight - 120) + 'px';
+          });
+        } else {
+          // IE11対策。上はモダンブラウザだと問題ないがIE11だとこける。
+          treeDivs[0].style.height = (bodyHeight - footerHeight - 120) + 'px';
+          treeDivs[1].style.height = (bodyHeight - footerHeight - 120) + 'px';
+        }
         resizersLeft.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';
         resizersRight.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';
         contents.style.height = (bodyHeight - footerHeight - headerHeight) + 'px';
