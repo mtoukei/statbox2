@@ -427,6 +427,46 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
   };
   const zoom = d3.zoom().on('zoom', zoomed);
   svg.call(zoom);
+  // スライダー操作------------------------------------------------------------------------------
+  const rangeInput = e => {
+    const value = Number(e.target.value);
+    const year = mixDataset[value].time.substr(0, 4);
+    d3.select('#year-text-' + prefOrCity).text(year);
+    rangeDiv.select('.year-range-text').text(year);
+    const dc = new DataCreate(value);
+    dc.create();
+    circleG
+    .data(dc.dataset, d => d.cityname)
+    .transition()
+    .attr('cx', d => newXScale(d.rightData))
+    .attr('cy', d => newYScale(d.leftData));
+    textG
+    .data(dc.dataset, d => d.cityname)
+    .transition()
+    .attr('x', d => newXScale(d.rightData) + 7)
+    .attr('y', d => newYScale(d.leftData) + 3);
+    // 相関係数--------------------------------------------------------------------------------
+    soukanTextG
+    .attr('transform', 'translate(' + (10 * multi) + ',' + (12 * multi + height - 70 * multi) + ')');
+    soukanText
+    .data([dc.soukan])
+    .text(d => '相関係数 = ' + d);
+    soukanTextCyuuG
+    .attr('transform', 'translate(' + (10 * multi) + ',' + (12 * multi + height - 50 * multi) + ')');
+    soukanTextCyuu
+    .data([dc.soukan])
+    .attr('font-size', 12 * multi + 'px')
+    .text(d => cyuuSyaku(d));
+    // 回帰直線--------------------------------------------------------------------------------
+    const rightMin = d3.min(dc.dataset, d => d.rightData);
+    const rightMax = d3.max(dc.dataset, d => d.rightData);
+    kaikiLine
+    .transition()
+    .attr('x1', newXScale(rightMin))
+    .attr('y1', newYScale(dc.linRegLine(rightMin)))
+    .attr('x2', newXScale(rightMax))
+    .attr('y2', newYScale(dc.linRegLine(rightMax)));
+  };
   // --------------------------------------------------------------------------------------------
   const redraw = () => {
     multi = width / defaultWidth < 1 ? width / defaultWidth : 1;
@@ -540,7 +580,7 @@ export default function (leftVal, rightVal, prefOrCity, palentDiv) {
     const type = ie ? 'change' : 'input';
     Common.eventAddRemove.removeListener(eventkey[prefOrCity]);
     eventkey[prefOrCity] = Common.eventAddRemove.addListener(document.querySelector('#year-range-scatter-' + prefOrCity + ' .year-range'), type, (() => {
-      return () => redraw()
+      return (e) => rangeInput(e)
     })(1), false);
     if (prefOrCity === 'pref') {
       storeBase.commit('statList/yearRangeScatterPrefChange', mixDataset.length - 1)
