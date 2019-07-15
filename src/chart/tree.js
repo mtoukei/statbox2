@@ -321,7 +321,8 @@ export default function (val, parentDiv) {
   .attr('dy', d => dc.fontScale(d.data.value))
   .attr('font-size', d => dc.fontScale(d.data.value))
   .attr('class', 'node-label')
-  .text(d => d.data.name);
+  .text(d => d.data.name)
+  .attr('fill', 'black');
   text
   .attr('opacity', 0)
   .transition()
