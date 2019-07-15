@@ -27,8 +27,6 @@ export default function (val, parentDiv) {
   let height = palentDiv.node().getBoundingClientRect().height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
   const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
-  //トランジションフラグ----------------------------------------------------------------------------
-  const isTransition = storeBase.state.statList.transition;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
@@ -64,7 +62,6 @@ export default function (val, parentDiv) {
       const data0 = String(this.dataset[0].citycode).substr(0, 2);
       const data1 = String(this.dataset[1].citycode).substr(0, 2);
       this.prefCode = data0 !== data1 ? '00' : data0
-
       // projectionを定義----------------------------------------------------------------------
       let projection;
       if (this.prefCode === '00') {
@@ -141,8 +138,7 @@ export default function (val, parentDiv) {
   // --------------------------------------------------------------------------------------------
   pathG
   .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 50 : 0)
+  .delay((d, i) => i * 50)
   .attr("fill", d => {
     if (d.properties.citycode) {
       const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
@@ -162,8 +158,7 @@ export default function (val, parentDiv) {
   .attr('height', 20 * multi)
   .attr('fill', 'rgba(255,255,255,0.1)')
   .transition()
-  .duration(() => isTransition ? 100 : 0)
-  .delay((d, i) => isTransition ? i * 10 : 0)
+  .delay((d, i) => i * 10)
   .attr('fill', d => d.color);
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
