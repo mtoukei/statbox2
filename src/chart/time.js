@@ -317,11 +317,11 @@ export default function (val, palentDiv) {
     }
     //パスの長さを取得----------------------------------------------------------------------------
     const pathLength = path.node().getTotalLength();
-    const isTransition = storeBase.state.statList.leftStatTime.transition;
+    // const isTransition = storeBase.state.statList.leftStatTime.transition;
     path
     .attr('stroke-dasharray', pathLength)
     .attr('stroke-dashoffset', pathLength);
-    if (value.stat === endStat && isTransition) {
+    if (value.stat === endStat) {
       path.transition()
       .duration(800)
       .ease(d3.easeLinear)
