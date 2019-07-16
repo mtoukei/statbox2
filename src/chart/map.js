@@ -165,12 +165,11 @@ export default function (val, parentDiv) {
   .append('text')
   .text(statName);
   // 偏差値説明--------------------------------------------------------------------------------
-  svg.append('g')
-  .attr('id', 'ssText')
-  .attr('font-size', 12 * multi + 'px')
+  const ssTextG = svg.append('g')
   .attr('transform', () => 'translate(5,' + (height - 5) + ')')
-  .attr('class', 'no-print')
-  .append('text')
+  .attr('class', 'no-print');
+  ssTextG.append('text')
+  .attr('font-size', 12 * multi + 'px')
   .text('偏差値　赤＝大　白＝50　青＝小');
   // ズーム--------------------------------------------------------------------------------------
   const zoom =
@@ -199,7 +198,7 @@ export default function (val, parentDiv) {
       }
       return 'rgba(0,0,0,0)'
     });
-    svg.select('#ssText')
+    ssTextG
     .attr('transform', () => 'translate(5,' + (height - 5) + ')')
   };
   // リサイズ検知--------------------------------------------------------------------------------

@@ -66,7 +66,8 @@ export default function (val, parentDiv) {
   const containerDiv = palentDiv.select('.resizers').append('div')
   .attr('id', 'rank-container-div')
   .style('height', (height - 20 * multi) + 'px')
-  .style('overflow', 'hidden auto');
+  // .style('overflow', 'hidden auto');
+  .style('overflow-x', 'hidden')
   const svg = containerDiv.append('svg')
   .attr('width', width - 25)
   .attr('height', dc.dataset.length * 15 * multi + 40)
