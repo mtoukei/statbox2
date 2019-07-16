@@ -298,35 +298,35 @@ export default function (val, parentDiv) {
   .append('text')
   .text(statName)
   .attr('text-anchor', 'start');
-  // 降順---------------------------------------------------------------------------------------
-  svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
-  .attr('transform', 'translate(' + 200 * multi + ',30)')
+  // ソートのグループ-----------------------------------------------------------------------------
+  const sortG = svg.append('g')
+  .attr('transform', 'translate(' + (width / 2 - 100) + ',30)')
   .attr('class', 'no-print')
+  .attr('cursor', 'pointer');
+  // 降順---------------------------------------------------------------------------------------
+  sortG
   .append('text')
+  .attr('font-size', 12 * multi + 'px')
   .text('降順')
   .attr('text-anchor', 'start')
-  .attr('cursor', 'pointer')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
   .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
   .on('click', () => order('desc'));
   // 昇順---------------------------------------------------------------------------------------
-  svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
-  .attr('transform', 'translate(' + 240 * multi + ',30)')
-  .attr('class', 'no-print')
+  sortG
   .append('text')
+  .attr('transform', 'translate(' + 40 * multi + ',0)')
+  .attr('font-size', 12 * multi + 'px')
   .text('昇順')
   .attr('text-anchor', 'start')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
   .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
   .on('click', () => order('asc'));
   // 元の並び（シティコード順）-----------------------------------------------------------------
-  svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
-  .attr('transform', 'translate(' + 280 * multi + ',30)')
-  .attr('class', 'no-print')
+  sortG
   .append('text')
+  .attr('transform', 'translate(' + 80 * multi + ',0)')
+  .attr('font-size', 12 * multi + 'px')
   .text('元の並び')
   .attr('text-anchor', 'start')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
@@ -413,14 +413,16 @@ export default function (val, parentDiv) {
     // 中央値-----------------------------------------------------------------------------------
     medianPolyline
     .attr('points', margin.left + ',' + dc.yScale(dc.median) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.median));
-    medianTextG.attr('transform', 'translate(' + (width - margin.right * multi) + ',32)')
+    medianTextG.attr('transform', 'translate(' + (width - margin.right * multi) + ',32)');
     medianText.text(`赤線：中央値＝${(Math.floor(dc.median * 100) / 100).toLocaleString()}${unit}`);
     // 標準偏差--------------------------------------------------------------------------------
     sdTextG.attr('transform', 'translate(' + (width - margin.right * multi) + ',49)');
     sdText.text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`);
     // 偏差値-----------------------------------------------------------------------------------
-    ssTextG.attr('transform', 'translate(' + (width - margin.right * multi) + ',66)')
-    ssText.text(`偏差値＝${standardScoreCompute(dc.dataset)}`)
+    ssTextG.attr('transform', 'translate(' + (width - margin.right * multi) + ',66)');
+    ssText.text(`偏差値＝${standardScoreCompute(dc.dataset)}`);
+    // ソートグループ-----------------------------------------------------------------------------
+    sortG.attr('transform', 'translate(' + (width / 2 - 100) + ',30)');
   };
   // リサイズ検知--------------------------------------------------------------------------------
   const isFirst = {miyazaki: true, pref: true, city: true};

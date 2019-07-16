@@ -21,7 +21,6 @@ div {
 }
 #app {
     height: 100%;
-    //font-family: 'Avenir', Helvetica, Arial, sans-serif;
     font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -179,8 +178,6 @@ div {
     font-size: 12px;
     background: white;
     border-radius: 4px;
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     visibility: hidden;
     z-index: 1;
@@ -213,9 +210,6 @@ input[type=range]::-ms-tooltip {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
     pointer-events: none;
     padding-right: 8px;

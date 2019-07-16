@@ -104,7 +104,6 @@ export default function (val, parentDiv) {
   .attr('d', dc.geoPath)
   .attr('stroke', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? 'orange' : 'gray')
   .attr('stroke-width', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? '3px' : '0.2px')
-  .attr('fill', 'rgba(255,255,255,0.1)')
   .style('cursor', 'pointer');
   // ツールチップ--------------------------------------------------------------------------------
   pathG
@@ -134,6 +133,7 @@ export default function (val, parentDiv) {
   });
   // --------------------------------------------------------------------------------------------
   pathG
+  .attr('fill', 'rgba(255,255,255,0.1)')
   .transition()
   .delay((d, i) => i * 50)
   .attr("fill", d => {
@@ -165,12 +165,11 @@ export default function (val, parentDiv) {
   .append('text')
   .text(statName);
   // 偏差値説明--------------------------------------------------------------------------------
-  svg.append('g')
-  .attr('id', 'ssText')
-  .attr('font-size', 12 * multi + 'px')
+  const ssTextG = svg.append('g')
   .attr('transform', () => 'translate(5,' + (height - 5) + ')')
-  .attr('class', 'no-print')
-  .append('text')
+  .attr('class', 'no-print');
+  ssTextG.append('text')
+  .attr('font-size', 12 * multi + 'px')
   .text('偏差値　赤＝大　白＝50　青＝小');
   // ズーム--------------------------------------------------------------------------------------
   const zoom =
@@ -199,7 +198,7 @@ export default function (val, parentDiv) {
       }
       return 'rgba(0,0,0,0)'
     });
-    svg.select('#ssText')
+    ssTextG
     .attr('transform', () => 'translate(5,' + (height - 5) + ')')
   };
   // リサイズ検知--------------------------------------------------------------------------------
