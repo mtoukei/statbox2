@@ -27,7 +27,7 @@ export default function (val, parentDiv) {
   let width = palentDiv.node().getBoundingClientRect().width;
   let height = palentDiv.node().getBoundingClientRect().height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 300;
-  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
+  let multi = width / defaultWidth < 10 ? width / defaultWidth : 10;
   const margin = { 'top': 30 * multi, 'bottom': 10 * multi, 'right': 10 * multi, 'left': 70 * multi };
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
@@ -97,14 +97,13 @@ export default function (val, parentDiv) {
   .attr('height', height)
   .attr('class', 'chart-svg');
   // Y軸---------------------------------------------------------------------------------------
-  svg.append('g')
-  .attr('id', 'box-y-axis')
-  .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
+  const yAxis = svg.append('g')
+  .attr('transform', 'translate(' + margin.left * multi + ',' + 0 + ')')
   .call(d3.axisLeft(dc.yScale));
   // --------------------------------------------------------------------------------------------
-  const boxWidth = 100;
-  const center = margin.left + boxWidth / 2 + 20;
-  const jitterWidth = 95;
+  const boxWidth = 100 * multi;
+  const center = margin.left + boxWidth / 2 * multi + 20;
+  const jitterWidth = 95 * multi;
   // 縦線---------------------------------------------------------------------------------------
   const vLine = svg.append('line')
   .attr('x1', center)
@@ -167,12 +166,20 @@ export default function (val, parentDiv) {
   .duration(1000)
   .attr('y', d => dc.yScale(d.data));
   // 散布イメージ-------------------------------------------------------------------------------
+  const sanpu = []; //ダミーの配列
+  const xScale = d3.scaleLinear()
+  .domain([0, 1])
+  .range([center - boxWidth / 2, center + boxWidth / 2]);
   const circle = svg.selectAll('circle')
   .data(dc.circleData)
   .enter()
   .append('circle')
   .attr('class', 'box-circle-' + prefOrCity)
-  .attr('cx', () => center - jitterWidth / 2 + Math.random() * jitterWidth )
+  .attr('cx', () => {
+    const random = Math.random();
+    sanpu.push(random); //ダミーの配列にランダム値をプッシュ。redrawで使用する。
+    return xScale(random)
+  })
   .attr('cy', d => dc.yScale(d.data))
   .attr('r', 0)
   .attr('fill', d => {
@@ -219,13 +226,13 @@ export default function (val, parentDiv) {
   .text(statName)
   .attr('text-anchor', 'start');
   // 散布イメージonoff--------------------------------------------------------------------------
-  svg.append('g')
-  .attr('font-size', 10 * multi + 'px')
+  const imageOnOffG = svg.append('g')
   .attr('transform', 'translate(' + (width / 2) + ',30)')
-  .attr('class', 'no-print')
-  .append('text')
+  .attr('class', 'no-print');
+  imageOnOffG.append('text')
   .text('イメージonoff')
-  .attr('text-anchor', 'start')
+  .attr('font-size', 10 * multi + 'px')
+  .attr('text-anchor', 'middle')
   .attr('cursor', 'pointer')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
   .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
@@ -238,8 +245,12 @@ export default function (val, parentDiv) {
   });
   // --------------------------------------------------------------------------------------------
   const redraw = () => {
+    multi = width / defaultWidth < 10 ? width / defaultWidth : 10;
     svg.attr('width', width);
     svg.attr('height', height);
+    const boxWidth = 100 * multi;
+    const multi2 = multi < 1 ? multi : 1;
+    const center = margin.left * multi2 + boxWidth / 2 + 20;
     let target;
     if (isEStat) {
       const value = Number(d3.select('#year-range-' + prefOrCity).select('.year-range').property("value"));
@@ -249,17 +260,23 @@ export default function (val, parentDiv) {
     }
     const dc = new DataCreate(JSON.parse(JSON.stringify(target)));
     dc.create();
-    svg.select('#box-y-axis')
-    .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
+    yAxis
+    .attr('transform', 'translate(' + margin.left * multi2 + ',' + 0 + ')')
     .call(d3.axisLeft(dc.yScale));
     vLine
+    .attr('x1', center)
+    .attr('x2', center)
     .attr('y1', dc.yScale(dc.min))
     .attr('y2', dc.yScale(dc.max));
     box
+    .attr('x', center - boxWidth / 2)
     .attr('y', dc.yScale(dc.q3))
+    .attr('width', boxWidth)
     .attr('height', dc.yScale(dc.q1) - dc.yScale(dc.q3));
     hLine
     .data([dc.min, dc.median, dc.max])
+    .attr('x1', center - boxWidth / 2)
+    .attr('x2', center + boxWidth / 2)
     .attr('y1', d => dc.yScale(d))
     .attr('y2', d => dc.yScale(d));
     hLineText
@@ -268,6 +285,7 @@ export default function (val, parentDiv) {
       {data: dc.median, text: '中央値 ', citys: ''},
       {data: dc.max, text: 'max ', citys: dc.maxCitys}
     ])
+    .attr('x', center + boxWidth / 2 + 5)
     .text(d => {
       const citys = d.citys ? d.citys.join() : '';
       const data = (Math.floor(d.data * 10) / 10).toLocaleString() + unit;
@@ -275,9 +293,16 @@ export default function (val, parentDiv) {
     })
     .attr('y', d => dc.yScale(d.data));
     // 散布イメージ-------------------------------------------------------------------------------
+    const xScale = d3.scaleLinear()
+    .domain([0, 1])
+    .range([center - boxWidth / 2, center + boxWidth / 2]);
     circle
     .data(dc.circleData)
+    .attr('cx', (d, i) => xScale(sanpu[i])) // ダミーの配列sanpuを使用
     .attr('cy', d => dc.yScale(d.data))
+    // イメージonoff-----------------------------------------------------------------------------
+    imageOnOffG
+    .attr('transform', 'translate(' + (width / 2) + ',30)')
   };
   // リサイズ検知--------------------------------------------------------------------------------
   const isFirst = {miyazaki: true, pref: true, city: true};
