@@ -104,7 +104,6 @@ export default function (val, parentDiv) {
   .attr('d', dc.geoPath)
   .attr('stroke', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? 'orange' : 'gray')
   .attr('stroke-width', d => String(d.properties.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]) ? '3px' : '0.2px')
-  .attr('fill', 'rgba(255,255,255,0.1)')
   .style('cursor', 'pointer');
   // ツールチップ--------------------------------------------------------------------------------
   pathG
@@ -134,6 +133,7 @@ export default function (val, parentDiv) {
   });
   // --------------------------------------------------------------------------------------------
   pathG
+  .attr('fill', 'rgba(255,255,255,0.1)')
   .transition()
   .delay((d, i) => i * 50)
   .attr("fill", d => {
