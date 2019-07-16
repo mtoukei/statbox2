@@ -103,7 +103,6 @@ export default function (val, parentDiv) {
   // --------------------------------------------------------------------------------------------
   const boxWidth = 100 * multi;
   const center = margin.left + boxWidth / 2 * multi + 20;
-  const jitterWidth = 95 * multi;
   // 縦線---------------------------------------------------------------------------------------
   const vLine = svg.append('line')
   .attr('x1', center)
