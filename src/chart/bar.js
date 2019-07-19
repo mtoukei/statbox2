@@ -172,10 +172,7 @@ export default function (val, parentDiv) {
   rect
   .transition()
   .duration(1000)
-  .delay((d, i) => {
-
-    return i * 1000 / dc.dataset.length
-  })
+  .delay((d, i) => i * 1000 / dc.dataset.length)
   .attr('y', d => d.data >= 0 ? dc.yScale(d.data) : dc.yScale(0))
   .attr('fill', d => {
     const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);

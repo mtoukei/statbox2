@@ -66,8 +66,7 @@ export default function (val, parentDiv) {
   const containerDiv = palentDiv.select('.resizers').append('div')
   .attr('id', 'rank-container-div')
   .style('height', (height - 20 * multi) + 'px')
-  // .style('overflow', 'hidden auto');
-  .style('overflow-x', 'hidden')
+  .style('overflow-x', 'hidden');
   const svg = containerDiv.append('svg')
   .attr('width', width - 25)
   .attr('height', dc.dataset.length * 15 * multi + 40)
@@ -79,8 +78,8 @@ export default function (val, parentDiv) {
   .data(dc.dataset)
   .enter();
   // 横棒(上位)--------------------------------------------------------------------------------
-  const rectG1 = g.append('g')
-  .append('rect')
+  const rectG1 = g.append('g');
+  const rect1 = rectG1.append('rect')
   .attr('class', 'rank-rect-' + prefOrCity)
   .attr('width', 130 * multi)
   .attr('height', 15 * multi)
@@ -89,13 +88,17 @@ export default function (val, parentDiv) {
     const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
     return isTarget ? 'orange' : d.rgb
   })
-  .attr('stroke', 'black')
-  .attr('stroke-width', 0.2)
   .style('cursor', 'pointer');
+  rect1
+  .attr('opacity', 0)
+  .transition()
+  .duration(1000)
+  .delay((d, i) => i * 50)
+  .attr('opacity', 1.0);
   // テキスト------------------------------------------------------------------------------------
   const text1_1 = g.append('g')
   .append('text')
-  .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(' + (0) + ',' + (11 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname )
@@ -107,7 +110,7 @@ export default function (val, parentDiv) {
   .style('pointer-events', 'none');
   const text1_2 = g.append('g')
   .append('text')
-  .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (11 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.data.toLocaleString())
@@ -125,8 +128,8 @@ export default function (val, parentDiv) {
   .data(dc.dataset2)
   .enter();
   // 横棒(下位)--------------------------------------------------------------------------------
-  const rectG2 = g2.append('g')
-  .append('rect')
+  const rectG2 = g2.append('g');
+  const rect2 = rectG2.append('rect')
   .attr('class', 'rank-rect-' + prefOrCity)
   .attr('width', 130 * multi)
   .attr('height', 15 * multi)
@@ -135,9 +138,13 @@ export default function (val, parentDiv) {
     const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
     return isTarget ? 'orange' : d.rgb
   })
-  .attr('stroke', 'black')
-  .attr('stroke-width', 0.2)
   .style('cursor', 'pointer');
+  rect2
+  .attr('opacity', 0)
+  .transition()
+  .duration(1000)
+  .delay((d, i) => i * 50)
+  .attr('opacity', 1.0);
   // テキスト------------------------------------------------------------------------------------
   const text2_1 = g2.append('g')
   .append('text')
@@ -203,7 +210,7 @@ export default function (val, parentDiv) {
     dc.create();
     palentDiv.select('#rank-container-div')
     .style('height', (height - 20 * multi) + 'px');
-    rectG1
+    rect1
     .data(dc.dataset, d => d.citycode)
     .attr('width', 130 * multi)
     .attr('height', 15 * multi)
@@ -216,7 +223,7 @@ export default function (val, parentDiv) {
     });
     text1_1
     .data(dc.dataset, d => d.citycode)
-    .attr('transform', (d, i) => 'translate(0,' + (12 * multi + 15 * i * multi) + ')')
+    .attr('transform', (d, i) => 'translate(0,' + (11 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
     .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
@@ -226,7 +233,7 @@ export default function (val, parentDiv) {
     });
     text1_2
     .data(dc.dataset, d => d.citycode)
-    .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
+    .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (11 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
     .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
@@ -237,7 +244,7 @@ export default function (val, parentDiv) {
     //-------------------------------------------------------------------------------------------
     svg.select('#g2')
     .attr('transform', 'translate(' + (10 * multi + 135 * multi) + ',' + (10 * multi + 15) + ')');
-    rectG2
+    rect2
     .data(dc.dataset2, d => d.citycode)
     .attr('width', 130 * multi)
     .attr('height', 15 * multi)
@@ -248,7 +255,7 @@ export default function (val, parentDiv) {
     .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * (i - 1) * multi) + ')');
     text2_1
     .data(dc.dataset2, d => d.citycode)
-    .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * i * multi) + ')')
+    .attr('transform', (d, i) => 'translate(' + (0) + ',' + (11 * multi + 15 * i * multi) + ')')
     .text(d => d.leftTop + ' ' + d.cityname)
     .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
@@ -258,7 +265,7 @@ export default function (val, parentDiv) {
     });
     text2_2
     .data(dc.dataset2, d => d.citycode)
-    .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
+    .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (11 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
     .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
