@@ -70,14 +70,13 @@ export default function (val, parentDiv) {
   const svg = containerDiv.append('svg')
   .attr('width', width - 25)
   .attr('height', dc.dataset.length * 15 * multi + 40)
-  .classed("chart-svg", true);
-  //--------------------------------------------------------------------------------------------
+  .attr('class', 'chart-svg');
+  // 横棒(上位)--------------------------------------------------------------------------------
   const g = svg.append('g')
   .attr('transform', 'translate(' + (10 * multi) + ',' + (10 * multi + 15) + ')')
   .selectAll('rect')
   .data(dc.dataset)
   .enter();
-  // 横棒(上位)--------------------------------------------------------------------------------
   const rectG1 = g.append('g');
   const rect1 = rectG1.append('rect')
   .attr('class', 'rank-rect-' + prefOrCity)
@@ -120,14 +119,13 @@ export default function (val, parentDiv) {
     return cY > 150 ? 'black' : 'white';
   })
   .style('pointer-events', 'none');
-  //--------------------------------------------------------------------------------------------
+  // 横棒(下位)--------------------------------------------------------------------------------
   const g2 = svg.append('g')
-  .attr('id', 'g2')
+  .attr('class', 'g2')
   .attr('transform', 'translate(' + (10 * multi + 135 * multi) + ',' + (10 * multi + 15) + ')')
   .selectAll('rect')
   .data(dc.dataset2)
   .enter();
-  // 横棒(下位)--------------------------------------------------------------------------------
   const rectG2 = g2.append('g');
   const rect2 = rectG2.append('rect')
   .attr('class', 'rank-rect-' + prefOrCity)
@@ -210,6 +208,7 @@ export default function (val, parentDiv) {
     dc.create();
     palentDiv.select('#rank-container-div')
     .style('height', (height - 20 * multi) + 'px');
+    // 横棒(上位)------------------------------------------------------------------------------
     rect1
     .data(dc.dataset, d => d.citycode)
     .attr('width', 130 * multi)
@@ -218,9 +217,7 @@ export default function (val, parentDiv) {
       const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
       return isTarget ? 'orange' : d.rgb
     })
-    .attr('transform', (d, i) => {
-      return 'translate(0,' + (12 * multi + 15 * (i - 1) * multi) + ')'
-    });
+    .attr('transform', (d, i) => 'translate(0,' + (12 * multi + 15 * (i - 1) * multi) + ')');
     text1_1
     .data(dc.dataset, d => d.citycode)
     .attr('transform', (d, i) => 'translate(0,' + (11 * multi + 15 * i * multi) + ')')
@@ -241,9 +238,9 @@ export default function (val, parentDiv) {
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });
-    //-------------------------------------------------------------------------------------------
-    svg.select('#g2')
-    .attr('transform', 'translate(' + (10 * multi + 135 * multi) + ',' + (10 * multi + 15) + ')');
+    // 横棒(下位)------------------------------------------------------------------------------
+    svg.select('.g2')
+    .attr('transform', 'translate(' + (10 * multi + 135 * multi) + ',25)');
     rect2
     .data(dc.dataset2, d => d.citycode)
     .attr('width', 130 * multi)
