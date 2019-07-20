@@ -349,14 +349,14 @@ export default function (val, parentDiv) {
     .transition()
     .duration(200)
     .attr('height', d => Math.abs(dc.yScale(d.data) - dc.yScale(0)))
-    .attr('y', function (d) {
-      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
-      if (d.data >= 0) {
-        d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
-        return dc.yScale(d.data)
-      }
-      d3.select(this).attr('fill', isTarget ? 'orange' : 'coral');
+    .attr('y', d => {
+      if (d.data >= 0) return dc.yScale(d.data);
       return dc.yScale(0)
+    })
+    .attr('fill', d => {
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
+      if (d.data >= 0) return isTarget ? 'orange' : 'slategray';
+      return isTarget ? 'orange' : 'coral'
     });
     cityNameText
     .data(dc.dataset)
