@@ -22,8 +22,7 @@ export default function (val, parentDiv) {
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
   let width = palentDiv.node().getBoundingClientRect().width;
-  let height = palentDiv.node().getBoundingClientRect().height
-    - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+  let height = palentDiv.node().getBoundingClientRect().height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 600;
   let multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 10 * multi, 'left': 50 * multi };
