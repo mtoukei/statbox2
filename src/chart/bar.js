@@ -22,8 +22,7 @@ export default function (val, parentDiv) {
   }
   // 大元のSVG領域の大きさを設定-------------------------------------------------------------
   let width = palentDiv.node().getBoundingClientRect().width;
-  let height = palentDiv.node().getBoundingClientRect().height
-    - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
+  let height = palentDiv.node().getBoundingClientRect().height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 600;
   let multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 10 * multi, 'left': 50 * multi };
@@ -349,14 +348,14 @@ export default function (val, parentDiv) {
     .transition()
     .duration(200)
     .attr('height', d => Math.abs(dc.yScale(d.data) - dc.yScale(0)))
-    .attr('y', function (d) {
-      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
-      if (d.data >= 0) {
-        d3.select(this).attr('fill', isTarget ? 'orange' : 'slategray');
-        return dc.yScale(d.data)
-      }
-      d3.select(this).attr('fill', isTarget ? 'orange' : 'coral');
+    .attr('y', d => {
+      if (d.data >= 0) return dc.yScale(d.data);
       return dc.yScale(0)
+    })
+    .attr('fill', d => {
+      const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
+      if (d.data >= 0) return isTarget ? 'orange' : 'slategray';
+      return isTarget ? 'orange' : 'coral'
     });
     cityNameText
     .data(dc.dataset)

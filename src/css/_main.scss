@@ -182,10 +182,6 @@ div {
     visibility: hidden;
     z-index: 1;
 }
-// IE11対策。余計なツールチップを非表示に----------------------------------------------------
-input[type=range]::-ms-tooltip {
-    display: none;
-}
 // トランジション--------------------------------------------------------------------------------
 .v-enter-active, .v-leave-active {
     transition: all  0.5s;

@@ -80,6 +80,7 @@ export default function (val, parentDiv) {
     if (isTransition) {
       rect.transition()
       .duration(1500)
+      .delay((d, i) => i * 3000 / map.length)
       .attr('y', d => yScale(d.length))
       .attr("height", d => height - yScale(d.length) - margin.bottom - margin.top);
     } else {
