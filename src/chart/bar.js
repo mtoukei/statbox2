@@ -183,45 +183,45 @@ export default function (val, parentDiv) {
   .attr('height', d => Math.abs(dc.yScale(d.data) - dc.yScale(0)));
   // 平均値-------------------------------------------------------------------------------------
   const meanPolyline = svg.append('polyline')
-  .attr('id', 'sum-polyline')
-  .attr('points', margin.left + ',' + dc.yScale(dc.mean) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.mean))
   .attr('stroke', 'blue')
-  .attr('fill', 'none')
-  .attr('stroke-width', 1);
+  .attr('stroke-width', 1)
+  .attr('points', margin.left + ',' + 0 + ' ' + (width - margin.right) + ',' + 0)
+  .transition()
+  .duration(1000)
+  .attr('points', margin.left + ',' + dc.yScale(dc.mean) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.mean));
   const meanTextG = svg.append('g')
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',15)')
   .attr('class', 'no-print');
   const meanText = meanTextG.append('text')
   .text(`青線：平均値＝${(Math.floor(dc.mean * 10) / 10).toLocaleString()}${unit}`)
-  .attr('font-size', 12 * multi + 'px')
+  .attr('font-size', '12px')
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
   .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
   .on('click', () => {
-    const target = svg.select('#sum-polyline');
-    target.style('display', () => target.style('display') !== 'none' ? 'none' : 'block')
+    meanPolyline.style('display', () => meanPolyline.style('display') !== 'none' ? 'none' : 'block')
   });
   // 中央値-------------------------------------------------------------------------------------
   const medianPolyline = svg.append('polyline')
-  .attr('id', 'median-polyline')
-  .attr('points', margin.left + ',' + dc.yScale(dc.median) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.median))
   .attr('stroke', 'red')
-  .attr('fill', 'none')
-  .attr('stroke-width', 1);
+  .attr('stroke-width', 1)
+  .attr('points', margin.left + ',' + 0 + ' ' + (width - margin.right) + ',' + 0)
+  .transition()
+  .duration(2000)
+  .attr('points', margin.left + ',' + dc.yScale(dc.median) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.median));
   const medianTextG = svg.append('g')
   .attr('transform', 'translate(' + (width - margin.right * multi) + ',32)')
   .attr('class', 'no-print');
   const medianText = medianTextG.append('text')
   .text(`赤線：中央値＝${(Math.floor(dc.median * 100) / 100).toLocaleString()}${unit}`)
-  .attr('font-size', 12 * multi + 'px')
+  .attr('font-size', '12px')
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
   .on('mouseleave', function() { d3.select(this).attr('fill', 'black') })
   .on('click', () => {
-    const target = svg.select('#median-polyline');
-    target.style('display', () => target.style('display') !== 'none' ? 'none' : 'block')
+    medianPolyline.style('display', () => medianPolyline.style('display') !== 'none' ? 'none' : 'block')
   });
   // 標準偏差----------------------------------------------------------------------------------
   const sdTextG = svg.append('g')
@@ -229,7 +229,7 @@ export default function (val, parentDiv) {
   .attr('class', 'no-print');
   const sdText = sdTextG.append('text')
   .text(`標準偏差＝${(Math.floor(dc.standardDeviation * 100) / 100).toLocaleString()}`)
-  .attr('font-size', 12 * multi + 'px')
+  .attr('font-size', '12px')
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer');
   // 偏差値------------------------------------------------------------------------------------
@@ -248,7 +248,7 @@ export default function (val, parentDiv) {
   const ssText = ssTextG.append('text')
   .text(`偏差値＝${standardScoreCompute(dc.dataset)}`)
   .attr('class', 'standard-score-text-' + prefOrCity)
-  .attr('font-size', 12 * multi + 'px')
+  .attr('font-size', '12px')
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer');
   // ツールチップ---------------------------------------------------------------------------------
@@ -286,13 +286,13 @@ export default function (val, parentDiv) {
   });
   // 単位---------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
+  .attr('font-size', '12px')
   .attr('transform', 'translate(10,15)')
   .append('text')
   .text('単位:' + unit);
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
+  .attr('font-size', '12px')
   .attr('transform', 'translate(' + 70 * multi + ',15)')
   .attr('class', 'no-print')
   .append('text')
@@ -306,7 +306,7 @@ export default function (val, parentDiv) {
   // 降順---------------------------------------------------------------------------------------
   sortG
   .append('text')
-  .attr('font-size', 12 * multi + 'px')
+  .attr('font-size', '12px')
   .text('降順')
   .attr('text-anchor', 'start')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
@@ -316,7 +316,7 @@ export default function (val, parentDiv) {
   sortG
   .append('text')
   .attr('transform', 'translate(' + 40 * multi + ',0)')
-  .attr('font-size', 12 * multi + 'px')
+  .attr('font-size', '12px')
   .text('昇順')
   .attr('text-anchor', 'start')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
@@ -326,7 +326,7 @@ export default function (val, parentDiv) {
   sortG
   .append('text')
   .attr('transform', 'translate(' + 80 * multi + ',0)')
-  .attr('font-size', 12 * multi + 'px')
+  .attr('font-size', '12px')
   .text('元の並び')
   .attr('text-anchor', 'start')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
