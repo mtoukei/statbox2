@@ -45,6 +45,7 @@ export default function (val, parentDiv) {
       this.maxCitys = null;
       this.minAll = null;
       this.maxAll = null;
+      this.yFontSize = null
     }
     create () {
       if (prefOrCity === 'pref') this.datasetOriginal.shift();
@@ -85,6 +86,22 @@ export default function (val, parentDiv) {
       this.yScale = d3.scaleLinear()
       .domain([this.minAll, this.maxAll * 1.05])
       .range([height - margin.bottom, margin.top]);
+      // 最大値に合わせて文字サイズと左マージンを設定---------------------------------------------
+      const len = String(Math.floor(this.maxAll)).length;
+      if (len >= 6) {
+        margin.left = 60;
+        this.yFontSize = 8 * multi + 'px'
+      } else if (len >= 5) {
+        margin.left = 50;
+        this.yFontSize = 10 * multi + 'px'
+      } else if (len >= 3) {
+        margin.left = 40;
+        this.yFontSize = 10 * multi + 'px'
+      } else {
+        margin.left = 30;
+        this.yFontSize = 10 * multi + 'px'
+      }
+      margin.left = margin.left * multi;
     }
   }
   //--------------------------------------------------------------------------------------------
@@ -98,11 +115,12 @@ export default function (val, parentDiv) {
   .attr('class', 'chart-svg');
   // Y軸---------------------------------------------------------------------------------------
   const yAxis = svg.append('g')
-  .attr('transform', 'translate(' + margin.left * multi + ',' + 0 + ')')
-  .call(d3.axisLeft(dc.yScale));
+  .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
+  .call(d3.axisLeft(dc.yScale))
+  .attr('font-size', dc.yFontSize);
   // --------------------------------------------------------------------------------------------
   const boxWidth = 100 * multi;
-  const center = margin.left + boxWidth / 2 * multi + 20;
+  const center = margin.left + boxWidth / 2 + 20;
   // 縦線---------------------------------------------------------------------------------------
   const vLine = svg.append('line')
   .attr('x1', center)
@@ -212,14 +230,14 @@ export default function (val, parentDiv) {
   .on('mouseout', tip.hide);
   // 単位---------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
+  .attr('font-size', '12px')
   .attr('transform', 'translate(10,15)')
   .append('text')
   .text('単位:' + unit);
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
-  .attr('transform', 'translate(' + 70 * multi + ',15)')
+  .attr('font-size', '12px')
+  .attr('transform', 'translate(70,15)')
   .attr('class', 'no-print')
   .append('text')
   .text(statName)
@@ -230,7 +248,7 @@ export default function (val, parentDiv) {
   .attr('class', 'no-print');
   imageOnOffG.append('text')
   .text('イメージonoff')
-  .attr('font-size', 10 * multi + 'px')
+  .attr('font-size', '10px')
   .attr('text-anchor', 'middle')
   .attr('cursor', 'pointer')
   .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
@@ -261,7 +279,8 @@ export default function (val, parentDiv) {
     dc.create();
     yAxis
     .attr('transform', 'translate(' + margin.left * multi2 + ',' + 0 + ')')
-    .call(d3.axisLeft(dc.yScale));
+    .call(d3.axisLeft(dc.yScale))
+    .attr('font-size', dc.yFontSize);
     vLine
     .attr('x1', center)
     .attr('x2', center)
@@ -290,6 +309,7 @@ export default function (val, parentDiv) {
       const data = (Math.floor(d.data * 10) / 10).toLocaleString() + unit;
       return `${d.text}=${data} ${citys}`
     })
+    .attr('font-size', 10 * multi + 'px')
     .attr('y', d => dc.yScale(d.data));
     // 散布イメージ-------------------------------------------------------------------------------
     const xScale = d3.scaleLinear()
