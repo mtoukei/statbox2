@@ -184,7 +184,8 @@ export default function (val, parentDiv) {
   // 平均値-------------------------------------------------------------------------------------
   const meanPolyline = svg.append('polyline')
   .attr('stroke', 'blue')
-  .attr('stroke-width', 1)
+  .attr('stroke-width', 1);
+  meanPolyline
   .attr('points', margin.left + ',' + 0 + ' ' + (width - margin.right) + ',' + 0)
   .transition()
   .duration(1000)
@@ -205,7 +206,8 @@ export default function (val, parentDiv) {
   // 中央値-------------------------------------------------------------------------------------
   const medianPolyline = svg.append('polyline')
   .attr('stroke', 'red')
-  .attr('stroke-width', 1)
+  .attr('stroke-width', 1);
+  medianPolyline
   .attr('points', margin.left + ',' + 0 + ' ' + (width - margin.right) + ',' + 0)
   .transition()
   .duration(2000)
