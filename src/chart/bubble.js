@@ -35,7 +35,6 @@ export default function (val, parentDiv) {
       this.dataset = dataset;
       this.data = null;
       this.colorScale = null;
-      this.fontScale = null;
     }
     create () {
       if (prefOrCity === 'pref') this.dataset.shift();
@@ -75,12 +74,8 @@ export default function (val, parentDiv) {
       .range(['white', 'red']);
       this.data.forEach((value, index) => {
         value['rgb'] = colorScale(value.r);
-        value['leftTop'] = index + 1
+        value['top'] = index + 1
       });
-      const maxFontSize = maxVal < 20 ? 10 : 20;
-      this.fontScale = d3.scaleLinear()
-      .domain([minVal, maxVal])
-      .range([6 * multi, maxFontSize * multi]);
     }
   }
   //--------------------------------------------------------------------------------------------
@@ -112,11 +107,9 @@ export default function (val, parentDiv) {
   .attr('r', d => d.r);
   // バブルのテキスト
   const text = bubbles.append('text')
-  .text(d => {
-    if(d.r !== 0) return d.data.name
-  })
-  .attr('font-size', d => dc.fontScale(d.r))
-  .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
+  .text(d => d.r !== 0 ? d.data.name : '')
+  .attr('font-size', d => d.r / 2)
+  .attr('transform', d => 'translate(0,' + (d.r / 2 / 3 ) + ')')
   .attr('text-anchor', 'middle')
   .attr('fill', d => {
     const rgb = d3.rgb(d.rgb);
@@ -200,10 +193,10 @@ export default function (val, parentDiv) {
     text
     .data(dc.data, d => d.data.citycode)
     .text(d => d.r !== 0 ? d.data.name : '')
-    .attr('font-size', d => dc.fontScale(d.r))
-    .attr('transform', d => 'translate(0,' + (dc.fontScale(d.r) / + 3 * multi) + ')')
+    .attr('font-size', d => d.r / 2)
+    .attr('transform', d => 'translate(0,' + (d.r / 2 / 3 ) + ')')
     .attr('text-anchor', 'middle')
-    .attr('fill', function (d) {
+    .attr('fill', d => {
       const rgb = d3.rgb(d.rgb);
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 200 ? 'black' : 'white';
