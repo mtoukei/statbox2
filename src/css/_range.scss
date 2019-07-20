@@ -1,10 +1,10 @@
 input[type=range] {
     height: 26px;
     appearance: none;
-    margin: 0 0;/*修正*/
+    margin: 0 0; //修正
     padding: 0;
     width: 100%;
-    background-color: rgba(0,0,0,0);/*修正*/
+    background-color: rgba(0,0,0,0); //修正
 }
 input[type=range]:focus {
     outline: none;
@@ -88,4 +88,8 @@ input[type=range]:focus::-ms-fill-lower {
 }
 input[type=range]:focus::-ms-fill-upper {
     background: #B6B6B6;
+}
+// IE11の余計なツールチップを非表示に
+input[type=range]::-ms-tooltip {
+    display: none;
 }
