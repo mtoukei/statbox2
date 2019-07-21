@@ -142,8 +142,8 @@ export default function (val, parentDiv) {
   .on('mouseout', tip.hide);
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size', (12 * multi) + 'px')
-  .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
+  .attr('font-size', '12px')
+  .attr('transform', () => 'translate(5,17)')
   .attr('class', 'no-print')
   .append('text')
   .text(statName);

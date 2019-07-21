@@ -145,7 +145,7 @@ export default function (val, parentDiv) {
   });
   // 凡例---------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('transform', 'translate(' + (5) + ',' + (30 * multi) + ')')
+  .attr('transform', 'translate(5,30)')
   .selectAll('rect')
   .data(dc.legendDataSet)
   .enter()
@@ -159,8 +159,8 @@ export default function (val, parentDiv) {
   .attr('fill', d => d.color);
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size', 12 * multi + 'px')
-  .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
+  .attr('font-size', '12px')
+  .attr('transform', () => 'translate(5,17)')
   .attr('class', 'no-print')
   .append('text')
   .text(statName);
@@ -169,8 +169,8 @@ export default function (val, parentDiv) {
   .attr('transform', () => 'translate(5,' + (height - 5) + ')')
   .attr('class', 'no-print');
   ssTextG.append('text')
-  .attr('font-size', 12 * multi + 'px')
-  .text('偏差値　赤＝大　白＝50　青＝小');
+  .attr('font-size', '12px')
+  .text('偏差値　赤＝高　白＝50　青＝低');
   // ズーム--------------------------------------------------------------------------------------
   const zoom =
     d3.zoom()
