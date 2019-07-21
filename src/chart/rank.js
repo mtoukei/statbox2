@@ -73,7 +73,7 @@ export default function (val, parentDiv) {
   .attr('class', 'chart-svg');
   // 横棒(上位)--------------------------------------------------------------------------------
   const g = svg.append('g')
-  .attr('transform', 'translate(' + (10 * multi) + ',' + (10 * multi + 15) + ')')
+  .attr('transform', 'translate(' + (10 * multi) + ',25)')
   .selectAll('rect')
   .data(dc.dataset)
   .enter();
@@ -82,7 +82,7 @@ export default function (val, parentDiv) {
   .attr('class', 'rank-rect-' + prefOrCity)
   .attr('width', 130 * multi)
   .attr('height', 15 * multi)
-  .attr('transform', (d, i) => 'translate(' + (0) + ',' + (15 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(0,' + (15 * i * multi) + ')')
   .attr('fill', d => {
     const isTarget = String(d.citycode) === String(storeBase.state.base.targetCitycode[prefOrCity]);
     return isTarget ? 'orange' : d.rgb
@@ -97,7 +97,7 @@ export default function (val, parentDiv) {
   // テキスト------------------------------------------------------------------------------------
   const text1_1 = g.append('g')
   .append('text')
-  .attr('transform', (d, i) => 'translate(' + (0) + ',' + (11 * multi + 15 * i * multi) + ')')
+  .attr('transform', (d, i) => 'translate(0,' + (11 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
   .text(d => d.leftTop + ' ' + d.cityname )
@@ -122,7 +122,7 @@ export default function (val, parentDiv) {
   // 横棒(下位)--------------------------------------------------------------------------------
   const g2 = svg.append('g')
   .attr('class', 'g2')
-  .attr('transform', 'translate(' + (10 * multi + 135 * multi) + ',' + (10 * multi + 15) + ')')
+  .attr('transform', 'translate(' + (145 * multi) + ',' + (25) + ')')
   .selectAll('rect')
   .data(dc.dataset2)
   .enter();
@@ -187,8 +187,8 @@ export default function (val, parentDiv) {
   });
   // 表名-------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size', (12 * multi) + 'px')
-  .attr('transform', () => 'translate(5,' + (12 * multi + 5) + ')')
+  .attr('font-size', '12px')
+  .attr('transform', () => 'translate(5,17)')
   .attr('class', 'no-print')
   .append('text')
   .text(statName + '　単位：' + unit);
