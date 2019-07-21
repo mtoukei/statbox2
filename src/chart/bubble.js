@@ -27,8 +27,6 @@ export default function (val, parentDiv) {
   let width = palentDiv.node().getBoundingClientRect().width;
   let height = palentDiv.node().getBoundingClientRect().height
     - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
-  const defaultWidth = 300;
-  const multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset) {
