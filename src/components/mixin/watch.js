@@ -33,9 +33,12 @@ export default {
       handler: function (val) {
         // 棒グラフのカレント行色塗りと同時に偏差値計算------------------------------------------
         ['pref', 'city', 'miyazaki'].forEach(prefOrCity => {
+          // 最初に偏差値をクリア（XX）
+          d3.select('.standard-score-text-' + prefOrCity).text('偏差値＝XX');
+          // selectAllでループ
           d3.selectAll('.bar-rect-' + prefOrCity).attr('fill', d => {
             const isTarget = String(d.citycode) === String(val[prefOrCity]);
-            // // 偏差値計算------------------------------------------------------------------------
+            // 偏差値計算------------------------------------------------------------------------
             if (isTarget) d3.select('.standard-score-text-' + prefOrCity).text(`偏差値＝${d.standardScore.toLocaleString()}`);
             // ------------------------------------------------------------------------------------
             if (d.data >= 0) return isTarget ? 'orange' : 'slategray';

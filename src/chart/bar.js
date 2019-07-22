@@ -277,14 +277,12 @@ export default function (val, parentDiv) {
   .on('click', function (d) {
     // 実際の色塗りはwatch.jsで塗っている。
     const target = d.cityname ? d.cityname : d;// 逃げのコード
-    const cityCode = dc.dataset.find(value => value.cityname === target).citycode;
+    const cityCode = String(dc.dataset.find(value => value.cityname === target).citycode);
     const payload = {
-      citycode: storeBase.state.base.targetCitycode === cityCode ? '' : cityCode,
+      citycode: storeBase.state.base.targetCitycode[prefOrCity] === cityCode ? '' : cityCode,
       prefOrCity: prefOrCity
     };
     storeBase.commit('base/targetCitycodeChange', payload);
-    // ------------------------------------------------------------------------------------------
-    ssText.text(`偏差値＝${d.standardScore.toLocaleString()}`)
   });
   // 単位---------------------------------------------------------------------------------------
   svg.append('g')
@@ -365,6 +363,7 @@ export default function (val, parentDiv) {
   };
   // --------------------------------------------------------------------------------------------
   const redraw = () => {
+    multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
     const orderType = storeBase.state.base.barSort;
     svg.attr('width', width);
     svg.attr('height', height);
@@ -382,11 +381,12 @@ export default function (val, parentDiv) {
     .ticks(20);
     svg.select("#bar-x-axis")
     .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
-    .call(axisx);
-    multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
-    cityNameTextG
+    .call(axisx)
+    .selectAll('text')
+    .attr('x', 0)
+    .attr('y', 3)
     .attr('font-size', 10 * multi + 'px');
-   // y軸---------------------------------------------------------------------------------------
+    // y軸---------------------------------------------------------------------------------------
     svg.select("#bar-y-axis")
     .attr('transform', 'translate(' + margin.left + ',' + 0 + ')')
     .call(d3.axisLeft(dc.yScale));
@@ -394,7 +394,7 @@ export default function (val, parentDiv) {
     .attr('font-size', dc.yFontSize);
     // 棒----------------------------------------------------------------------------------------
     rect
-    .data(dc.dataset, d => d.citycode)
+    .data(dc.dataset)
     .attr('height', d => Math.abs(dc.yScale(d.data) - dc.yScale(0)))
     .attr('y', d => d.data >= 0 ? dc.yScale(d.data) : dc.yScale(0))
     .attr('x', d => dc.xScale(d.cityname))
@@ -404,9 +404,6 @@ export default function (val, parentDiv) {
       if (d.data >= 0) return isTarget ? 'orange' : 'slategray';
       return isTarget ? 'orange' : 'coral';
     });
-    cityNameTextG
-    .data(dc.dataset, d => d.citycode)
-    .text(d => d.cityname);
     // 平均値-----------------------------------------------------------------------------------
     meanPolyline
     .attr('points', margin.left + ',' + dc.yScale(dc.mean) + ' ' + (width - margin.right) + ',' + dc.yScale(dc.mean));
