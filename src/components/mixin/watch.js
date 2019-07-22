@@ -39,7 +39,14 @@ export default {
           d3.selectAll('.bar-rect-' + prefOrCity).attr('fill', d => {
             const isTarget = String(d.citycode) === String(val[prefOrCity]);
             // 偏差値計算------------------------------------------------------------------------
-            if (isTarget) d3.select('.standard-score-text-' + prefOrCity).text(`偏差値＝${d.standardScore.toLocaleString()}`);
+            if (isTarget) {
+              d3.select('.standard-score-text-' + prefOrCity)
+              .text(`偏差値＝${d.standardScore.toLocaleString()}`)
+              .attr('fill', 'red')
+              .transition()
+              .duration(1000)
+              .attr('fill', 'black')
+            }
             // ------------------------------------------------------------------------------------
             if (d.data >= 0) return isTarget ? 'orange' : 'slategray';
             return isTarget ? 'orange' : 'coral';
