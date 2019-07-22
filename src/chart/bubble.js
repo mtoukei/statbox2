@@ -174,6 +174,7 @@ export default function (val, parentDiv) {
     if (isEStat) {
       const value = Number(rangeDiv.select('.year-range').property("value"));
       target = val.statData[value].data2;
+      rangeDiv.select('.year-range-text').text(target[0].time.substr(0, 4));
     } else {
       target = dataset
     }
