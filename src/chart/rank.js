@@ -29,7 +29,7 @@ export default function (val, parentDiv) {
   class DataCreate {
     constructor(dataset) {
       this.dataset = dataset;
-      this.dataset2 = null;
+      this.datasetDesc = null;
     }
     create() {
       // ソートして順位をつける-------------------------------------------------------------------
@@ -46,10 +46,10 @@ export default function (val, parentDiv) {
       .range(['white', 'red']);
       this.dataset.forEach((value, index) => {
         value['rgb'] = colorScale(value.data);
-        value['leftTop'] = index + 1
+        value['top'] = index + 1
       });
-      this.dataset2 = JSON.parse(JSON.stringify(this.dataset));
-      this.dataset2.sort((a, b) => {
+      this.datasetDesc = JSON.parse(JSON.stringify(this.dataset));
+      this.datasetDesc.sort((a, b) => {
         if (a.data < b.data) return -1;
         if (a.data > b.data) return 1;
         return 0;
@@ -100,7 +100,7 @@ export default function (val, parentDiv) {
   .attr('transform', (d, i) => 'translate(0,' + (11 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
-  .text(d => d.leftTop + ' ' + d.cityname )
+  .text(d => d.top + ' ' + d.cityname )
   .attr('fill', d => {
     const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
@@ -124,7 +124,7 @@ export default function (val, parentDiv) {
   .attr('class', 'g2')
   .attr('transform', 'translate(' + (145 * multi) + ',' + (25) + ')')
   .selectAll('rect')
-  .data(dc.dataset2)
+  .data(dc.datasetDesc)
   .enter();
   const rectG2 = g2.append('g');
   const rect2 = rectG2.append('rect')
@@ -149,7 +149,7 @@ export default function (val, parentDiv) {
   .attr('transform', (d, i) => 'translate(0,' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'start')
   .attr('font-size', 12 * multi + 'px')
-  .text(d => d.leftTop + ' ' + d.cityname)
+  .text(d => d.top + ' ' + d.cityname)
   .attr('fill', d => {
     const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
@@ -185,13 +185,27 @@ export default function (val, parentDiv) {
   .on('click', function (d) {
     rectClick(d, d3.select(this))
   });
-  // 表名-------------------------------------------------------------------------------------
+  // 表名---------------------------------------------------------------------------------------
   svg.append('g')
-  .attr('font-size', '12px')
   .attr('transform', () => 'translate(5,17)')
   .attr('class', 'no-print')
   .append('text')
+  .attr('font-size', '12px')
   .text(statName + '　単位：' + unit);
+  // 表示を偏差値に----------------------------------------------------------------------------
+  const ssTextG = svg.append('g')
+  .attr('transform', () => 'translate(' + (width - 30) + ',17)')
+  .attr('class', 'no-print');
+  ssTextG.append('text')
+  .attr('font-size', '12px')
+  .attr('text-anchor', 'end')
+  .style('cursor', 'pointer')
+  .text('偏差値')
+  .on('click', () => {
+    console.log(storeBase.state.base.isSS)
+    storeBase.commit('base/isSSChange');
+    console.log(storeBase.state.base.isSS)
+  });
   // --------------------------------------------------------------------------------------------
   const redraw = () => {
     multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
@@ -221,7 +235,7 @@ export default function (val, parentDiv) {
     text1_1
     .data(dc.dataset, d => d.citycode)
     .attr('transform', (d, i) => 'translate(0,' + (11 * multi + 15 * i * multi) + ')')
-    .text(d => d.leftTop + ' ' + d.cityname)
+    .text(d => d.top + ' ' + d.cityname)
     .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
       const rgb = d3.rgb(d.rgb);
@@ -242,7 +256,7 @@ export default function (val, parentDiv) {
     svg.select('.g2')
     .attr('transform', 'translate(' + (10 * multi + 135 * multi) + ',25)');
     rect2
-    .data(dc.dataset2, d => d.citycode)
+    .data(dc.datasetDesc, d => d.citycode)
     .attr('width', 130 * multi)
     .attr('height', 15 * multi)
     .attr('fill', d => {
@@ -251,9 +265,9 @@ export default function (val, parentDiv) {
     })
     .attr('transform', (d, i) => 'translate(' + (0) + ',' + (12 * multi + 15 * (i - 1) * multi) + ')');
     text2_1
-    .data(dc.dataset2, d => d.citycode)
+    .data(dc.datasetDesc, d => d.citycode)
     .attr('transform', (d, i) => 'translate(' + (0) + ',' + (11 * multi + 15 * i * multi) + ')')
-    .text(d => d.leftTop + ' ' + d.cityname)
+    .text(d => d.top + ' ' + d.cityname)
     .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
       const rgb = d3.rgb(d.rgb);
@@ -261,7 +275,7 @@ export default function (val, parentDiv) {
       return cY > 150 ? 'black' : 'white';
     });
     text2_2
-    .data(dc.dataset2, d => d.citycode)
+    .data(dc.datasetDesc, d => d.citycode)
     .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (11 * multi + 15 * i * multi) + ')')
     .text(d => d.data.toLocaleString())
     .attr('font-size', 12 * multi + 'px')
@@ -270,6 +284,9 @@ export default function (val, parentDiv) {
       const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
       return cY > 150 ? 'black' : 'white';
     });
+    //-------------------------------------------------------------------------------------------
+    ssTextG
+    .attr('transform', () => 'translate(' + (width - 30) + ',17)')
   };
   // リサイズ検知--------------------------------------------------------------------------------
   const isFirst = {miyazaki: true, pref: true, city: true};

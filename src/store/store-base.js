@@ -67,6 +67,7 @@ const base = {
     chartDivLoading: false,
     prefCode: '45000',
     barSort: 'original',
+    isSS: true,
     prefOptions: [{
       value: '00000',
       label: '全国',
@@ -264,6 +265,9 @@ const base = {
   mutations: {
     targetCitycodeChange (state, payload) {
       state.targetCitycode[payload.prefOrCity] = payload.citycode
+    },
+    isSSChange (state) {
+      state.isSS = !state.isSS
     },
     barSortChange (state, payload) {
       state.barSort = payload

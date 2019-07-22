@@ -25,7 +25,7 @@ export default function (val, parentDiv) {
   let height = palentDiv.node().getBoundingClientRect().height - palentDiv.select('.chart-div-handle').node().getBoundingClientRect().height;
   const defaultWidth = 600;
   let multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
-  const margin = { 'top': 40 * multi, 'bottom': 60 * multi, 'right': 10 * multi, 'left': 50 * multi };
+  const margin = { 'top': 40 * multi, 'bottom': 70 * multi, 'right': 10 * multi, 'left': 50 * multi };
   // データ等を作るクラス-------------------------------------------------------------------------
   class DataCreate {
     constructor (dataset, orderType) {
@@ -133,7 +133,7 @@ export default function (val, parentDiv) {
   // x軸
   const axisx = d3.axisBottom(dc.xScale)
   .ticks(20);
-  const cityNameText = svg.append('g')
+  const cityNameTextG = svg.append('g')
   .attr('id', 'bar-x-axis')
   .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
   .call(axisx)
@@ -273,7 +273,7 @@ export default function (val, parentDiv) {
     // ------------------------------------------------------------------------------------------
     ssText.text(`偏差値＝${d.standardScore.toLocaleString()}`)
   });
-  cityNameText
+  cityNameTextG
   .on('click', function (d) {
     // 実際の色塗りはwatch.jsで塗っている。
     const target = d.cityname ? d.cityname : d;// 逃げのコード
@@ -359,7 +359,7 @@ export default function (val, parentDiv) {
       if (d.data >= 0) return isTarget ? 'orange' : 'slategray';
       return isTarget ? 'orange' : 'coral'
     });
-    cityNameText
+    cityNameTextG
     .data(dc.dataset)
     .text(d => d.cityname);
   };
@@ -384,7 +384,7 @@ export default function (val, parentDiv) {
     .attr('transform', 'translate(' + 0 + ',' + (height - margin.bottom) + ')')
     .call(axisx);
     multi = width / defaultWidth < 1.5 ? width / defaultWidth : 1.5;
-    cityNameText
+    cityNameTextG
     .attr('font-size', 10 * multi + 'px');
    // y軸---------------------------------------------------------------------------------------
     svg.select("#bar-y-axis")
@@ -394,7 +394,7 @@ export default function (val, parentDiv) {
     .attr('font-size', dc.yFontSize);
     // 棒----------------------------------------------------------------------------------------
     rect
-    .data(dc.dataset)
+    .data(dc.dataset, d => d.citycode)
     .attr('height', d => Math.abs(dc.yScale(d.data) - dc.yScale(0)))
     .attr('y', d => d.data >= 0 ? dc.yScale(d.data) : dc.yScale(0))
     .attr('x', d => dc.xScale(d.cityname))
@@ -404,8 +404,8 @@ export default function (val, parentDiv) {
       if (d.data >= 0) return isTarget ? 'orange' : 'slategray';
       return isTarget ? 'orange' : 'coral';
     });
-    cityNameText
-    .data(dc.dataset)
+    cityNameTextG
+    .data(dc.dataset, d => d.citycode)
     .text(d => d.cityname);
     // 平均値-----------------------------------------------------------------------------------
     meanPolyline
