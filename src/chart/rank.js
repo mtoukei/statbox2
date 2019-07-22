@@ -177,11 +177,11 @@ export default function (val, parentDiv) {
     };
     storeBase.commit('base/targetCitycodeChange', payload);
   };
-  rectG1
+  rect1
   .on('click', function (d) {
     rectClick(d, d3.select(this))
   });
-  rectG2
+  rect2
   .on('click', function (d) {
     rectClick(d, d3.select(this))
   });
