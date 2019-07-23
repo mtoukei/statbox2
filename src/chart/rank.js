@@ -39,13 +39,23 @@ export default function (val, parentDiv) {
         if (a.data < b.data) return 1;
         return 0;
       });
-      const maxLeft = d3.max(this.dataset, d => d.data);
-      const minLeft = d3.min(this.dataset, d => d.data);
-      const colorScale = d3.scaleLinear()
-      .domain([minLeft, maxLeft])
-      .range(['white', 'red']);
+      const isSS = storeBase.state.base.isSS;
+      let target, colorScale;
+      if (isSS) {
+        target = 'standardScore';
+        colorScale = d3.scaleLinear()
+        .domain([20, 50, 70, 120])
+        .range(['blue', 'white', 'red', 'brown']);
+      } else {
+        target = 'data';
+        const maxLeft = d3.max(this.dataset, d => d.data);
+        const minLeft = d3.min(this.dataset, d => d.data);
+        colorScale = d3.scaleLinear()
+        .domain([minLeft, maxLeft])
+        .range(['white', 'red']);
+      }
       this.dataset.forEach((value, index) => {
-        value['rgb'] = colorScale(value.data);
+        value['rgb'] = colorScale(value[target]);
         value['top'] = index + 1
       });
       this.datasetDesc = JSON.parse(JSON.stringify(this.dataset));
@@ -112,7 +122,10 @@ export default function (val, parentDiv) {
   .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (11 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
-  .text(d => d.data.toLocaleString())
+  .text(d => {
+    const target = storeBase.state.base.isSS ? d.standardScore : d.data;
+    return target.toLocaleString()
+  })
   .attr('fill', d => {
     const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
@@ -161,7 +174,10 @@ export default function (val, parentDiv) {
   .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (12 * multi + 15 * i * multi) + ')')
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
-  .text(d => d.data.toLocaleString())
+  .text(d => {
+    const target = storeBase.state.base.isSS ? d.standardScore : d.data;
+    return target.toLocaleString()
+  })
   .attr('fill', d => {
     const rgb = d3.rgb(d.rgb);
     const cY = 0.3 * rgb.r + 0.6 * rgb.g + 0.1 * rgb.b;
@@ -186,12 +202,12 @@ export default function (val, parentDiv) {
     rectClick(d, d3.select(this))
   });
   // 表名---------------------------------------------------------------------------------------
-  svg.append('g')
+  const statNameTextG = svg.append('g')
   .attr('transform', () => 'translate(5,17)')
-  .attr('class', 'no-print')
-  .append('text')
+  .attr('class', 'no-print');
+  const statNameText = statNameTextG.append('text')
   .attr('font-size', '12px')
-  .text(statName + '　単位：' + unit);
+  .text(() => storeBase.state.base.isSS ? statName + '　偏差値' : statName + '　単位：' + unit);
   // 表示を偏差値に----------------------------------------------------------------------------
   const ssTextG = svg.append('g')
   .attr('transform', () => 'translate(' + (width - 30) + ',17)')
@@ -200,12 +216,19 @@ export default function (val, parentDiv) {
   .attr('font-size', '12px')
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer')
-  .text('偏差値')
-  .on('click', () => {
-    console.log(storeBase.state.base.isSS)
+  .text(() => storeBase.state.base.isSS ? '実数へ' : '偏差値へ')
+  .on('click', function () {
     storeBase.commit('base/isSSChange');
-    console.log(storeBase.state.base.isSS)
-  });
+    redraw();
+    d3.select(this)
+    .text(() => storeBase.state.base.isSS ? '実数へ' : '偏差値へ');
+    //-----------------------------------------------------------------------
+    const text = storeBase.state.base.isSS ? statName + '　偏差値' : statName + '　単位：' + unit;
+    statNameText
+    .text(text)
+  })
+  .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
+  .on('mouseleave', function() { d3.select(this).attr('fill', 'black') });
   // --------------------------------------------------------------------------------------------
   const redraw = () => {
     multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
@@ -245,7 +268,10 @@ export default function (val, parentDiv) {
     text1_2
     .data(dc.dataset, d => d.citycode)
     .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (11 * multi + 15 * i * multi) + ')')
-    .text(d => d.data.toLocaleString())
+    .text(d => {
+      const target = storeBase.state.base.isSS ? d.standardScore : d.data;
+      return target.toLocaleString()
+    })
     .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
       const rgb = d3.rgb(d.rgb);
@@ -277,7 +303,10 @@ export default function (val, parentDiv) {
     text2_2
     .data(dc.datasetDesc, d => d.citycode)
     .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (11 * multi + 15 * i * multi) + ')')
-    .text(d => d.data.toLocaleString())
+    .text(d => {
+      const target = storeBase.state.base.isSS ? d.standardScore : d.data;
+      return target.toLocaleString()
+    })
     .attr('font-size', 12 * multi + 'px')
     .attr('fill', d => {
       const rgb = d3.rgb(d.rgb);

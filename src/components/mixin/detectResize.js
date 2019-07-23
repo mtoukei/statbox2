@@ -4,7 +4,6 @@ export default {
   methods: {
     mix_detectResize () {
       this.$nextTick(function () {
-        console.log(4444)
         const bodyHeight = document.body.clientHeight;
         const bodyWidth = document.body.clientWidth;
         const headerHeight = document.querySelector('#header-menu').clientHeight;

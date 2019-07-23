@@ -135,6 +135,7 @@ export default function (val, parentDiv) {
   pathG
   .attr('fill', 'rgba(255,255,255,0.1)')
   .transition()
+  .duration(1000)
   .delay((d, i) => i * 50)
   .attr("fill", d => {
     if (d.properties.citycode) {
