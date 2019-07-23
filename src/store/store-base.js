@@ -67,7 +67,7 @@ const base = {
     chartDivLoading: false,
     prefCode: '45000',
     barSort: 'original',
-    isSS: true,
+    isSS: false,
     prefOptions: [{
       value: '00000',
       label: '全国',

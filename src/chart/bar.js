@@ -128,7 +128,6 @@ export default function (val, parentDiv) {
     .attr('width', width)
     .attr('height', height)
     .classed("chart-svg", true);
-
   // 軸の表示----------------------------------------------------------------------------------
   // x軸
   const axisx = d3.axisBottom(dc.xScale)
