@@ -39,13 +39,23 @@ export default function (val, parentDiv) {
         if (a.data < b.data) return 1;
         return 0;
       });
-      const maxLeft = d3.max(this.dataset, d => d.data);
-      const minLeft = d3.min(this.dataset, d => d.data);
-      const colorScale = d3.scaleLinear()
-      .domain([minLeft, maxLeft])
-      .range(['white', 'red']);
+      const isSS = storeBase.state.base.isSS;
+      let target, colorScale;
+      if (isSS) {
+        target = 'standardScore';
+        colorScale = d3.scaleLinear()
+        .domain([20, 50, 70, 120])
+        .range(['blue', 'white', 'red', 'brown']);
+      } else {
+        target = 'data';
+        const maxLeft = d3.max(this.dataset, d => d.data);
+        const minLeft = d3.min(this.dataset, d => d.data);
+        colorScale = d3.scaleLinear()
+        .domain([minLeft, maxLeft])
+        .range(['white', 'red']);
+      }
       this.dataset.forEach((value, index) => {
-        value['rgb'] = colorScale(value.data);
+        value['rgb'] = colorScale(value[target]);
         value['top'] = index + 1
       });
       this.datasetDesc = JSON.parse(JSON.stringify(this.dataset));
@@ -200,12 +210,15 @@ export default function (val, parentDiv) {
   .attr('font-size', '12px')
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer')
-  .text('偏差値')
-  .on('click', () => {
-    console.log(storeBase.state.base.isSS)
+  .text(() => storeBase.state.base.isSS ? '実数へ' : '偏差値へ')
+  .on('click', function () {
     storeBase.commit('base/isSSChange');
-    console.log(storeBase.state.base.isSS)
-  });
+    redraw();
+    d3.select(this)
+    .text(() => storeBase.state.base.isSS ? '実数へ' : '偏差値へ')
+  })
+  .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
+  .on('mouseleave', function() { d3.select(this).attr('fill', 'black') });
   // --------------------------------------------------------------------------------------------
   const redraw = () => {
     multi = width / defaultWidth < 5 ? width / defaultWidth : 5;
