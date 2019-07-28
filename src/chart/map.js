@@ -50,14 +50,30 @@ export default function (val, parentDiv) {
         if (a.citycode > b.citycode) return 1;
         return 0;
       });
-      this.colorScale = d3.scaleLinear()
-      .domain([20, 50, 70, 120])
-      .range(['blue', 'white', 'red', 'brown']);
+      const isSSMap = storeBase.state.base.isSSMap;
+      const maxLeft = d3.max(this.dataset, d => d.data);
+      const minLeft = d3.min(this.dataset, d => d.data);
       this.legendDataSet = [];
-      for (let i = 120; i > 20; i -= 3) {
-        this.legendDataSet.push({
-          color: this.colorScale(i),
-        })
+      if (isSSMap) {
+        this.colorScale = d3.scaleLinear()
+        .domain([20, 50, 70, 120])
+        .range(['blue', 'white', 'red', 'brown']);
+        for (let i = 120; i > 20; i -= 3) {
+          this.legendDataSet.push({
+            color: this.colorScale(i),
+          })
+        }
+      } else {
+        this.colorScale = d3.scaleLinear()
+        .domain([minLeft, maxLeft])
+        .range(['white', 'red']);
+        const value = maxLeft / 5;
+        for (let i = 0; i < 5; i++) {
+          this.legendDataSet.push({
+            color: this.colorScale(value * (5 - i)),
+            value: value * (5 - i)
+          })
+        }
       }
       const data0 = String(this.dataset[0].citycode).substr(0, 2);
       const data1 = String(this.dataset[1].citycode).substr(0, 2);
@@ -136,28 +152,44 @@ export default function (val, parentDiv) {
   .attr('fill', 'rgba(255,255,255,0.1)')
   .transition()
   .duration(1000)
-  .delay((d, i) => i * 50)
+  .delay((d, i) => i * 1000 / dc.dataset.length)
   .attr("fill", d => {
     if (d.properties.citycode) {
       const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
-      return result ? dc.colorScale(result.standardScore) : 'rgba(0,0,0,0)'
+      const isSSMap = storeBase.state.base.isSSMap;
+      const target = isSSMap ? result.standardScore : result.data;
+      return result ? dc.colorScale(target) : 'rgba(0,0,0,0)'
     }
     return 'rgba(0,0,0,0)'
   });
-  // 凡例---------------------------------------------------------------------------------------
-  svg.append('g')
-  .attr('transform', 'translate(5,30)')
-  .selectAll('rect')
-  .data(dc.legendDataSet)
-  .enter()
-  .append('rect')
-  .attr('transform', (d, i) => 'translate(0,' + (2.5 * i * multi) + ')')
-  .attr('width', 20 * multi)
-  .attr('height', 20 * multi)
-  .attr('fill', 'rgba(255,255,255,0.1)')
-  .transition()
-  .delay((d, i) => i * 10)
-  .attr('fill', d => d.color);
+  const isSSMap = storeBase.state.base.isSSMap;
+  let legendG;
+  const legendCreate = dataset => {
+    // 凡例（実数用）-------------------------------------------------------------------------
+    legendG = svg.append('g')
+    .attr('class', 'legend')
+    .attr('transform', 'translate(' + (5) + ',' + (30 * multi) + ')')
+    .selectAll('rect')
+    .data(dataset)
+    .enter();
+    legendG.append('rect')
+    .attr('transform', (d, i) => 'translate(0,' + (20 * i * multi) + ')')
+    .attr('width', 20 * multi)
+    .attr('height', 20 * multi)
+    .attr('stroke', 'black')
+    .attr('stroke-width', '0.3px')
+    .attr('fill', 'rgba(255,255,255,0.1)')
+    .transition()
+    .delay((d, i) => i * 100)
+    .attr('fill', d => d.color);
+    legendG.append('text')
+    .attr('font-size', 10 * multi + 'px')
+    .attr('transform', (d, i) => 'translate(' + (22 * multi) + ',' + (10 * multi + 20 * i * multi) + ')')
+    .text(d => Math.floor(d.value).toLocaleString() + ' ' + unit);
+  };
+  if (!isSSMap) {
+    legendCreate(dc.legendDataSet)
+  }
   // 表名---------------------------------------------------------------------------------------
   svg.append('g')
   .attr('font-size', '12px')
@@ -166,12 +198,29 @@ export default function (val, parentDiv) {
   .append('text')
   .text(statName);
   // 偏差値説明--------------------------------------------------------------------------------
-  const ssTextG = svg.append('g')
+  const ssDescriptionG = svg.append('g')
   .attr('transform', () => 'translate(5,' + (height - 5) + ')')
+  .attr('class', 'no-print');
+  ssDescriptionG.append('text')
+  .attr('font-size', '12px')
+  .text('偏差値　赤＝高　白＝50　青＝低');
+  // 表示を偏差値に----------------------------------------------------------------------------
+  const ssTextG = svg.append('g')
+  .attr('transform', () => 'translate(' + (width - 5) + ',17)')
   .attr('class', 'no-print');
   ssTextG.append('text')
   .attr('font-size', '12px')
-  .text('偏差値　赤＝高　白＝50　青＝低');
+  .attr('text-anchor', 'end')
+  .style('cursor', 'pointer')
+  .text(() => storeBase.state.base.isSSMap ? '実数へ' : '偏差値へ')
+  .on('click', function () {
+    storeBase.commit('base/isSSMapChange');
+    redraw();
+    d3.select(this)
+    .text(() => storeBase.state.base.isSSMap ? '実数へ' : '偏差値へ');
+  })
+  .on('mouseenter', function() { d3.select(this).attr('fill', 'orange') })
+  .on('mouseleave', function() { d3.select(this).attr('fill', 'black') });
   // ズーム--------------------------------------------------------------------------------------
   const zoom =
     d3.zoom()
@@ -195,12 +244,31 @@ export default function (val, parentDiv) {
     .attr("fill", d => {
       if (d.properties.citycode) {
         const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
-        return result ? dc.colorScale(result.standardScore) : 'rgba(0,0,0,0)'
+        const isSSMap = storeBase.state.base.isSSMap;
+        const target = isSSMap ? result.standardScore : result.data;
+        return result ? dc.colorScale(target) : 'rgba(0,0,0,0)'
       }
       return 'rgba(0,0,0,0)'
     });
-    ssTextG
-    .attr('transform', () => 'translate(5,' + (height - 5) + ')')
+    ssDescriptionG
+    .attr('transform', () => 'translate(5,' + (height - 5) + ')');
+    const isSSMap = storeBase.state.base.isSSMap;
+    if (isSSMap) {
+      svg.selectAll('.legend').style('display', 'none')
+    } else {
+      if(legendG) {
+        svg.selectAll('.legend').style('display', 'block');
+        legendG
+        .selectAll('rect')
+        .data(dc.legendDataSet)
+        .attr('fill', d => d.color);
+        legendG.selectAll('text')
+        .data(dc.legendDataSet)
+        .text(d => Math.floor(d.value).toLocaleString() + ' ' + unit);
+      } else {
+        legendCreate(dc.legendDataSet)
+      }
+    }
   };
   // リサイズ検知--------------------------------------------------------------------------------
   const isFirst = {miyazaki: true, pref: true, city: true};
