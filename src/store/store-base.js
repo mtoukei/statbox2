@@ -67,7 +67,8 @@ const base = {
     chartDivLoading: false,
     prefCode: '45000',
     barSort: 'original',
-    isSS: false,
+    isSSRank: false,
+    isSSMap: true,
     prefOptions: [{
       value: '00000',
       label: '全国',
@@ -266,8 +267,11 @@ const base = {
     targetCitycodeChange (state, payload) {
       state.targetCitycode[payload.prefOrCity] = payload.citycode
     },
-    isSSChange (state) {
-      state.isSS = !state.isSS
+    isSSRankChange (state) {
+      state.isSSRank = !state.isSSRank
+    },
+    isSSMapChange (state) {
+      state.isSSMap = !state.isSSMap
     },
     barSortChange (state, payload) {
       state.barSort = payload
