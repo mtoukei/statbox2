@@ -39,9 +39,9 @@ export default function (val, parentDiv) {
         if (a.data < b.data) return 1;
         return 0;
       });
-      const isSS = storeBase.state.base.isSS;
+      const isSSRank = storeBase.state.base.isSSRank;
       let target, colorScale;
-      if (isSS) {
+      if (isSSRank) {
         target = 'standardScore';
         colorScale = d3.scaleLinear()
         .domain([20, 50, 70, 120])
@@ -123,7 +123,7 @@ export default function (val, parentDiv) {
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
   .text(d => {
-    const target = storeBase.state.base.isSS ? d.standardScore : d.data;
+    const target = storeBase.state.base.isSSRank ? d.standardScore : d.data;
     return target.toLocaleString()
   })
   .attr('fill', d => {
@@ -175,7 +175,7 @@ export default function (val, parentDiv) {
   .attr('text-anchor', 'end')
   .attr('font-size', 12 * multi + 'px')
   .text(d => {
-    const target = storeBase.state.base.isSS ? d.standardScore : d.data;
+    const target = storeBase.state.base.isSSRank ? d.standardScore : d.data;
     return target.toLocaleString()
   })
   .attr('fill', d => {
@@ -207,7 +207,7 @@ export default function (val, parentDiv) {
   .attr('class', 'no-print');
   const statNameText = statNameTextG.append('text')
   .attr('font-size', '12px')
-  .text(() => storeBase.state.base.isSS ? statName + '　偏差値' : statName + '　単位：' + unit);
+  .text(() => storeBase.state.base.isSSRank ? statName + '　偏差値' : statName + '　単位：' + unit);
   // 表示を偏差値に----------------------------------------------------------------------------
   const ssTextG = svg.append('g')
   .attr('transform', () => 'translate(' + (width - 30) + ',17)')
@@ -216,14 +216,14 @@ export default function (val, parentDiv) {
   .attr('font-size', '12px')
   .attr('text-anchor', 'end')
   .style('cursor', 'pointer')
-  .text(() => storeBase.state.base.isSS ? '実数へ' : '偏差値へ')
+  .text(() => storeBase.state.base.isSSRank ? '実数へ' : '偏差値へ')
   .on('click', function () {
-    storeBase.commit('base/isSSChange');
+    storeBase.commit('base/isSSRankChange');
     redraw();
     d3.select(this)
-    .text(() => storeBase.state.base.isSS ? '実数へ' : '偏差値へ');
+    .text(() => storeBase.state.base.isSSRank ? '実数へ' : '偏差値へ');
     //-----------------------------------------------------------------------
-    const text = storeBase.state.base.isSS ? statName + '　偏差値' : statName + '　単位：' + unit;
+    const text = storeBase.state.base.isSSRank ? statName + '　偏差値' : statName + '　単位：' + unit;
     statNameText
     .text(text)
   })
@@ -269,7 +269,7 @@ export default function (val, parentDiv) {
     .data(dc.dataset, d => d.citycode)
     .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (11 * multi + 15 * i * multi) + ')')
     .text(d => {
-      const target = storeBase.state.base.isSS ? d.standardScore : d.data;
+      const target = storeBase.state.base.isSSRank ? d.standardScore : d.data;
       return target.toLocaleString()
     })
     .attr('font-size', 12 * multi + 'px')
@@ -304,7 +304,7 @@ export default function (val, parentDiv) {
     .data(dc.datasetDesc, d => d.citycode)
     .attr('transform', (d, i) => 'translate(' + (130 * multi) + ',' + (11 * multi + 15 * i * multi) + ')')
     .text(d => {
-      const target = storeBase.state.base.isSS ? d.standardScore : d.data;
+      const target = storeBase.state.base.isSSRank ? d.standardScore : d.data;
       return target.toLocaleString()
     })
     .attr('font-size', 12 * multi + 'px')
