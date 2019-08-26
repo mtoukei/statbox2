@@ -157,8 +157,12 @@ export default function (val, parentDiv) {
     if (d.properties.citycode) {
       const result = dc.dataset.find(value => Number(value.citycode) === Number(d.properties.citycode));
       const isSSMap = storeBase.state.base.isSSMap;
-      const target = isSSMap ? result.standardScore : result.data;
-      return result ? dc.colorScale(target) : 'rgba(0,0,0,0)'
+      if (result) {
+        const target = isSSMap ? result.standardScore : result.data;
+        return result ? dc.colorScale(target) : 'rgba(0,0,0,0)'
+      } else {
+        return 'rgba(0,0,0,0)'
+      }
     }
     return 'rgba(0,0,0,0)'
   });
