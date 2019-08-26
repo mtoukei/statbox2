@@ -2,14 +2,15 @@
 // メタデータを取得するときに使う。
 // コンソールログに出力されるJSON.stringifyをコピーして
 // meta-pref.jsまたはmeta-city.jsに貼り付ける
-import metaSourceIDPref from '../../store/meta/meta-source-id-pref'
-// import metaSourceIDCity from '../../store/meta/meta-source-id-city'
+// ①
+// import metaSourceIDPref from '../../store/meta/meta-source-id-pref'
+import metaSourceIDCity from '../../store/meta/meta-source-id-city'
 export default {
   name: 'metaDataCreate',
   beforeCreate () {
-    // ①
-    const targets = [this.$store.state.statList.eStatMetaPref];
-    // const targets = [this.$store.state.statList.eStatMetaCity];
+    // ②
+    // const targets = [this.$store.state.statList.eStatMetaPref];
+    const targets = [this.$store.state.statList.eStatMetaCity];
     console.log(targets)
     const vm = this;
     for (const h in targets) {
@@ -45,29 +46,32 @@ export default {
           if (result[i].cat01s.length) {
             for (const j in result[i].cat01s) {
               const tgt = result[i].cat01s[j];
-              // ②
-              const sourceIdResult = metaSourceIDPref.find(val => val.項目符号 === tgt['@code']);
-              // const sourceIdResult = metaSourceIDCity.find(val => val.項目符号 === tgt['@code']);
+              // ③
+              // const sourceIdResult = metaSourceIDPref.find(val => val.項目符号 === tgt['@code']);
+              const sourceIdResult = metaSourceIDCity.find(val => val.項目符号 === tgt['@code']);
               if (sourceIdResult) {
                 sourceId = sourceIdResult.sourceId
               }
               // console.log(sourceId)
               childrenArr.push({
-                statId: result[i].statId + '/' + tgt['@code'] + '/' + tgt['@unit'] + '/' + sourceId + '/' + tgt['@name'].split('_')[1],
-                label: tgt['@name'].split('_')[1],
+                // statId: result[i].statId + '/' + tgt['@code'] + '/' + tgt['@unit'] + '/' + sourceId + '/' + tgt['@name'].split('_')[1],
+                key: result[i].statId + '/' + tgt['@code'] ,
+                statId: result[i].statId,
                 cat01: tgt['@code'],
+                label: tgt['@name'].split('_')[1],
                 unit: tgt['@unit'],
-                sourceId: sourceId
+                // sourceId: sourceId
               });
             }
           } else {
             const tgt = result[i].cat01s;
             childrenArr.push({
-              statId: result[i].statId + '/' + tgt['@code'] + '/' + tgt['@unit'] + '/' + sourceId + '/' + tgt['@name'].split('_')[1],
-              label: tgt['@name'].split('_')[1],
+              // statId: result[i].statId + '/' + tgt['@code'] + '/' + tgt['@unit'] + '/' + sourceId + '/' + tgt['@name'].split('_')[1],
+              statId: result[i].statId,
               cat01: tgt['@code'],
+              label: tgt['@name'].split('_')[1],
               unit: tgt['@unit'],
-              sourceId: sourceId
+              // sourceId: sourceId
             });
           }
           // -------------------------------------------------------------------------------------
