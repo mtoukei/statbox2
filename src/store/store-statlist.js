@@ -223,7 +223,8 @@ const statList = {
       const limit = 100000;
       axios({
         method: 'get',
-        url: 'https://api.e-stat.go.jp/rest/2.1/app/json/getStatsData',
+        url: 'https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData',
+        // url: 'https://api.e-stat.go.jp/rest/2.1/app/json/getStatsData',
         params: {
           metaGetFlg: 'N',
           cntGetFlg: 'N',
@@ -397,7 +398,7 @@ const statList = {
             const limit = 100000;
             axios({
               method: 'get',
-              url: 'https://api.e-stat.go.jp/rest/2.1/app/json/getStatsData',
+              url: 'https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData',
               params: {
                 metaGetFlg: 'Y',
                 cntGetFlg: 'N',
@@ -478,7 +479,7 @@ const statList = {
             const limit = 100000;
             axios({
               method: 'get',
-              url: 'https://api.e-stat.go.jp/rest/2.1/app/json/getStatsData',
+              url: 'https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData',
               params: {
                 metaGetFlg: 'Y',
                 cntGetFlg: 'N',
