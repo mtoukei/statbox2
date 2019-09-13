@@ -24,7 +24,7 @@ export default {
           plomises[count] = new Promise(function(resolve) {
             axios({
               method: 'get',
-              url: 'https://api.e-stat.go.jp/rest/2.1/app/json/getMetaInfo',
+              url: 'https://api.e-stat.go.jp/rest/3.0/app/json/getMetaInfo',
               params: {
                 statsDataId: statId,
                 appId: eStatApiId
