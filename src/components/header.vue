@@ -26,13 +26,10 @@
         新統計BOX（試作版）
       </el-menu-item>
       <el-submenu index="2">
-        <template slot="title">
-          宮崎県市町村
-        </template>
-        <el-menu-item index="miyazakiCity">
-          いろんなグラフで見える化
-        </el-menu-item>
-        <!--<el-menu-item index="double">２市町村を比較</el-menu-item>-->
+        <template slot="title">宮崎県市町村</template>
+        <el-menu-item index="miyazakiCity">いろんなグラフで見える化（グラフ全表示）</el-menu-item>
+        <el-menu-item index="">グラフを自分で選択（未実装 ）</el-menu-item>
+        <el-menu-item index="">複数の表で見える化（未実装）</el-menu-item>
         <el-menu-item index="scatterMiyazaki">
           散布図で見える化
         </el-menu-item>
@@ -41,20 +38,18 @@
         <template slot="title">
           全国都道府県
         </template>
-        <el-menu-item index="pref">
-          いろんなグラフで見える化
-        </el-menu-item>
+        <el-menu-item index="pref">いろんなグラフで見える化（グラフ全表示）</el-menu-item>
+        <el-menu-item index="">グラフを自分で選択（未実装 ）</el-menu-item>
+        <el-menu-item index="">複数の表で見える化（未実装）</el-menu-item>
         <el-menu-item index="scatterPref">
           散布図で見える化
         </el-menu-item>
       </el-submenu>
       <el-submenu index="4">
-        <template slot="title">
-          全国市町村
-        </template>
-        <el-menu-item index="city">
-          いろんなグラフで見える化
-        </el-menu-item>
+        <template slot="title">全国市町村</template>
+        <el-menu-item index="city">いろんなグラフで見える化（グラフ全表示）</el-menu-item>
+        <el-menu-item index="">グラフを自分で選択（未実装 ）</el-menu-item>
+        <el-menu-item index="">複数の表で見える化（未実装）</el-menu-item>
         <el-menu-item index="scatterCity">
           散布図で見える化
         </el-menu-item>
